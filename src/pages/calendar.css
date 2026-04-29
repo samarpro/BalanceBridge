@@ -1,0 +1,26 @@
+.calendar-shell .react-calendar {
+  width: 100%;
+  border: 0;
+  font-family: 'Manrope', sans-serif;
+  color: #1b1c19;
+}
+
+.calendar-shell .react-calendar__navigation button {
+  border-radius: 9999px;
+  padding: 6px 12px;
+  color: #3a627f;
+}
+
+.calendar-shell .react-calendar__tile {
+  border-radius: 12px;
+  padding: 12px 6px;
+}
+
+.calendar-shell .react-calendar__tile--now {
+  background: #c9e6ff;
+}
+
+.calendar-shell .react-calendar__tile--active {
+  background: #3a627f;
+  color: #ffffff;
+}
