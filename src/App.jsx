@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react'
 import OnboardingWelcome from './pages/OnboardingWelcome'
 import OnboardingVerification from './pages/OnboardingVerification'
 import OnboardingDefineGoals from './pages/OnboardingDefineGoals'
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="/shift-checker-status-trends" element={<ShiftCheckerStatusTrends />} />
         <Route path="/exam-protection-mode" element={<ExamProtectionMode />} />
       </Routes>
+      <Analytics />
     </BrowserRouter>
   )
 }
