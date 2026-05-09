@@ -3,28 +3,31 @@ import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
 import { SchedulePlanner } from "@/components/balance-bridge/schedule-planner";
 import { ScheduleEntryCreateDetailsModal } from "@/components/balance-bridge/schedule-entry-modal";
-import { useBalanceBridgeStore } from "@/stores/balance-bridge-store";
+import { useCollisionGuardedAdd } from "@/hooks/use-collision-guarded-add";
+import { useKiraStore } from "@/stores/kira-store";
 import { isoFromDate } from "@/utils/schedule-time";
 import { cx } from "@/utils/cx";
 import { t } from "@/i18n/strings";
 
 export function CalendarPanel() {
-    const entries = useBalanceBridgeStore((s) => s.entries);
-    const addEntry = useBalanceBridgeStore((s) => s.addEntry);
+    const entries = useKiraStore((s) => s.entries);
+    const { tryAdd, collisionModal } = useCollisionGuardedAdd();
 
     const [title, setTitle] = useState("");
     const [detailsOpen, setDetailsOpen] = useState(false);
 
     const handleQuickAdd = () => {
         const trimmed = title.trim();
-        addEntry({
-            isoDate: isoFromDate(new Date()),
-            title: trimmed || "Untitled",
-            kind: "study",
-            priority: "medium",
-            completed: false,
-        });
-        setTitle("");
+        tryAdd(
+            {
+                isoDate: isoFromDate(new Date()),
+                title: trimmed || "Untitled",
+                kind: "study",
+                priority: "medium",
+                completed: false,
+            },
+            () => setTitle(""),
+        );
     };
 
     return (
@@ -68,6 +71,7 @@ export function CalendarPanel() {
                 initialTitle={title}
                 onSaved={() => setTitle("")}
             />
+            {collisionModal}
 
             <SchedulePlanner entries={entries} />
         </div>

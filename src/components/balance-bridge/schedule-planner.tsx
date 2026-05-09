@@ -9,7 +9,7 @@ import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/but
 import type { ScheduleEntry } from "@/components/balance-bridge/calendar-month";
 import { DayColumn, DayScheduleTimeline, TimelineRulerColumn } from "@/components/balance-bridge/day-schedule-timeline";
 import { ScheduleEntryEditModal } from "@/components/balance-bridge/schedule-entry-modal";
-import { useBalanceBridgeStore } from "@/stores/balance-bridge-store";
+import { useCollisionGuardedAdd } from "@/hooks/use-collision-guarded-add";
 import { addDays, defaultStartMinutesForNewTaskOnDay, isoFromDate, startOfWeekMonday } from "@/utils/schedule-time";
 import { t } from "@/i18n/strings";
 
@@ -28,7 +28,7 @@ interface SchedulePlannerProps {
 }
 
 export function SchedulePlanner({ entries }: SchedulePlannerProps) {
-    const addEntry = useBalanceBridgeStore((s) => s.addEntry);
+    const { tryAdd, collisionModal } = useCollisionGuardedAdd();
     const [view, setView] = useState<PlannerView>("week");
     const [anchorDate, setAnchorDate] = useState(() => {
         const x = new Date();
@@ -70,16 +70,18 @@ export function SchedulePlanner({ entries }: SchedulePlannerProps) {
     const NEW_BLOCK_MINUTES = 30;
 
     const createTaskAndEdit = (day: Date, startMinutes: number) => {
-        const id = addEntry({
-            isoDate: isoFromDate(day),
-            title: t("calendar.newTaskDefaultTitle"),
-            kind: "study",
-            priority: "medium",
-            completed: false,
-            startMinutes,
-            durationMinutes: NEW_BLOCK_MINUTES,
-        });
-        setEditingEntryId(id);
+        tryAdd(
+            {
+                isoDate: isoFromDate(day),
+                title: t("calendar.newTaskDefaultTitle"),
+                kind: "study",
+                priority: "medium",
+                completed: false,
+                startMinutes,
+                durationMinutes: NEW_BLOCK_MINUTES,
+            },
+            (id) => setEditingEntryId(id),
+        );
     };
 
     const handleTimelineCreate = (startMinutes: number) => {
@@ -222,6 +224,7 @@ export function SchedulePlanner({ entries }: SchedulePlannerProps) {
                     if (!open) setEditingEntryId(null);
                 }}
             />
+            {collisionModal}
 
             <div className="mt-6 flex flex-wrap gap-2 border-t border-secondary pt-4">
                 <Badge type="pill-color" color="brand" size="sm">

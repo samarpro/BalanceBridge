@@ -1,12 +1,12 @@
 /**
- * Central copy catalog for BalanceBridge. Replace `catalog` values or wire `t()`
+ * Central copy catalog for KIRA. Replace `catalog` values or wire `t()`
  * to react-i18next / Format.JS when you add real locales.
  */
 export const catalog = {
-    "app.name": "BalanceBridge",
-    "app.tagline": "Study, work, and wellbeing in one balanced place.",
+    "app.name": "KIRA",
+    "app.tagline": "Study, work, and wellbeing in one prioritized place.",
 
-    "onboarding.welcome.title": "Welcome to BalanceBridge",
+    "onboarding.welcome.title": "Welcome to KIRA",
     "onboarding.welcome.body":
         "Protect study time, stay inside work-hour limits, and find low-pressure campus connection—all in one schedule.",
     "onboarding.welcome.socialProof": "Trusted by 10+ students across campuses (pilot).",
@@ -22,7 +22,20 @@ export const catalog = {
     "onboarding.login.demoNote": "Demo only — SSO would open your institution’s login page.",
     "onboarding.login.next": "Continue",
 
-    "onboarding.timetable.title": "Bring your timetable into BalanceBridge",
+    "onboarding.priorities.title": "What matters most in your week?",
+    "onboarding.priorities.body":
+        "Drag isn’t required—move items up or down. KIRA uses this order when two blocks collide: we’ll nudge you toward what you said matters most.",
+    "onboarding.priorities.hint": "Typical for working students: study and exams, paid shifts, health, admin, friends, rest.",
+    "onboarding.priorities.cta": "Save order & continue",
+
+    "lifePriority.study": "Study & classes",
+    "lifePriority.work": "Paid work / shifts",
+    "lifePriority.health": "Health & movement",
+    "lifePriority.personal": "Personal / admin",
+    "lifePriority.social": "Social life",
+    "lifePriority.rest": "Rest & recovery",
+
+    "onboarding.timetable.title": "Bring your timetable into KIRA",
     "onboarding.timetable.body": "Import classes so we can layer shifts, exams, and wellbeing alongside your real week.",
     "onboarding.timetable.ics": "Upload .ics file",
     "onboarding.timetable.google": "Connect Google Calendar",
@@ -33,7 +46,7 @@ export const catalog = {
     "onboarding.start.title": "You’re set up to build better weeks",
     "onboarding.start.body":
         "Small, steady habits beat heroic cram sessions. Sync your timetable, log realistic shifts, and check in when energy dips—we’ll keep the interface calm so you can focus.",
-    "onboarding.start.cta": "Open BalanceBridge",
+    "onboarding.start.cta": "Open KIRA",
 
     "app.tab.dashboard": "Dashboard",
     "app.tab.calendar": "Calendar",
@@ -163,6 +176,21 @@ export const catalog = {
     "aria.themeMode": "Colour appearance",
     "aria.previousMonth": "Previous month",
     "aria.nextMonth": "Next month",
+
+    "collision.title": "Time clash",
+    "collision.subtitle":
+        "This block overlaps something already on your calendar. Use your priority order to decide—or take the next free slot we found.",
+    "collision.yourOrder": "Your priority order",
+    "collision.newBlock": "New block",
+    "collision.coach.favourNew":
+        "Based on your order, this new block lines up with a higher-priority area than at least one overlapping event. Stacking both is a conscious trade-off—consider the suggested time instead.",
+    "collision.coach.favourExisting":
+        "Something already on the calendar matches a higher-priority area for you than this new block. If you add both, you’re choosing to double-book—make sure that’s intentional.",
+    "collision.coach.neutral":
+        "These areas sit at a similar place in your priorities. Pick a time that fits your energy, or use the next free slot.",
+    "collision.useSuggested": "Use next free slot at {{time}}",
+    "collision.addAnyway": "Add anyway (I accept the overlap)",
+    "collision.backToEdit": "Go back and change time",
 } as const;
 
 export type MessageId = keyof typeof catalog;
@@ -175,4 +203,8 @@ export function t(id: MessageId): string {
 /** Simple interpolation helper for numeric placeholders. */
 export function tf(id: "events.peopleGoing", values: { count: number }): string {
     return catalog[id].replace("{{count}}", String(values.count));
+}
+
+export function tCollisionSuggested(time: string): string {
+    return catalog["collision.useSuggested"].replace("{{time}}", time);
 }

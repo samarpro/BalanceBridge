@@ -4,7 +4,7 @@ const OnboardingConnectCalendar = () => {
   return (
     <div className="bg-background text-on-background font-body-md min-h-screen flex flex-col overflow-x-hidden">
       <nav className="h-16 flex items-center px-8 fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md">
-        <span className="text-lg font-bold text-slate-900 font-h1 tracking-tight">BalanceBridge</span>
+        <span className="text-lg font-bold text-slate-900 font-h1 tracking-tight">KIRA</span>
         <div className="ml-auto flex items-center gap-4">
           <span className="font-label-sm text-outline">Step 2 of 4</span>
           <div className="w-32 h-1 bg-surface-container rounded-full overflow-hidden">

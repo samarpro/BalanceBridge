@@ -3,7 +3,7 @@ const AddShiftForm = () => {
     <div className="bg-background text-on-background min-h-screen font-body-md">
       <header className="bg-slate-50/90 backdrop-blur-md sticky top-0 z-40 border-b border-slate-200 shadow-sm shadow-sky-900/5 flex justify-between items-center w-full px-6 h-16">
         <div className="flex items-center gap-2">
-          <span className="text-xl font-bold tracking-tight text-sky-700 font-h1">BalanceBridge</span>
+          <span className="text-xl font-bold tracking-tight text-sky-700 font-h1">KIRA</span>
         </div>
         <nav className="hidden md:flex gap-8">
           <a className="text-slate-500 hover:bg-slate-100 transition-colors px-3 py-2 rounded-lg font-label-md" href="/dashboard-weekly-overview">

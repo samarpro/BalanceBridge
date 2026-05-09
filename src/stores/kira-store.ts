@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import type { ScheduleEntry } from "@/components/balance-bridge/calendar-month";
+import { loadLifePriorityOrder, saveLifePriorityOrder } from "@/lib/life-priority-storage";
+import type { LifePriorityId } from "@/types/life-priority";
 import { isoFromDate } from "@/utils/schedule-time";
 
 export interface WellbeingTask {
@@ -60,11 +62,14 @@ function seedEntries(): ScheduleEntry[] {
     ];
 }
 
-interface BalanceBridgeState {
+interface KiraStoreState {
     entries: ScheduleEntry[];
     wellbeingTasks: WellbeingTask[];
     /** Target focused study minutes for the current calendar week (synced with dashboard goal). */
     weeklyStudyGoalMinutes: number;
+    /** Onboarding life-area ranking (first = most important). Persisted in localStorage. */
+    lifePriorityOrder: LifePriorityId[];
+    setLifePriorityOrder: (order: LifePriorityId[]) => void;
     addEntry: (entry: Omit<ScheduleEntry, "id">) => string;
     updateEntry: (id: string, patch: Partial<Omit<ScheduleEntry, "id">>) => void;
     removeEntry: (id: string) => void;
@@ -73,13 +78,18 @@ interface BalanceBridgeState {
     removeWellbeingTask: (id: string) => void;
 }
 
-export const useBalanceBridgeStore = create<BalanceBridgeState>((set) => ({
+export const useKiraStore = create<KiraStoreState>((set) => ({
     entries: seedEntries(),
     wellbeingTasks: [
         { id: newWellbeingId(), label: "Hydrate before evening shift", completed: false },
         { id: newWellbeingId(), label: "Phone-free hour before sleep", completed: false },
     ],
     weeklyStudyGoalMinutes: 720,
+    lifePriorityOrder: loadLifePriorityOrder(),
+    setLifePriorityOrder: (order) => {
+        saveLifePriorityOrder(order);
+        set({ lifePriorityOrder: [...order] });
+    },
     addEntry: (entry) => {
         const id = newEntryId();
         set((s) => ({

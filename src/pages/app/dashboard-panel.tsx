@@ -7,7 +7,8 @@ import type { ScheduleEntry, ScheduleKind } from "@/components/balance-bridge/ca
 import { DayScheduleTimeline } from "@/components/balance-bridge/day-schedule-timeline";
 import { ScheduleEntryEditModal } from "@/components/balance-bridge/schedule-entry-modal";
 import { MOCK_EVENTS } from "@/data/mock-events";
-import { useBalanceBridgeStore } from "@/stores/balance-bridge-store";
+import { useCollisionGuardedAdd } from "@/hooks/use-collision-guarded-add";
+import { useKiraStore } from "@/stores/kira-store";
 import {
     calendarWeekKindMinutes,
     formatMinutesAsHoursMinutes,
@@ -74,9 +75,9 @@ function priorityLabel(priority: ScheduleEntry["priority"]): string {
 }
 
 export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
-    const entries = useBalanceBridgeStore((s) => s.entries);
-    const addEntry = useBalanceBridgeStore((s) => s.addEntry);
-    const weeklyStudyGoalMinutes = useBalanceBridgeStore((s) => s.weeklyStudyGoalMinutes);
+    const entries = useKiraStore((s) => s.entries);
+    const { tryAdd, collisionModal } = useCollisionGuardedAdd();
+    const weeklyStudyGoalMinutes = useKiraStore((s) => s.weeklyStudyGoalMinutes);
 
     const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
 
@@ -125,16 +126,18 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
     };
 
     const handleTimelineCreate = (startMinutes: number) => {
-        const id = addEntry({
-            isoDate: isoFromDate(scheduleDay),
-            title: t("calendar.newTaskDefaultTitle"),
-            kind: "study",
-            priority: "medium",
-            completed: false,
-            startMinutes,
-            durationMinutes: 30,
-        });
-        setEditingEntryId(id);
+        tryAdd(
+            {
+                isoDate: isoFromDate(scheduleDay),
+                title: t("calendar.newTaskDefaultTitle"),
+                kind: "study",
+                priority: "medium",
+                completed: false,
+                startMinutes,
+                durationMinutes: 30,
+            },
+            (id) => setEditingEntryId(id),
+        );
     };
 
     return (
@@ -219,6 +222,7 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
                     if (!open) setEditingEntryId(null);
                 }}
             />
+            {collisionModal}
 
             <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
                 <section className="flex flex-col rounded-xl bg-primary_alt p-5 ring-1 ring-secondary">

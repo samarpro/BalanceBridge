@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import { RootRedirect } from "@/pages/root-redirect";
 import { OnboardingWelcomePage } from "@/pages/onboarding/onboarding-welcome";
 import { OnboardingLoginPage } from "@/pages/onboarding/onboarding-login";
+import { OnboardingPrioritiesPage } from "@/pages/onboarding/onboarding-priorities";
 import { OnboardingTimetablePage } from "@/pages/onboarding/onboarding-timetable";
 import { OnboardingReadyPage } from "@/pages/onboarding/onboarding-ready";
 import { AppGate } from "@/pages/app-gate";
@@ -22,6 +23,7 @@ createRoot(document.getElementById("root")!).render(
                         <Route path="/" element={<RootRedirect />} />
                         <Route path="/onboarding/welcome" element={<OnboardingWelcomePage />} />
                         <Route path="/onboarding/login" element={<OnboardingLoginPage />} />
+                        <Route path="/onboarding/priorities" element={<OnboardingPrioritiesPage />} />
                         <Route path="/onboarding/timetable" element={<OnboardingTimetablePage />} />
                         <Route path="/onboarding/ready" element={<OnboardingReadyPage />} />
                         <Route

@@ -4,7 +4,7 @@ const ExamProtectionMode = () => {
       <header className="bg-slate-50/90 backdrop-blur-md sticky top-0 z-40 border-b border-slate-200 shadow-sm shadow-sky-900/5">
         <div className="flex justify-between items-center w-full px-6 h-16 max-w-7xl mx-auto">
           <div className="flex items-center gap-2">
-            <span className="text-xl font-bold tracking-tight text-sky-700 font-h1">BalanceBridge</span>
+            <span className="text-xl font-bold tracking-tight text-sky-700 font-h1">KIRA</span>
           </div>
           <nav className="hidden md:flex items-center gap-8">
             <a className="text-slate-500 font-label-md hover:bg-slate-100 transition-colors px-3 py-2 rounded-lg" href="/dashboard-weekly-overview">
@@ -115,7 +115,7 @@ const ExamProtectionMode = () => {
               <div>
                 <h4 className="font-label-md text-on-tertiary-container">Proactive Support Active</h4>
                 <p className="font-body-sm text-on-tertiary-container/80">
-                  BalanceBridge has detected a cluster of exams from May 14 to May 20. Protection mode is automatically suggesting a 24-hour buffer before each date.
+                  KIRA has detected a cluster of exams from May 14 to May 20. Protection mode is automatically suggesting a 24-hour buffer before each date.
                 </p>
               </div>
             </div>

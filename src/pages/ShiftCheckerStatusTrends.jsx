@@ -3,7 +3,7 @@ const ShiftCheckerStatusTrends = () => {
     <div className="min-h-screen bg-background text-on-background">
       <header className="fixed top-0 w-full z-[100] bg-slate-50/90 backdrop-blur-md border-b border-slate-200 shadow-sm shadow-sky-900/5 h-16 flex justify-between items-center px-6">
         <div className="flex items-center gap-2">
-          <span className="text-xl font-bold tracking-tight text-sky-700 font-h1">BalanceBridge</span>
+          <span className="text-xl font-bold tracking-tight text-sky-700 font-h1">KIRA</span>
         </div>
         <div className="flex items-center gap-4">
           <button className="p-2 text-slate-500 hover:bg-slate-100 transition-colors rounded-full" type="button">
@@ -17,7 +17,7 @@ const ShiftCheckerStatusTrends = () => {
       <div className="flex pt-16 min-h-screen">
         <aside className="hidden md:flex flex-col w-64 h-[calc(100vh-64px)] fixed left-0 p-4 gap-2 bg-slate-50 border-r border-slate-200 text-sm">
           <div className="px-4 py-2 mb-4">
-            <h2 className="text-lg font-black text-sky-700">BalanceBridge</h2>
+            <h2 className="text-lg font-black text-sky-700">KIRA</h2>
             <p className="text-xs text-slate-400">Academic Flow</p>
           </div>
           <nav className="flex flex-col gap-1">

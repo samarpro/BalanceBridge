@@ -9,7 +9,7 @@ const AddShiftRosterUpload = () => {
       <div className="flex min-h-screen">
         <aside className="hidden md:flex flex-col p-4 gap-2 h-screen w-64 border-r border-slate-200 bg-slate-50 text-sm">
           <div className="px-4 py-6">
-            <h1 className="text-lg font-black text-sky-700">BalanceBridge</h1>
+            <h1 className="text-lg font-black text-sky-700">KIRA</h1>
             <p className="text-xs text-slate-500">Academic Flow</p>
           </div>
           <nav className="flex-1 flex flex-col gap-2">

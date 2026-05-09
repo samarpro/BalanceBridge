@@ -12,7 +12,7 @@ const DashboardWeeklyOverview = () => {
     <div className="font-body-md bg-background text-on-background min-h-screen">
       <aside className="hidden md:flex flex-col h-screen w-64 fixed left-0 border-r border-slate-100 bg-white shadow-xl shadow-sky-900/5 z-50 py-8 px-4 gap-y-2 text-sm font-medium">
         <div className="mb-8 px-2">
-          <h1 className="text-lg font-extrabold text-sky-500 tracking-tight">BalanceBridge</h1>
+          <h1 className="text-lg font-extrabold text-sky-500 tracking-tight">KIRA</h1>
           <p className="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Your Academic Sanctuary</p>
         </div>
         <nav className="flex-1 space-y-3">

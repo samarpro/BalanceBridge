@@ -33,20 +33,20 @@ export function OnboardingLoginPage() {
                 />
 
                 <div className="flex flex-col gap-3">
-                    <Button color="primary" size="lg" className="w-full" onClick={() => navigate("/onboarding/timetable")}>
+                    <Button color="primary" size="lg" className="w-full" onClick={() => navigate("/onboarding/priorities")}>
                         {t("onboarding.login.ssoUniversity")}
                     </Button>
-                    <SocialButton social="google" theme="gray" size="lg" className="w-full">
+                    <SocialButton social="google" theme="gray" size="lg" className="w-full" onClick={() => navigate("/onboarding/priorities")}>
                         {t("onboarding.login.ssoGoogle")}
                     </SocialButton>
-                    <Button color="secondary" size="lg" className="w-full" onClick={() => navigate("/onboarding/timetable")}>
+                    <Button color="secondary" size="lg" className="w-full" onClick={() => navigate("/onboarding/priorities")}>
                         {t("onboarding.login.ssoMicrosoft")}
                     </Button>
                 </div>
 
                 <HintText>{t("onboarding.login.demoNote")}</HintText>
 
-                <Button color="secondary" size="lg" className="w-full" isDisabled={!valid} onClick={() => navigate("/onboarding/timetable")}>
+                <Button color="primary" size="lg" className="w-full" isDisabled={!valid} onClick={() => navigate("/onboarding/priorities")}>
                     {t("onboarding.login.next")}
                 </Button>
             </div>

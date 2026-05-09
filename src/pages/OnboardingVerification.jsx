@@ -13,7 +13,7 @@ const OnboardingVerification = () => {
               shield_with_heart
             </span>
           </div>
-          <h2 className="font-h2 text-h2 text-on-surface tracking-tight">BalanceBridge</h2>
+          <h2 className="font-h2 text-h2 text-on-surface tracking-tight">KIRA</h2>
           <p className="font-body-md text-body-md text-outline">Academic Sanctuary</p>
         </div>
         <div className="w-full max-w-[520px] bg-surface-container-lowest rounded-xl p-md md:p-lg border border-surface-container shadow-card">
@@ -70,7 +70,7 @@ const OnboardingVerification = () => {
           </div>
           <div className="space-y-sm px-md">
             <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-              We use student authentication to ensure every member of BalanceBridge is a verified peer. We do not store your university login credentials, and your student data is used only for the initial verification process.
+              We use student authentication to ensure every member of KIRA is a verified peer. We do not store your university login credentials, and your student data is used only for the initial verification process.
             </p>
             <p className="font-body-sm text-body-sm text-on-surface-variant">
               Questions?{' '}

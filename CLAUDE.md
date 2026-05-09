@@ -1,4 +1,4 @@
-# Balance Bridge — CLAUDE
+# KIRA — CLAUDE
 
 ## Stack
 - Untitled UI React · React 19 + TS · Tailwind v4.2 · React Aria Components foundation.

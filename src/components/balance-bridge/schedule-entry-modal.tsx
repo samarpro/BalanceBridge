@@ -7,22 +7,26 @@ import { NativeSelect } from "@/components/base/select/select-native";
 import { RadioButton } from "@/components/base/radio-buttons/radio-buttons";
 import { RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
 import type { ScheduleEntry, ScheduleKind } from "@/components/balance-bridge/calendar-month";
+import { ScheduleCollisionModal } from "@/components/balance-bridge/schedule-collision-modal";
 import { Dialog, Modal, ModalOverlay } from "@/components/application/modals/modal";
-import { useBalanceBridgeStore } from "@/stores/balance-bridge-store";
+import { useKiraStore } from "@/stores/kira-store";
 import { formatMinutesForTimeInput, parseOptionalTimeToMinutes } from "@/utils/schedule-form";
+import { entriesOverlappingInterval, findNextFreeSlotStart, syntheticEntryForCollision } from "@/utils/schedule-collisions";
 import { defaultTimeRange, getEntryTimeRange, isoFromDate } from "@/utils/schedule-time";
 import { cx } from "@/utils/cx";
 import { t } from "@/i18n/strings";
 
-interface ScheduleEntryEditModalProps {
+export interface ScheduleEntryEditModalProps {
     entry: ScheduleEntry | null;
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
 }
 
 export function ScheduleEntryEditModal({ entry, isOpen, onOpenChange }: ScheduleEntryEditModalProps) {
-    const updateEntry = useBalanceBridgeStore((s) => s.updateEntry);
-    const removeEntry = useBalanceBridgeStore((s) => s.removeEntry);
+    const entries = useKiraStore((s) => s.entries);
+    const lifePriorityOrder = useKiraStore((s) => s.lifePriorityOrder);
+    const updateEntry = useKiraStore((s) => s.updateEntry);
+    const removeEntry = useKiraStore((s) => s.removeEntry);
 
     const [title, setTitle] = useState("");
     const [isoDate, setIsoDate] = useState("");
@@ -32,6 +36,15 @@ export function ScheduleEntryEditModal({ entry, isOpen, onOpenChange }: Schedule
     const [startTime, setStartTime] = useState("");
     const [durationMinutes, setDurationMinutes] = useState("120");
     const [deadlineIso, setDeadlineIso] = useState("");
+
+    const [collision, setCollision] = useState<{
+        overlaps: ScheduleEntry[];
+        patch: Partial<Omit<ScheduleEntry, "id">>;
+        startMin: number;
+        endMin: number;
+        kindResolved: ScheduleKind;
+        suggested: number | null;
+    } | null>(null);
 
     useEffect(() => {
         if (!entry || !isOpen) return;
@@ -45,6 +58,7 @@ export function ScheduleEntryEditModal({ entry, isOpen, onOpenChange }: Schedule
         setStartTime(formatMinutesForTimeInput(range.start));
         const dur = range.end - range.start;
         setDurationMinutes(String(Math.max(15, dur)));
+        setCollision(null);
     }, [entry, isOpen]);
 
     const durationOptions = useMemo(
@@ -62,11 +76,18 @@ export function ScheduleEntryEditModal({ entry, isOpen, onOpenChange }: Schedule
         [],
     );
 
+    const commitUpdate = (patch: Partial<Omit<ScheduleEntry, "id">>) => {
+        if (!entry) return;
+        updateEntry(entry.id, patch);
+        onOpenChange(false);
+        setCollision(null);
+    };
+
     const handleSave = () => {
         if (!entry) return;
         const dm = Number.parseInt(durationMinutes, 10);
         const parsedStart = parseOptionalTimeToMinutes(startTime);
-        updateEntry(entry.id, {
+        const patch: Partial<Omit<ScheduleEntry, "id">> = {
             title: title.trim() || "Untitled",
             isoDate,
             deadlineIso: deadlineIso.trim() ? deadlineIso.trim() : undefined,
@@ -75,81 +96,113 @@ export function ScheduleEntryEditModal({ entry, isOpen, onOpenChange }: Schedule
             completed,
             startMinutes: parsedStart ?? defaultTimeRange(kind).start,
             durationMinutes: Number.isFinite(dm) ? dm : undefined,
-        });
-        onOpenChange(false);
+        };
+        const merged: ScheduleEntry = { ...entry, ...patch };
+        const { start, end } = getEntryTimeRange(merged);
+        const overlaps = entriesOverlappingInterval(entries, merged.isoDate, start, end, entry.id);
+        if (overlaps.length > 0) {
+            const dur = end - start;
+            const suggested = findNextFreeSlotStart(entries, merged.isoDate, dur, entry.id, start);
+            setCollision({ overlaps, patch, startMin: start, endMin: end, kindResolved: merged.kind, suggested });
+            return;
+        }
+        commitUpdate(patch);
     };
 
     const handleDelete = () => {
         if (!entry) return;
         removeEntry(entry.id);
         onOpenChange(false);
+        setCollision(null);
     };
 
     return (
-        <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} isDismissable className="z-[60]">
-            <Modal className={cx("max-h-[min(90vh,720px)] w-full overflow-y-auto rounded-2xl bg-primary p-6 shadow-xl ring-1 ring-secondary sm:max-w-lg")}>
-                <Dialog aria-label={t("calendar.editModal.title")} className="outline-hidden">
-                    <div className="w-full">
-                        <h2 className="text-md font-semibold text-secondary">{t("calendar.editModal.title")}</h2>
+        <>
+            <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} isDismissable className="z-[60]">
+                <Modal className={cx("max-h-[min(90vh,720px)] w-full overflow-y-auto rounded-2xl bg-primary p-6 shadow-xl ring-1 ring-secondary sm:max-w-lg")}>
+                    <Dialog aria-label={t("calendar.editModal.title")} className="outline-hidden">
+                        <div className="w-full">
+                            <h2 className="text-md font-semibold text-secondary">{t("calendar.editModal.title")}</h2>
 
-                        <div className="mt-5 space-y-4">
-                            <Checkbox isSelected={completed} onChange={setCompleted} label={t("calendar.editModal.completed")} />
+                            <div className="mt-5 space-y-4">
+                                <Checkbox isSelected={completed} onChange={setCompleted} label={t("calendar.editModal.completed")} />
 
-                            <Input label={t("calendar.modal.nameLabel")} value={title} onChange={setTitle} />
+                                <Input label={t("calendar.modal.nameLabel")} value={title} onChange={setTitle} />
 
-                            <Input label={t("calendar.modal.dateLabel")} type="date" value={isoDate} onChange={setIsoDate} />
+                                <Input label={t("calendar.modal.dateLabel")} type="date" value={isoDate} onChange={setIsoDate} />
 
-                            <Input
-                                label={t("calendar.modal.deadlineOptional")}
-                                type="date"
-                                value={deadlineIso}
-                                onChange={setDeadlineIso}
-                                hint={t("calendar.modal.deadlineHint")}
-                            />
+                                <Input
+                                    label={t("calendar.modal.deadlineOptional")}
+                                    type="date"
+                                    value={deadlineIso}
+                                    onChange={setDeadlineIso}
+                                    hint={t("calendar.modal.deadlineHint")}
+                                />
 
-                            <Input label={t("calendar.modal.startOptional")} type="time" value={startTime} onChange={setStartTime} hint={t("calendar.modal.startHint")} />
+                                <Input label={t("calendar.modal.startOptional")} type="time" value={startTime} onChange={setStartTime} hint={t("calendar.modal.startHint")} />
 
-                            <NativeSelect
-                                label={t("calendar.modal.duration")}
-                                options={durationOptions}
-                                value={durationMinutes}
-                                onChange={(e) => setDurationMinutes(e.target.value)}
-                            />
+                                <NativeSelect
+                                    label={t("calendar.modal.duration")}
+                                    options={durationOptions}
+                                    value={durationMinutes}
+                                    onChange={(e) => setDurationMinutes(e.target.value)}
+                                />
 
-                            <div>
-                                <p className="mb-2 text-sm font-medium text-secondary">{t("calendar.modal.typeLabel")}</p>
-                                <RadioGroup value={kind} onChange={(v) => setKind(v as ScheduleKind)} className="gap-3">
-                                    <RadioButton value="shift" label={t("calendar.modal.type.shift")} />
-                                    <RadioButton value="exam" label={t("calendar.modal.type.exam")} />
-                                    <RadioButton value="study" label={t("calendar.modal.type.study")} />
-                                </RadioGroup>
-                            </div>
+                                <div>
+                                    <p className="mb-2 text-sm font-medium text-secondary">{t("calendar.modal.typeLabel")}</p>
+                                    <RadioGroup value={kind} onChange={(v) => setKind(v as ScheduleKind)} className="gap-3">
+                                        <RadioButton value="shift" label={t("calendar.modal.type.shift")} />
+                                        <RadioButton value="exam" label={t("calendar.modal.type.exam")} />
+                                        <RadioButton value="study" label={t("calendar.modal.type.study")} />
+                                    </RadioGroup>
+                                </div>
 
-                            <div>
-                                <p className="mb-2 text-sm font-medium text-secondary">{t("calendar.modal.priorityLabel")}</p>
-                                <RadioGroup value={priority} onChange={(v) => setPriority(v as typeof priority)} className="gap-3">
-                                    <RadioButton value="low" label={t("calendar.priority.low")} />
-                                    <RadioButton value="medium" label={t("calendar.priority.medium")} />
-                                    <RadioButton value="high" label={t("calendar.priority.high")} />
-                                </RadioGroup>
-                            </div>
+                                <div>
+                                    <p className="mb-2 text-sm font-medium text-secondary">{t("calendar.modal.priorityLabel")}</p>
+                                    <RadioGroup value={priority} onChange={(v) => setPriority(v as typeof priority)} className="gap-3">
+                                        <RadioButton value="low" label={t("calendar.priority.low")} />
+                                        <RadioButton value="medium" label={t("calendar.priority.medium")} />
+                                        <RadioButton value="high" label={t("calendar.priority.high")} />
+                                    </RadioGroup>
+                                </div>
 
-                            <div className="flex flex-wrap gap-3 pt-2">
-                                <Button color="primary" size="lg" onClick={handleSave}>
-                                    {t("calendar.editModal.save")}
-                                </Button>
-                                <Button color="secondary" size="lg" onClick={() => onOpenChange(false)}>
-                                    {t("calendar.cancel")}
-                                </Button>
-                                <Button color="secondary-destructive" size="lg" iconLeading={Trash01} className="ml-auto" onClick={handleDelete}>
-                                    {t("calendar.editModal.delete")}
-                                </Button>
+                                <div className="flex flex-wrap gap-3 pt-2">
+                                    <Button color="primary" size="lg" onClick={handleSave}>
+                                        {t("calendar.editModal.save")}
+                                    </Button>
+                                    <Button color="secondary" size="lg" onClick={() => onOpenChange(false)}>
+                                        {t("calendar.cancel")}
+                                    </Button>
+                                    <Button color="secondary-destructive" size="lg" iconLeading={Trash01} className="ml-auto" onClick={handleDelete}>
+                                        {t("calendar.editModal.delete")}
+                                    </Button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </Dialog>
-            </Modal>
-        </ModalOverlay>
+                    </Dialog>
+                </Modal>
+            </ModalOverlay>
+
+            {collision && entry && (
+                <ScheduleCollisionModal
+                    isOpen
+                    onOpenChange={(open) => {
+                        if (!open) setCollision(null);
+                    }}
+                    overlaps={collision.overlaps}
+                    proposedTitle={collision.patch.title ?? entry.title}
+                    proposedKind={collision.kindResolved}
+                    proposedStartMin={collision.startMin}
+                    proposedEndMin={collision.endMin}
+                    lifePriorityOrder={lifePriorityOrder}
+                    suggestedStartMin={collision.suggested}
+                    onContinueAnyway={() => commitUpdate(collision.patch)}
+                    onUseSuggestedTime={(sm) => {
+                        commitUpdate({ ...collision.patch, startMinutes: sm });
+                    }}
+                />
+            )}
+        </>
     );
 }
 
@@ -162,7 +215,9 @@ interface ScheduleEntryCreateDetailsModalProps {
 }
 
 export function ScheduleEntryCreateDetailsModal({ isOpen, onOpenChange, initialTitle, onSaved }: ScheduleEntryCreateDetailsModalProps) {
-    const addEntry = useBalanceBridgeStore((s) => s.addEntry);
+    const entries = useKiraStore((s) => s.entries);
+    const lifePriorityOrder = useKiraStore((s) => s.lifePriorityOrder);
+    const addEntry = useKiraStore((s) => s.addEntry);
 
     const [title, setTitle] = useState("");
     const [isoDate, setIsoDate] = useState(() => isoFromDate(new Date()));
@@ -171,6 +226,14 @@ export function ScheduleEntryCreateDetailsModal({ isOpen, onOpenChange, initialT
     const [startTime, setStartTime] = useState("");
     const [durationMinutes, setDurationMinutes] = useState("120");
     const [deadlineIso, setDeadlineIso] = useState("");
+
+    const [collision, setCollision] = useState<{
+        overlaps: ScheduleEntry[];
+        payload: Omit<ScheduleEntry, "id">;
+        startMin: number;
+        endMin: number;
+        suggested: number | null;
+    } | null>(null);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -181,6 +244,7 @@ export function ScheduleEntryCreateDetailsModal({ isOpen, onOpenChange, initialT
         setPriority("medium");
         setStartTime("");
         setDurationMinutes("120");
+        setCollision(null);
     }, [isOpen, initialTitle]);
 
     const durationOptions = useMemo(
@@ -198,9 +262,9 @@ export function ScheduleEntryCreateDetailsModal({ isOpen, onOpenChange, initialT
         [],
     );
 
-    const handleSave = () => {
+    const buildPayload = (): Omit<ScheduleEntry, "id"> => {
         const dm = Number.parseInt(durationMinutes, 10);
-        addEntry({
+        return {
             isoDate,
             deadlineIso: deadlineIso.trim() ? deadlineIso.trim() : undefined,
             title: title.trim() || "Untitled",
@@ -209,71 +273,111 @@ export function ScheduleEntryCreateDetailsModal({ isOpen, onOpenChange, initialT
             completed: false,
             startMinutes: parseOptionalTimeToMinutes(startTime),
             durationMinutes: Number.isFinite(dm) ? dm : undefined,
-        });
+        };
+    };
+
+    const finishCreate = (payload: Omit<ScheduleEntry, "id">) => {
+        addEntry(payload);
         onSaved();
         onOpenChange(false);
+        setCollision(null);
+    };
+
+    const handleSave = () => {
+        const payload = buildPayload();
+        const { start, end } = getEntryTimeRange(syntheticEntryForCollision(payload));
+        const overlaps = entriesOverlappingInterval(entries, payload.isoDate, start, end);
+        if (overlaps.length > 0) {
+            const dur = end - start;
+            const suggested = findNextFreeSlotStart(entries, payload.isoDate, dur, undefined, start);
+            setCollision({ overlaps, payload, startMin: start, endMin: end, suggested });
+            return;
+        }
+        finishCreate(payload);
     };
 
     return (
-        <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} isDismissable className="z-[60]">
-            <Modal className={cx("max-h-[min(90vh,720px)] w-full overflow-y-auto rounded-2xl bg-primary p-6 shadow-xl ring-1 ring-secondary sm:max-w-lg")}>
-                <Dialog aria-label={t("calendar.detailsModal.title")} className="outline-hidden">
-                    <div className="w-full">
-                        <h2 className="text-md font-semibold text-secondary">{t("calendar.detailsModal.title")}</h2>
-                        <p className="mt-1 text-sm text-tertiary">{t("calendar.detailsModal.subtitle")}</p>
+        <>
+            <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} isDismissable className="z-[60]">
+                <Modal className={cx("max-h-[min(90vh,720px)] w-full overflow-y-auto rounded-2xl bg-primary p-6 shadow-xl ring-1 ring-secondary sm:max-w-lg")}>
+                    <Dialog aria-label={t("calendar.detailsModal.title")} className="outline-hidden">
+                        <div className="w-full">
+                            <h2 className="text-md font-semibold text-secondary">{t("calendar.detailsModal.title")}</h2>
+                            <p className="mt-1 text-sm text-tertiary">{t("calendar.detailsModal.subtitle")}</p>
 
-                        <div className="mt-5 space-y-4">
-                            <Input label={t("calendar.modal.nameLabel")} value={title} onChange={setTitle} />
+                            <div className="mt-5 space-y-4">
+                                <Input label={t("calendar.modal.nameLabel")} value={title} onChange={setTitle} />
 
-                            <Input label={t("calendar.modal.dateLabel")} type="date" value={isoDate} onChange={setIsoDate} />
+                                <Input label={t("calendar.modal.dateLabel")} type="date" value={isoDate} onChange={setIsoDate} />
 
-                            <Input
-                                label={t("calendar.modal.deadlineOptional")}
-                                type="date"
-                                value={deadlineIso}
-                                onChange={setDeadlineIso}
-                                hint={t("calendar.modal.deadlineHint")}
-                            />
+                                <Input
+                                    label={t("calendar.modal.deadlineOptional")}
+                                    type="date"
+                                    value={deadlineIso}
+                                    onChange={setDeadlineIso}
+                                    hint={t("calendar.modal.deadlineHint")}
+                                />
 
-                            <Input label={t("calendar.modal.startOptional")} type="time" value={startTime} onChange={setStartTime} hint={t("calendar.modal.startHint")} />
+                                <Input label={t("calendar.modal.startOptional")} type="time" value={startTime} onChange={setStartTime} hint={t("calendar.modal.startHint")} />
 
-                            <NativeSelect
-                                label={t("calendar.modal.duration")}
-                                options={durationOptions}
-                                value={durationMinutes}
-                                onChange={(e) => setDurationMinutes(e.target.value)}
-                            />
+                                <NativeSelect
+                                    label={t("calendar.modal.duration")}
+                                    options={durationOptions}
+                                    value={durationMinutes}
+                                    onChange={(e) => setDurationMinutes(e.target.value)}
+                                />
 
-                            <div>
-                                <p className="mb-2 text-sm font-medium text-secondary">{t("calendar.modal.typeLabel")}</p>
-                                <RadioGroup value={kind} onChange={(v) => setKind(v as ScheduleKind)} className="gap-3">
-                                    <RadioButton value="shift" label={t("calendar.modal.type.shift")} />
-                                    <RadioButton value="exam" label={t("calendar.modal.type.exam")} />
-                                    <RadioButton value="study" label={t("calendar.modal.type.study")} />
-                                </RadioGroup>
-                            </div>
+                                <div>
+                                    <p className="mb-2 text-sm font-medium text-secondary">{t("calendar.modal.typeLabel")}</p>
+                                    <RadioGroup value={kind} onChange={(v) => setKind(v as ScheduleKind)} className="gap-3">
+                                        <RadioButton value="shift" label={t("calendar.modal.type.shift")} />
+                                        <RadioButton value="exam" label={t("calendar.modal.type.exam")} />
+                                        <RadioButton value="study" label={t("calendar.modal.type.study")} />
+                                    </RadioGroup>
+                                </div>
 
-                            <div>
-                                <p className="mb-2 text-sm font-medium text-secondary">{t("calendar.modal.priorityLabel")}</p>
-                                <RadioGroup value={priority} onChange={(v) => setPriority(v as typeof priority)} className="gap-3">
-                                    <RadioButton value="low" label={t("calendar.priority.low")} />
-                                    <RadioButton value="medium" label={t("calendar.priority.medium")} />
-                                    <RadioButton value="high" label={t("calendar.priority.high")} />
-                                </RadioGroup>
-                            </div>
+                                <div>
+                                    <p className="mb-2 text-sm font-medium text-secondary">{t("calendar.modal.priorityLabel")}</p>
+                                    <RadioGroup value={priority} onChange={(v) => setPriority(v as typeof priority)} className="gap-3">
+                                        <RadioButton value="low" label={t("calendar.priority.low")} />
+                                        <RadioButton value="medium" label={t("calendar.priority.medium")} />
+                                        <RadioButton value="high" label={t("calendar.priority.high")} />
+                                    </RadioGroup>
+                                </div>
 
-                            <div className="flex flex-wrap gap-3 pt-2">
-                                <Button color="primary" size="lg" onClick={handleSave}>
-                                    {t("calendar.save")}
-                                </Button>
-                                <Button color="secondary" size="lg" onClick={() => onOpenChange(false)}>
-                                    {t("calendar.cancel")}
-                                </Button>
+                                <div className="flex flex-wrap gap-3 pt-2">
+                                    <Button color="primary" size="lg" onClick={handleSave}>
+                                        {t("calendar.save")}
+                                    </Button>
+                                    <Button color="secondary" size="lg" onClick={() => onOpenChange(false)}>
+                                        {t("calendar.cancel")}
+                                    </Button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </Dialog>
-            </Modal>
-        </ModalOverlay>
+                    </Dialog>
+                </Modal>
+            </ModalOverlay>
+
+            {collision && (
+                <ScheduleCollisionModal
+                    isOpen
+                    onOpenChange={(open) => {
+                        if (!open) setCollision(null);
+                    }}
+                    overlaps={collision.overlaps}
+                    proposedTitle={collision.payload.title}
+                    proposedKind={collision.payload.kind}
+                    proposedStartMin={collision.startMin}
+                    proposedEndMin={collision.endMin}
+                    lifePriorityOrder={lifePriorityOrder}
+                    suggestedStartMin={collision.suggested}
+                    onContinueAnyway={() => finishCreate(collision.payload)}
+                    onUseSuggestedTime={(sm) => {
+                        finishCreate({ ...collision.payload, startMinutes: sm });
+                    }}
+                />
+            )}
+        </>
     );
 }

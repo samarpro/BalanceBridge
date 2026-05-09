@@ -7,7 +7,7 @@ const OnboardingWelcome = () => {
         <header className="w-full flex justify-center mb-lg">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-primary text-3xl">shield_with_heart</span>
-            <span className="font-h2 text-h3 tracking-tight text-on-surface">BalanceBridge</span>
+            <span className="font-h2 text-h3 tracking-tight text-on-surface">KIRA</span>
           </div>
         </header>
         <div className="flex-1 w-full flex flex-col md:flex-row items-center gap-lg md:gap-xl">
@@ -19,7 +19,7 @@ const OnboardingWelcome = () => {
               Find Your Academic <span className="text-primary italic">Rhythm</span>
             </h1>
             <p className="font-body-lg text-body-lg text-on-surface-variant max-w-lg mx-auto md:mx-0">
-              Transform your high-stress study cycles into a sustainable flow. BalanceBridge helps you manage shifts, track exam prep, and prioritize your wellbeing.
+              Transform your high-stress study cycles into a sustainable flow. KIRA helps you manage shifts, track exam prep, and prioritize your wellbeing.
             </p>
             <div className="pt-sm space-y-sm">
               <div className="flex items-center gap-3 justify-center md:justify-start group">

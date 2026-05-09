@@ -5,7 +5,7 @@ import { FeaturedIcon } from "@/components/foundations/featured-icon/featured-ic
 import { Button } from "@/components/base/buttons/button";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Input } from "@/components/base/input/input";
-import { useBalanceBridgeStore } from "@/stores/balance-bridge-store";
+import { useKiraStore } from "@/stores/kira-store";
 import {
     calendarWeekKindMinutes,
     estimatedWeekScreenMinutes,
@@ -19,11 +19,11 @@ import { t } from "@/i18n/strings";
 const sleepSeed = [6.5, 7.25, 6.0, 7.8, 5.5, 8.0, 7.1];
 
 export function WellbeingPanel() {
-    const entries = useBalanceBridgeStore((s) => s.entries);
-    const wellbeingTasks = useBalanceBridgeStore((s) => s.wellbeingTasks);
-    const addWellbeingTask = useBalanceBridgeStore((s) => s.addWellbeingTask);
-    const toggleWellbeingTask = useBalanceBridgeStore((s) => s.toggleWellbeingTask);
-    const removeWellbeingTask = useBalanceBridgeStore((s) => s.removeWellbeingTask);
+    const entries = useKiraStore((s) => s.entries);
+    const wellbeingTasks = useKiraStore((s) => s.wellbeingTasks);
+    const addWellbeingTask = useKiraStore((s) => s.addWellbeingTask);
+    const toggleWellbeingTask = useKiraStore((s) => s.toggleWellbeingTask);
+    const removeWellbeingTask = useKiraStore((s) => s.removeWellbeingTask);
 
     const [task, setTask] = useState("");
 
