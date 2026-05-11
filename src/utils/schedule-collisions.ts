@@ -1,4 +1,4 @@
-import type { ScheduleEntry } from "@/components/balance-bridge/calendar-month";
+import type { ScheduleEntry } from "@/components/kira/calendar-month";
 import { DAY_END_MIN, DAY_START_MIN, getEntryTimeRange } from "@/utils/schedule-time";
 
 export function syntheticEntryForCollision(payload: Omit<ScheduleEntry, "id">): ScheduleEntry {

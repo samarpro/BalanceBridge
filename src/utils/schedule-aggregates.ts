@@ -1,4 +1,4 @@
-import type { ScheduleEntry, ScheduleKind } from "@/components/balance-bridge/calendar-month";
+import type { ScheduleEntry, ScheduleKind } from "@/components/kira/calendar-month";
 import { addDays, getEntryTimeRange, isoFromDate, startOfWeekMonday } from "@/utils/schedule-time";
 
 export function entryDurationMinutes(e: ScheduleEntry): number {
@@ -45,6 +45,33 @@ export function calendarWeekKindMinutes(entries: ScheduleEntry[], kind: Schedule
     const ws = startOfWeekMonday(ref);
     const we = addDays(ws, 6);
     return minutesForKindInDateRange(entries, kind, ws, we);
+}
+
+const WEEKDAY_SHORT = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] as const;
+
+/** Per-day scheduled minutes for Mon–Sun of the ISO week containing `ref` (local). */
+export interface CalendarWeekDayLoad {
+    day: (typeof WEEKDAY_SHORT)[number];
+    shift: number;
+    study: number;
+    exam: number;
+}
+
+export function calendarWeekMinutesByDay(entries: ScheduleEntry[], ref = new Date()): CalendarWeekDayLoad[] {
+    const ws = startOfWeekMonday(ref);
+    const out: CalendarWeekDayLoad[] = [];
+    for (let i = 0; i < 7; i++) {
+        const day = addDays(ws, i);
+        day.setHours(0, 0, 0, 0);
+        const end = new Date(day);
+        out.push({
+            day: WEEKDAY_SHORT[i],
+            shift: minutesForKindInDateRange(entries, "shift", day, end),
+            study: minutesForKindInDateRange(entries, "study", day, end),
+            exam: minutesForKindInDateRange(entries, "exam", day, end),
+        });
+    }
+    return out;
 }
 
 export function formatMinutesAsHoursMinutes(total: number): string {

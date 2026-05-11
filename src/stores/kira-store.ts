@@ -1,6 +1,7 @@
 import { create } from "zustand";
-import type { ScheduleEntry } from "@/components/balance-bridge/calendar-month";
+import type { ScheduleEntry } from "@/components/kira/calendar-month";
 import { loadLifePriorityOrder, saveLifePriorityOrder } from "@/lib/life-priority-storage";
+import { loadUserProfile, saveUserProfile, type UserProfile } from "@/lib/profile-storage";
 import type { LifePriorityId } from "@/types/life-priority";
 import { isoFromDate } from "@/utils/schedule-time";
 
@@ -67,9 +68,19 @@ interface KiraStoreState {
     wellbeingTasks: WellbeingTask[];
     /** Target focused study minutes for the current calendar week (synced with dashboard goal). */
     weeklyStudyGoalMinutes: number;
+    /** Rolling 14-day shift total is compared against this cap (hours). Persisted with profile. */
+    fortnightWorkLimitHours: number;
+    /** True while the optional “edit limits” dialog is open (required gate uses profile flag instead). */
+    limitsEditorOpen: boolean;
+    openLimitsEditor: () => void;
+    closeLimitsEditor: () => void;
+    completeLimitsSetup: (weeklyStudyGoalMinutes: number, fortnightWorkLimitHours: number) => void;
     /** Onboarding life-area ranking (first = most important). Persisted in localStorage. */
     lifePriorityOrder: LifePriorityId[];
     setLifePriorityOrder: (order: LifePriorityId[]) => void;
+    /** Name + university email from onboarding; persisted in localStorage. */
+    userProfile: UserProfile;
+    setUserProfile: (patch: Partial<UserProfile>) => void;
     addEntry: (entry: Omit<ScheduleEntry, "id">) => string;
     updateEntry: (id: string, patch: Partial<Omit<ScheduleEntry, "id">>) => void;
     removeEntry: (id: string) => void;
@@ -78,18 +89,51 @@ interface KiraStoreState {
     removeWellbeingTask: (id: string) => void;
 }
 
+const initialProfile = loadUserProfile();
+
 export const useKiraStore = create<KiraStoreState>((set) => ({
     entries: seedEntries(),
     wellbeingTasks: [
         { id: newWellbeingId(), label: "Hydrate before evening shift", completed: false },
         { id: newWellbeingId(), label: "Phone-free hour before sleep", completed: false },
     ],
-    weeklyStudyGoalMinutes: 720,
+    weeklyStudyGoalMinutes: initialProfile.weeklyStudyGoalMinutes,
+    fortnightWorkLimitHours: initialProfile.fortnightWorkLimitHours,
+    limitsEditorOpen: false,
+    openLimitsEditor: () => set({ limitsEditorOpen: true }),
+    closeLimitsEditor: () => set({ limitsEditorOpen: false }),
+    completeLimitsSetup: (weeklyStudyGoalMinutes, fortnightWorkLimitHours) =>
+        set((s) => {
+            const nextProfile: UserProfile = {
+                ...s.userProfile,
+                limitsConfigured: true,
+                weeklyStudyGoalMinutes,
+                fortnightWorkLimitHours,
+            };
+            saveUserProfile(nextProfile);
+            return {
+                userProfile: nextProfile,
+                weeklyStudyGoalMinutes,
+                fortnightWorkLimitHours,
+                limitsEditorOpen: false,
+            };
+        }),
     lifePriorityOrder: loadLifePriorityOrder(),
+    userProfile: initialProfile,
     setLifePriorityOrder: (order) => {
         saveLifePriorityOrder(order);
         set({ lifePriorityOrder: [...order] });
     },
+    setUserProfile: (patch) =>
+        set((s) => {
+            const next: UserProfile = { ...s.userProfile, ...patch };
+            saveUserProfile(next);
+            return {
+                userProfile: next,
+                ...(typeof patch.weeklyStudyGoalMinutes === "number" ? { weeklyStudyGoalMinutes: patch.weeklyStudyGoalMinutes } : {}),
+                ...(typeof patch.fortnightWorkLimitHours === "number" ? { fortnightWorkLimitHours: patch.fortnightWorkLimitHours } : {}),
+            };
+        }),
     addEntry: (entry) => {
         const id = newEntryId();
         set((s) => ({

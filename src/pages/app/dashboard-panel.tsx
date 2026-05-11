@@ -3,9 +3,9 @@ import { ArrowUpRight, ChevronLeft, ChevronRight } from "@untitledui/icons";
 import { Badge } from "@/components/base/badges/badges";
 import { Button } from "@/components/base/buttons/button";
 import { ProgressBar } from "@/components/base/progress-indicators/progress-indicators";
-import type { ScheduleEntry, ScheduleKind } from "@/components/balance-bridge/calendar-month";
-import { DayScheduleTimeline } from "@/components/balance-bridge/day-schedule-timeline";
-import { ScheduleEntryEditModal } from "@/components/balance-bridge/schedule-entry-modal";
+import type { ScheduleEntry, ScheduleKind } from "@/components/kira/calendar-month";
+import { DayScheduleTimeline } from "@/components/kira/day-schedule-timeline";
+import { ScheduleEntryEditModal } from "@/components/kira/schedule-entry-modal";
 import { MOCK_EVENTS } from "@/data/mock-events";
 import { useCollisionGuardedAdd } from "@/hooks/use-collision-guarded-add";
 import { useKiraStore } from "@/stores/kira-store";
@@ -21,8 +21,6 @@ import { t } from "@/i18n/strings";
 interface DashboardPanelProps {
     onOpenTab: (tab: string) => void;
 }
-
-const FORTNIGHT_CAP_HOURS = 48;
 
 function formatIsoShort(iso: string): string {
     const [y, m, d] = iso.split("-").map(Number);
@@ -78,6 +76,8 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
     const entries = useKiraStore((s) => s.entries);
     const { tryAdd, collisionModal } = useCollisionGuardedAdd();
     const weeklyStudyGoalMinutes = useKiraStore((s) => s.weeklyStudyGoalMinutes);
+    const fortnightWorkLimitHours = useKiraStore((s) => s.fortnightWorkLimitHours);
+    const openLimitsEditor = useKiraStore((s) => s.openLimitsEditor);
 
     const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
 
@@ -92,8 +92,8 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
     const fortnightWorkMinutes = useMemo(() => fortnightShiftMinutes(entries, refDay), [entries, refDay]);
     const weekStudyMinutes = useMemo(() => calendarWeekKindMinutes(entries, "study", refDay), [entries, refDay]);
 
-    const workHoursDisplay = Math.min(fortnightWorkMinutes / 60, FORTNIGHT_CAP_HOURS);
-    const studyGoalPercent = Math.min(100, Math.round((weekStudyMinutes / Math.max(weeklyStudyGoalMinutes, 1)) * 100));
+    const workHoursActual = fortnightWorkMinutes / 60;
+    const workCapHours = Math.max(fortnightWorkLimitHours, 1);
 
     const upcoming = useMemo(() => [...entries].sort((a, b) => a.isoDate.localeCompare(b.isoDate)).slice(0, 4), [entries]);
 
@@ -144,17 +144,22 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
         <div className="flex flex-col gap-8">
             <div className="grid gap-6 lg:grid-cols-2">
                 <section className="rounded-xl ring-1 ring-secondary bg-primary_alt p-5">
-                    <h2 className="text-lg font-semibold text-secondary">{t("dashboard.workHours")}</h2>
+                    <div className="flex flex-wrap items-start justify-between gap-2">
+                        <h2 className="text-lg font-semibold text-secondary">{t("dashboard.workHours")}</h2>
+                        <Button color="link-color" size="sm" className="px-0" onClick={() => openLimitsEditor()}>
+                            {t("dashboard.editLimits")}
+                        </Button>
+                    </div>
                     <p className="mt-1 text-sm text-tertiary">{t("dashboard.workHoursCaption")}</p>
                     <p className="mt-4 text-sm font-medium text-secondary">
-                        {(fortnightWorkMinutes / 60).toFixed(1)} h / {FORTNIGHT_CAP_HOURS} h
+                        {workHoursActual.toFixed(1)} h / {fortnightWorkLimitHours} h
                     </p>
                     <ProgressBar
                         className="mt-3"
-                        value={workHoursDisplay}
-                        max={FORTNIGHT_CAP_HOURS}
+                        value={workHoursActual}
+                        max={workCapHours}
                         labelPosition="bottom"
-                        valueFormatter={(v) => `${v.toFixed(1)} h`}
+                        valueFormatter={(v, p) => `${v.toFixed(1)} h (${Math.round(p)}%)`}
                     />
                 </section>
 
@@ -164,7 +169,13 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
                     <p className="mt-4 text-sm font-medium text-secondary">
                         {formatMinutesAsHoursMinutes(weekStudyMinutes)} / {formatMinutesAsHoursMinutes(weeklyStudyGoalMinutes)}
                     </p>
-                    <ProgressBar className="mt-4" value={studyGoalPercent} labelPosition="right" valueFormatter={() => `${studyGoalPercent}%`} />
+                    <ProgressBar
+                        className="mt-4"
+                        value={weekStudyMinutes}
+                        max={Math.max(weeklyStudyGoalMinutes, 1)}
+                        labelPosition="right"
+                        valueFormatter={(_, p) => `${Math.round(p)}%`}
+                    />
                 </section>
             </div>
 

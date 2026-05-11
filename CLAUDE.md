@@ -14,7 +14,7 @@
 - `npm run build` — production build
 
 ## `src/`
-- `components/{base,application,foundations,marketing,shared-assets}`, `hooks`, `pages`, `providers`, `styles`, `types`, `utils`
+- `components/{base,application,foundations,marketing,shared-assets,kira}`, `hooks`, `pages`, `providers`, `styles`, `types`, `utils`
 
 ## Patterns
 - Compound: `Select.Item`, `Select.ComboBox`.

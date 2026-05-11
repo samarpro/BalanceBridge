@@ -1,4 +1,4 @@
-import type { ScheduleKind } from "@/components/balance-bridge/calendar-month";
+import type { ScheduleKind } from "@/components/kira/calendar-month";
 
 /** Life areas working students juggle — ordered in onboarding (first = most important). */
 export type LifePriorityId = "study" | "work" | "health" | "personal" | "social" | "rest";

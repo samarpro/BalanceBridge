@@ -1,4 +1,4 @@
-import type { ScheduleEntry } from "@/components/balance-bridge/calendar-month";
+import type { ScheduleEntry } from "@/components/kira/calendar-month";
 import { Button } from "@/components/base/buttons/button";
 import { Dialog, Modal, ModalOverlay } from "@/components/application/modals/modal";
 import { lifeAreaForScheduleKind, rankOfLifeArea, type LifePriorityId } from "@/types/life-priority";

@@ -2,7 +2,9 @@ import type { TabRenderProps } from "react-aria-components";
 import { useState } from "react";
 import { BarChartSquare02, Calendar as CalendarIcon, HeartRounded, Users01 } from "@untitledui/icons";
 import { Tabs } from "@/components/application/tabs/tabs";
-import { ThemeToggle } from "@/components/balance-bridge/theme-toggle";
+import { LimitsSetupModal } from "@/components/kira/limits-setup-modal";
+import { ThemeToggle } from "@/components/kira/theme-toggle";
+import { useKiraStore } from "@/stores/kira-store";
 import { t } from "@/i18n/strings";
 import { DashboardPanel } from "@/pages/app/dashboard-panel";
 import { CalendarPanel } from "@/pages/app/calendar-panel";
@@ -24,9 +26,11 @@ function glassNavTabClass({ isSelected, isFocusVisible, isHovered }: TabRenderPr
 
 function AppTabs() {
     const [tab, setTab] = useState("dashboard");
+    const limitsConfigured = useKiraStore((s) => s.userProfile.limitsConfigured);
+    const limitsEditorOpen = useKiraStore((s) => s.limitsEditorOpen);
 
     return (
-        <Tabs selectedKey={tab} onSelectionChange={(k) => k != null && setTab(String(k))} className="flex min-h-dvh flex-col bg-primary">
+        <Tabs selectedKey={tab} onSelectionChange={(k) => k != null && setTab(String(k))} className="flex h-dvh min-h-0 flex-col overflow-hidden bg-primary">
             <header className="sticky top-0 z-30 border-b border-white/25 bg-primary/55 pb-3 shadow-[0_12px_40px_-16px_rgba(15,23,42,0.2)] backdrop-blur-2xl backdrop-saturate-150 dark:border-white/10 dark:bg-black/35 dark:shadow-[0_14px_48px_-18px_rgba(0,0,0,0.55)] supports-[backdrop-filter]:bg-primary/45 supports-[backdrop-filter]:dark:bg-black/30">
                 <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 pt-4 md:flex-row md:items-center md:justify-between md:px-8">
                     <div>
@@ -64,17 +68,23 @@ function AppTabs() {
                 </div>
             </header>
 
-            <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 md:px-8 md:py-8">
-                <Tabs.Panel id="dashboard" className="outline-hidden">
+            <LimitsSetupModal
+                isOpen={!limitsConfigured || limitsEditorOpen}
+                isRequired={!limitsConfigured}
+                onOpenChange={() => undefined}
+            />
+
+            <main className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col overflow-hidden px-4 py-6 md:px-8 md:py-8">
+                <Tabs.Panel id="dashboard" className="outline-hidden min-h-0 flex-1 overflow-y-auto">
                     <DashboardPanel onOpenTab={(id) => setTab(id)} />
                 </Tabs.Panel>
-                <Tabs.Panel id="calendar" className="outline-hidden">
+                <Tabs.Panel id="calendar" className="outline-hidden min-h-0 flex-1 overflow-y-auto">
                     <CalendarPanel />
                 </Tabs.Panel>
-                <Tabs.Panel id="wellbeing" className="outline-hidden">
+                <Tabs.Panel id="wellbeing" className="outline-hidden flex min-h-0 flex-1 flex-col overflow-hidden">
                     <WellbeingPanel />
                 </Tabs.Panel>
-                <Tabs.Panel id="events" className="outline-hidden">
+                <Tabs.Panel id="events" className="outline-hidden min-h-0 flex-1 overflow-y-auto">
                     <EventsPanel />
                 </Tabs.Panel>
             </main>

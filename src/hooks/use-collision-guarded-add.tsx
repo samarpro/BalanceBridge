@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type { ScheduleEntry } from "@/components/balance-bridge/calendar-month";
-import { ScheduleCollisionModal } from "@/components/balance-bridge/schedule-collision-modal";
+import type { ScheduleEntry } from "@/components/kira/calendar-month";
+import { ScheduleCollisionModal } from "@/components/kira/schedule-collision-modal";
 import { useKiraStore } from "@/stores/kira-store";
 import { entriesOverlappingInterval, findNextFreeSlotStart, syntheticEntryForCollision } from "@/utils/schedule-collisions";
 import { getEntryTimeRange } from "@/utils/schedule-time";

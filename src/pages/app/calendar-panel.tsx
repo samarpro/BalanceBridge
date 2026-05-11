@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Button } from "@/components/base/buttons/button";
-import { Input } from "@/components/base/input/input";
-import { SchedulePlanner } from "@/components/balance-bridge/schedule-planner";
-import { ScheduleEntryCreateDetailsModal } from "@/components/balance-bridge/schedule-entry-modal";
+import { HintText } from "@/components/base/input/hint-text";
+import { InputBase, TextField } from "@/components/base/input/input";
+import { Label } from "@/components/base/input/label";
+import { SchedulePlanner } from "@/components/kira/schedule-planner";
+import { ScheduleEntryCreateDetailsModal } from "@/components/kira/schedule-entry-modal";
 import { useCollisionGuardedAdd } from "@/hooks/use-collision-guarded-add";
 import { useKiraStore } from "@/stores/kira-store";
 import { isoFromDate } from "@/utils/schedule-time";
@@ -45,24 +47,29 @@ export function CalendarPanel() {
                 )}
             >
                 <p className="text-xs font-semibold uppercase tracking-wide text-quaternary">{t("calendar.quickAddSectionLabel")}</p>
-                <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end">
-                    <Input
-                        label={t("calendar.modal.nameLabel")}
-                        placeholder={t("calendar.addPlaceholder")}
-                        className="flex-1"
-                        value={title}
-                        onChange={setTitle}
-                        hint={t("calendar.quickAddHint")}
-                    />
-                    <div className="flex shrink-0 flex-wrap gap-2">
-                        <Button color="primary" size="lg" onClick={handleQuickAdd}>
-                            {t("calendar.quickAdd")}
-                        </Button>
-                        <Button color="secondary" size="lg" onClick={() => setDetailsOpen(true)}>
-                            {t("calendar.quickAddDetails")}
-                        </Button>
-                    </div>
-                </div>
+                <TextField value={title} onChange={setTitle} size="lg" className="w-full gap-1.5">
+                    {({ isRequired, isInvalid }) => (
+                        <>
+                            <Label isRequired={isRequired} isInvalid={isInvalid}>
+                                {t("calendar.modal.nameLabel")}
+                            </Label>
+                            <div className="flex gap-5 sm:flex-row sm:items-center flex-wrap w-full ">
+                                <div className="min-w-70 flex-1">
+                                    <InputBase placeholder={t("calendar.addPlaceholder")} />
+                                </div>
+                                <div className="flex shrink-0 flex-wrap gap-2">
+                                    <Button color="primary" size="lg" onClick={handleQuickAdd}>
+                                        {t("calendar.quickAdd")}
+                                    </Button>
+                                    <Button color="secondary" size="lg" onClick={() => setDetailsOpen(true)}>
+                                        {t("calendar.quickAddDetails")}
+                                    </Button>
+                                </div>
+                            </div>
+                            <HintText isInvalid={isInvalid}>{t("calendar.quickAddHint")}</HintText>
+                        </>
+                    )}
+                </TextField>
             </section>
 
             <ScheduleEntryCreateDetailsModal

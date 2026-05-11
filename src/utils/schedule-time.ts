@@ -1,4 +1,4 @@
-import type { ScheduleEntry, ScheduleKind } from "@/components/balance-bridge/calendar-month";
+import type { ScheduleEntry, ScheduleKind } from "@/components/kira/calendar-month";
 
 /** Visible planner range (local), 6:00–22:00 */
 export const DAY_START_MIN = 6 * 60;

@@ -1,4 +1,4 @@
-import type { ScheduleEntry } from "@/components/balance-bridge/calendar-month";
+import type { ScheduleEntry } from "@/components/kira/calendar-month";
 import { isoFromDate } from "@/utils/schedule-time";
 
 /** Due-date used for “what first?” ranking: explicit deadline, else scheduled calendar date. */

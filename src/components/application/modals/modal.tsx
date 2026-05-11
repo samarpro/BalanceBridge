@@ -4,15 +4,21 @@ import { cx } from "@/utils/cx";
 
 export const DialogTrigger = AriaDialogTrigger;
 
+const overlayEnter = "motion-safe:animate-in motion-safe:fade-in motion-safe:duration-300 motion-safe:ease-out";
+const overlayExit = "motion-safe:animate-out motion-safe:fade-out motion-safe:duration-200 motion-safe:ease-in";
+const modalEnter =
+    "motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:slide-in-from-bottom-6 motion-safe:duration-350 motion-safe:ease-[cubic-bezier(0.16,1,0.3,1)] sm:motion-safe:slide-in-from-bottom-0";
+const modalExit = "motion-safe:animate-out motion-safe:fade-out motion-safe:zoom-out-95 motion-safe:duration-200 motion-safe:ease-in";
+
 export const ModalOverlay = (props: AriaModalOverlayProps) => {
     return (
         <AriaModalOverlay
             {...props}
             className={(state) =>
                 cx(
-                    "fixed inset-0 z-50 flex min-h-dvh w-full items-end justify-center overflow-y-auto bg-overlay/70 px-4 pt-4 pb-[clamp(16px,8vh,64px)] outline-hidden backdrop-blur-[6px] sm:items-center sm:justify-center sm:p-8",
-                    state.isEntering && "duration-300 ease-out animate-in fade-in",
-                    state.isExiting && "duration-200 ease-in animate-out fade-out",
+                    "pointer-events-auto fixed inset-0 z-[100] flex min-h-dvh w-full items-end justify-center overflow-y-auto bg-overlay/70 px-4 pt-4 pb-[clamp(16px,8vh,64px)] outline-hidden backdrop-blur-[6px] sm:items-center sm:justify-center sm:p-8",
+                    state.isEntering && overlayEnter,
+                    state.isExiting && overlayExit,
                     typeof props.className === "function" ? props.className(state) : props.className,
                 )
             }
@@ -25,9 +31,9 @@ export const Modal = (props: AriaModalOverlayProps) => (
         {...props}
         className={(state) =>
             cx(
-                "max-h-full w-full align-middle outline-hidden max-sm:overflow-y-auto max-sm:rounded-xl",
-                state.isEntering && "duration-300 ease-out animate-in zoom-in-95",
-                state.isExiting && "duration-200 ease-in animate-out zoom-out-95",
+                "pointer-events-auto relative z-[1] max-h-full w-full align-middle outline-hidden max-sm:overflow-y-auto max-sm:rounded-xl",
+                state.isEntering && modalEnter,
+                state.isExiting && modalExit,
                 typeof props.className === "function" ? props.className(state) : props.className,
             )
         }

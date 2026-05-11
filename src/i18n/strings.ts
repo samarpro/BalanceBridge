@@ -12,10 +12,18 @@ export const catalog = {
     "onboarding.welcome.socialProof": "Trusted by 10+ students across campuses (pilot).",
     "onboarding.welcome.cta": "Continue",
 
-    "onboarding.login.title": "Sign in with your university account",
+    "onboarding.login.title": "Your name and account",
+    "onboarding.login.subtitle":
+        "Add how we should greet you, your university email, and a password. SSO options below are still a demo—no real sign-in yet.",
+    "onboarding.login.nameLabel": "Preferred name",
+    "onboarding.login.nameHint": "Used to personalise KIRA after onboarding.",
+    "onboarding.login.namePlaceholder": "Alex",
     "onboarding.login.emailLabel": "University email",
     "onboarding.login.emailHint": "We use this to verify you are a student before enabling social features.",
     "onboarding.login.emailPlaceholder": "you@student.university.edu.au",
+    "onboarding.login.passwordLabel": "Password",
+    "onboarding.login.passwordHint": "Demo only — not stored or sent anywhere. A real build would authenticate securely here.",
+    "onboarding.login.passwordPlaceholder": "Choose a password",
     "onboarding.login.ssoUniversity": "Continue with university SSO",
     "onboarding.login.ssoGoogle": "Continue with Google (Calendar)",
     "onboarding.login.ssoMicrosoft": "Continue with Microsoft (Outlook)",
@@ -79,6 +87,19 @@ export const catalog = {
     "aria.nextDay": "Next day",
 
     "dashboard.calendarPreview": "This month",
+    "dashboard.editLimits": "Adjust study & work limits",
+
+    "limits.modalTitle": "Set your weekly guardrails",
+    "limits.modalBodyRequired":
+        "Tell KIRA how much study time you are aiming for each week and how many paid hours you want to cap across a fortnight. You can change these later from the dashboard.",
+    "limits.modalBodyOptional":
+        "Update your weekly study target and fortnight work cap. These drive progress rings on your dashboard and wellbeing view.",
+    "limits.studyHoursLabel": "Study target (hours per week)",
+    "limits.studyHoursHint": "Typical range 8–25. Calendar study blocks this ISO week are compared to this goal.",
+    "limits.workHoursLabel": "Work limit (hours per fortnight)",
+    "limits.workHoursHint": "Typical range 20–48. Rolling 14-day shift totals from your calendar are compared to this cap.",
+    "limits.save": "Save limits",
+    "limits.cancel": "Cancel",
 
     "calendar.newTaskDefaultTitle": "New task",
     "calendar.addPlaceholder": "What do you want to schedule?",
@@ -136,25 +157,27 @@ export const catalog = {
 
     "aria.weekPlannerGrid": "Week schedule grid",
 
-    "wellbeing.title": "Rhythm & recovery",
+    "wellbeing.welcome": "Welcome, {{name}}",
+    "wellbeing.welcomeGuest": "Welcome",
+    "wellbeing.editLimits": "Adjust study & work limits",
     "wellbeing.subtitle": "Study and work totals mirror your calendar; screen time is a gentle estimate from that rhythm.",
-    "wellbeing.study": "Study focus",
-    "wellbeing.studyHint": "Study-slot duration from your calendar this week.",
-    "wellbeing.screen": "Screen time",
-    "wellbeing.screenHint": "Estimated from your weekly study rhythm (demo heuristic).",
-    "wellbeing.work": "Paid work",
-    "wellbeing.workHint": "Shift duration from your calendar over the last 14 days.",
-    "wellbeing.workMonthTitle": "Monthly shift distribution",
-    "wellbeing.workMonthSubtitle": "Paid shift hours by calendar week (Mon–Sun). Only days inside this month are counted in each bar.",
-    "wellbeing.workMonthTotal": "Month total",
-    "wellbeing.workMonthAvg": "Avg / week",
-    "wellbeing.workMonthPeak": "Peak week",
-    "wellbeing.workMonthEmpty": "No shift blocks this month yet — add shifts on the Calendar tab to see your rhythm here.",
-    "wellbeing.sleepChart": "Sleep hours (last 7 nights)",
-    "wellbeing.addTask": "Wellbeing tasks",
+    "wellbeing.ringStudyTitle": "Study focus",
+    "wellbeing.ringStudySubtitle": "Calendar study blocks this ISO week vs your weekly target.",
+    "wellbeing.ringWorkTitle": "Paid work",
+    "wellbeing.ringWorkSubtitle": "Shift minutes in the last 14 days vs your fortnight cap.",
+    "wellbeing.ringScreenTitle": "Screen time",
+    "wellbeing.ringScreenSubtitle": "Estimated from your study rhythm (demo heuristic), capped at 16 h/week.",
+    "wellbeing.ringWeekLoadTitle": "Week load",
+    "wellbeing.ringWeekLoadSubtitle": "Shifts, study, and exams combined — compared to a soft week budget.",
+    "wellbeing.ringMonthTitle": "Month shifts",
+    "wellbeing.ringMonthSubtitle": "Paid shift hours this calendar month vs an 80 h/month reference pace.",
+    "wellbeing.ringPercentOfGoal": "{{pct}}% of goal",
+    "wellbeing.ringPercentOfCap": "{{pct}}% of cap",
+    "wellbeing.ringPercentOfGuide": "{{pct}}% of guide",
+    "wellbeing.tasksTileTitle": "Wellbeing tasks",
+    "wellbeing.tasksTileSubtitle": "Compact checklist — scroll inside this card if the list grows.",
     "wellbeing.addTaskButton": "Add task",
     "wellbeing.taskPlaceholder": "e.g. Walk 20 minutes after lab",
-    "wellbeing.tasksSubtitle": "Check items off as you go, or remove what no longer fits your week.",
     "wellbeing.removeTask": "Remove task",
 
     "events.title": "Campus events",
@@ -198,6 +221,13 @@ export type MessageId = keyof typeof catalog;
 /** Translation-ready accessor — swap implementation for locale bundles later. */
 export function t(id: MessageId): string {
     return catalog[id];
+}
+
+/** Personalised wellbeing greeting using onboarding preferred name. */
+export function tWellbeingWelcome(displayName: string): string {
+    const n = displayName.trim();
+    if (!n) return catalog["wellbeing.welcomeGuest"];
+    return catalog["wellbeing.welcome"].replace("{{name}}", n);
 }
 
 /** Simple interpolation helper for numeric placeholders. */
