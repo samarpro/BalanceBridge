@@ -4,17 +4,22 @@
  */
 export const catalog = {
     "app.name": "KIRA",
-    "app.tagline": "✨ Study, work, and wellbeing in one prioritized place.",
+    "app.tagline": "Study, work & wellbeing — prioritized.",
+    "app.taglineDetail": "✨ Study, work, and wellbeing in one prioritized place.",
 
     "onboarding.welcome.title": "👋 Welcome to KIRA",
+    "onboarding.welcome.lead": "One calm place for your week.",
     "onboarding.welcome.body":
         "Protect study time, stay inside work-hour limits, and find low-pressure campus connection—all in one schedule.",
     "onboarding.welcome.socialProof": "Trusted by 10+ students across campuses (pilot).",
+    "onboarding.welcome.hintTitle": "What KIRA does for you",
     "onboarding.welcome.cta": "Continue",
 
     "onboarding.login.title": "Your name and account",
-    "onboarding.login.subtitle":
+    "onboarding.login.subtitle": "Local demo profile — details on hover.",
+    "onboarding.login.subtitleDetail":
         "Tell us how to greet you and which email you use on campus. Your timetable, tasks, and RSVPs stay in this browser on your device until you connect a real account in a future build.",
+    "onboarding.login.hintTitle": "Privacy & storage",
     "onboarding.login.nameLabel": "Preferred name",
     "onboarding.login.nameHint": "Used to personalise KIRA after onboarding.",
     "onboarding.login.namePlaceholder": "Alex",
@@ -28,13 +33,16 @@ export const catalog = {
     "onboarding.login.ssoUniversity": "Continue with university SSO",
     "onboarding.login.ssoGoogle": "Continue with Google (Calendar)",
     "onboarding.login.ssoMicrosoft": "Continue with Microsoft (Outlook)",
+    "onboarding.login.demoLead": "Demo only — SSO is simulated.",
     "onboarding.login.demoNote": "Demo only — SSO would open your institution’s login page.",
     "onboarding.login.next": "Continue",
 
     "onboarding.priorities.title": "What matters most in your week?",
+    "onboarding.priorities.lead": "Reorder the list — top items win when times clash.",
     "onboarding.priorities.body":
         "Drag isn’t required—move items up or down. KIRA uses this order when two blocks collide: we’ll nudge you toward what you said matters most.",
     "onboarding.priorities.hint": "Typical for working students: study and exams, paid shifts, health, admin, friends, rest.",
+    "onboarding.priorities.hintTitle": "How ordering works",
     "onboarding.priorities.cta": "Save order & continue",
 
     "lifePriority.study": "Study & classes",
@@ -45,7 +53,9 @@ export const catalog = {
     "lifePriority.rest": "Rest & recovery",
 
     "onboarding.timetable.title": "Bring your timetable into KIRA",
+    "onboarding.timetable.lead": "Import classes to layer shifts, exams, and wellbeing.",
     "onboarding.timetable.body": "Import classes so we can layer shifts, exams, and wellbeing alongside your real week.",
+    "onboarding.timetable.hintTitle": "Why import",
     "onboarding.timetable.ics": "Upload .ics file",
     "onboarding.timetable.google": "Connect Google Calendar",
     "onboarding.timetable.outlook": "Connect Outlook Calendar",
@@ -53,8 +63,10 @@ export const catalog = {
     "onboarding.timetable.next": "Continue",
 
     "onboarding.start.title": "You’re set up to build better weeks",
+    "onboarding.start.lead": "Small habits beat cram sessions — we keep the UI calm.",
     "onboarding.start.body":
         "Small, steady habits beat heroic cram sessions. Sync your timetable, log realistic shifts, and check in when energy dips—we’ll keep the interface calm so you can focus.",
+    "onboarding.start.hintTitle": "What happens next",
     "onboarding.start.cta": "Open KIRA",
 
     "app.tab.dashboard": "🏠 Dashboard",
@@ -66,23 +78,24 @@ export const catalog = {
     "app.nav.wellbeing": "Wellbeing",
     "app.nav.events": "Events",
     "app.menuTitle": "✨ Where to next?",
+    "app.hover.tagline": "About KIRA",
 
     "theme.light": "Light",
     "theme.dark": "Dark",
     "theme.system": "Auto",
 
-    "dashboard.workHours": "📊 Work hours this fortnight",
+    "dashboard.workHours": "Fortnight work",
     "dashboard.workHoursCaption": "Sum of shift blocks on your calendar in the last 14 days.",
-    "dashboard.goalTitle": "📚 Study goal — week progress",
+    "dashboard.goalTitle": "Weekly study",
     "dashboard.goalCaption": "Compared to your weekly study target using calendar study blocks this ISO week.",
-    "dashboard.upcoming": "📅 Upcoming",
+    "dashboard.upcoming": "Upcoming",
     "dashboard.dayScheduleCaption": "All timed entries on your calendar for this day (same data as the Calendar tab).",
     "dashboard.dayScheduleClickHint": "Click an empty spot on the grid to add a 30-minute task (snapped to the nearest quarter hour). Click a block to edit.",
     "dashboard.timelineAddTaskAria": "Add task at clicked time",
     "dashboard.dayTimelineAria": "Daily schedule timeline",
     "dashboard.openFullCalendar": "Full calendar",
-    "dashboard.nextAction.title": "🎯 Going nowhere to start?",
-    "dashboard.nextAction.headline": "Do this first…",
+    "dashboard.nextAction.title": "Next up",
+    "dashboard.nextAction.headline": "Start here",
     "dashboard.nextAction.hint": "Open calendar entries are ranked by overdue status, then deadline (if you set one) or scheduled date, then priority.",
     "dashboard.nextAction.empty": "🎉 You're all caught up — no open entries need a push.",
     "dashboard.nextAction.overdue": "Overdue",
@@ -110,7 +123,7 @@ export const catalog = {
     "calendar.newTaskDefaultTitle": "New task",
     "calendar.addPlaceholder": "What do you want to schedule?",
     "calendar.addHint": "Details stay inline below — the card lifts with a soft glow on hover or keyboard focus.",
-    "calendar.quickAddSectionLabel": "➕ Add to calendar",
+    "calendar.quickAddSectionLabel": "Quick add",
     "calendar.quickAdd": "Quick add",
     "calendar.quickAddDetails": "More details",
     "calendar.quickAddHint": "Quick add creates a study block today with a typical window. Use More details for date, time, and type.",
@@ -145,9 +158,11 @@ export const catalog = {
     "calendar.view.week": "Week",
     "calendar.view.month": "Month",
     "calendar.goToday": "Today",
-    "calendar.plannerTitle.day": "📆 Day view",
-    "calendar.plannerTitle.week": "Week view",
-    "calendar.plannerTitle.month": "Month view",
+    "calendar.plannerTitle.day": "Day",
+    "calendar.plannerTitle.week": "Week",
+    "calendar.plannerTitle.month": "Month",
+    "app.hover.plannerDayWeek": "Day & week planner",
+    "app.hover.plannerMonth": "Month planner",
 
     "calendar.monthPlannerClickHint":
         "Click a day to add a 30-minute study block (today starts near the current time; other days use a typical afternoon slot). In day view, click an empty spot on the timeline for a precise start time.",
@@ -166,7 +181,9 @@ export const catalog = {
     "wellbeing.welcome": "👋 Hi {{name}} — great to see you",
     "wellbeing.welcomeGuest": "👋 Hi there — great to see you",
     "wellbeing.editLimits": "Adjust study & work limits",
+    "wellbeing.lead": "Rings mirror your calendar — screen time is an estimate.",
     "wellbeing.subtitle": "🧘 Study and work totals mirror your calendar; screen time is a gentle estimate from that rhythm.",
+    "wellbeing.hintTitle": "How this page works",
     "wellbeing.ringStudyTitle": "Study focus",
     "wellbeing.ringStudySubtitle": "Calendar study blocks this ISO week vs your weekly target.",
     "wellbeing.ringWorkTitle": "Paid work",
@@ -182,13 +199,16 @@ export const catalog = {
     "wellbeing.ringPercentOfGuide": "{{pct}}% of guide",
     "wellbeing.tasksTileTitle": "Wellbeing tasks",
     "wellbeing.tasksTileSubtitle": "Compact checklist — the page scrolls if your list grows.",
+    "wellbeing.tasksTileHintTitle": "Tasks list",
     "wellbeing.addTaskButton": "Add task",
     "wellbeing.taskPlaceholder": "e.g. Walk 20 minutes after lab",
     "wellbeing.removeTask": "Remove task",
 
-    "events.title": "🎉 Campus events",
+    "events.title": "Campus events",
+    "events.lead": "Pilot listings — tap a card to RSVP.",
     "events.subtitle":
         "Sample campus listings for the pilot. RSVP choices are saved on this device only. Cards show headcount, topic, and RSVP — hover for glow; click opens a light panel anchored to the card.",
+    "events.hintTitle": "About these events",
     "events.going": "Going",
     "events.notGoing": "Not going",
     "events.undecided": "Undecided",

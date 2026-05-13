@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Button } from "@/components/base/buttons/button";
-import { HintText } from "@/components/base/input/hint-text";
 import { InputBase, TextField } from "@/components/base/input/input";
 import { Label } from "@/components/base/input/label";
 import { SchedulePlanner } from "@/components/kira/schedule-planner";
+import { HoverHint } from "@/components/kira/hover-hint";
 import { ScheduleEntryCreateDetailsModal } from "@/components/kira/schedule-entry-modal";
 import { useCollisionGuardedAdd } from "@/hooks/use-collision-guarded-add";
 import { useKiraStore } from "@/stores/kira-store";
@@ -33,10 +33,10 @@ export function CalendarPanel() {
     };
 
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-8">
             <section
                 className={cx(
-                    "rounded-2xl bg-primary_alt p-5 md:p-6",
+                    "rounded-2xl bg-primary_alt p-6 md:p-7",
                     "ring-2 ring-secondary",
                     "transition-[box-shadow,ring-color,transform] duration-300 ease-out",
                     "hover:-translate-y-px",
@@ -46,7 +46,14 @@ export function CalendarPanel() {
                     "dark:hover:shadow-[0_0_48px_-14px_rgba(45,211,191,0.35)] dark:focus-within:shadow-[0_0_52px_-12px_rgba(45,211,191,0.42)]",
                 )}
             >
-                <p className="text-sm font-semibold uppercase tracking-wide text-brand-secondary">{t("calendar.quickAddSectionLabel")}</p>
+                <div className="flex flex-wrap items-center gap-1.5">
+                    <p className="text-sm font-semibold uppercase tracking-wide text-brand-secondary">{t("calendar.quickAddSectionLabel")}</p>
+                    <HoverHint
+                        title={t("calendar.quickAddSectionLabel")}
+                        description={t("calendar.quickAddHint")}
+                        className="-mt-0.5"
+                    />
+                </div>
                 <TextField value={title} onChange={setTitle} size="lg" className="w-full gap-1.5">
                     {({ isRequired, isInvalid }) => (
                         <>
@@ -66,7 +73,6 @@ export function CalendarPanel() {
                                     </Button>
                                 </div>
                             </div>
-                            <HintText isInvalid={isInvalid}>{t("calendar.quickAddHint")}</HintText>
                         </>
                     )}
                 </TextField>

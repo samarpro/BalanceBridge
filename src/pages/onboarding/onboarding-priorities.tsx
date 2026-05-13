@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { ArrowDown, ArrowUp, Flag02 } from "@untitledui/icons";
 import { FeaturedIcon } from "@/components/foundations/featured-icon/featured-icon";
 import { Button } from "@/components/base/buttons/button";
+import { HoverHint } from "@/components/kira/hover-hint";
 import { useNavigate } from "react-router";
 import { useKiraStore } from "@/stores/kira-store";
 import { DEFAULT_LIFE_PRIORITY_ORDER, type LifePriorityId } from "@/types/life-priority";
@@ -38,15 +39,20 @@ export function OnboardingPrioritiesPage() {
     };
 
     return (
-        <div className="flex min-h-dvh flex-col items-center justify-center gap-8 px-4 py-12">
+        <div className="flex min-h-dvh flex-col items-center justify-center gap-10 px-5 py-14 kira-text-flow">
             <FeaturedIcon icon={Flag02} color="brand" theme="modern" size="xl" />
-            <div className="w-full max-w-md space-y-4 text-center">
+            <div className="w-full max-w-md space-y-5 text-center">
                 <h1 className="text-display-xs font-semibold text-secondary">{t("onboarding.priorities.title")}</h1>
-                <p className="text-md text-tertiary">{t("onboarding.priorities.body")}</p>
-                <p className="text-sm text-quaternary">{t("onboarding.priorities.hint")}</p>
+                <p className="text-md text-tertiary">{t("onboarding.priorities.lead")}</p>
+                <div className="flex justify-center">
+                    <HoverHint
+                        title={t("onboarding.priorities.hintTitle")}
+                        description={`${t("onboarding.priorities.body")} ${t("onboarding.priorities.hint")}`}
+                    />
+                </div>
             </div>
 
-            <ol className="w-full max-w-md space-y-2" aria-label={t("onboarding.priorities.title")}>
+            <ol className="w-full max-w-md space-y-3" aria-label={t("onboarding.priorities.title")}>
                 {rows.map(({ id, label, index }) => (
                     <li
                         key={id}

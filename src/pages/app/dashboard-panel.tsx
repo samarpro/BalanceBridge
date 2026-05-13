@@ -4,8 +4,10 @@ import { ArrowUpRight, ChevronLeft, ChevronRight } from "@untitledui/icons";
 import { Badge } from "@/components/base/badges/badges";
 import { Button } from "@/components/base/buttons/button";
 import { ProgressBar } from "@/components/base/progress-indicators/progress-indicators";
+import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 import type { ScheduleEntry, ScheduleKind } from "@/components/kira/calendar-month";
 import { DayScheduleTimeline } from "@/components/kira/day-schedule-timeline";
+import { HoverHint } from "@/components/kira/hover-hint";
 import { ScheduleEntryEditModal } from "@/components/kira/schedule-entry-modal";
 import { MOCK_EVENTS } from "@/data/mock-events";
 import { useCollisionGuardedAdd } from "@/hooks/use-collision-guarded-add";
@@ -17,7 +19,7 @@ import {
 } from "@/utils/schedule-aggregates";
 import { effectiveDeadlineIso, sortedIncompleteByAttention } from "@/utils/next-schedule-action";
 import { isoFromDate } from "@/utils/schedule-time";
-import { scheduleKindPillClass } from "@/utils/schedule-kind-styles";
+import { scheduleKindLegendSwatchClass, scheduleKindPillClass } from "@/utils/schedule-kind-styles";
 import { cx } from "@/utils/cx";
 import { t, tWellbeingWelcome } from "@/i18n/strings";
 
@@ -26,7 +28,7 @@ interface DashboardPanelProps {
 }
 
 const statsCardClass = cx(
-    "relative overflow-hidden rounded-2xl border border-brand-secondary/40 p-6 shadow-lg",
+    "relative overflow-hidden rounded-2xl border border-brand-secondary/40 p-7 shadow-lg",
     "bg-gradient-to-br from-brand-primary from-[28%] via-primary_alt to-emerald-50/40",
     "ring-1 ring-brand-secondary/25",
     "dark:border-brand-secondary/35 dark:from-brand-950/55 dark:via-primary_alt dark:to-primary_alt dark:ring-brand-secondary/20",
@@ -156,27 +158,32 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
     };
 
     return (
-        <div className="flex flex-col gap-8 max-md:gap-4">
-            <header className="shrink-0">
+        <div className="flex flex-col gap-10 max-md:gap-5">
+            <header className="shrink-0 pb-1">
                 <h2 className="text-display-sm font-semibold tracking-tight text-primary max-md:text-lg max-md:leading-snug">
                     {welcomeHeading}
                 </h2>
             </header>
             <motion.div
-                className="grid gap-6 max-md:gap-4 lg:grid-cols-2"
+                className="grid gap-8 max-md:gap-5 lg:grid-cols-2"
                 variants={statsList}
                 initial="hidden"
                 animate="show"
             >
-                <motion.section className={cx(statsCardClass, "max-md:p-4 max-md:py-4")} variants={statsItem}>
+                <motion.section className={cx(statsCardClass, "max-md:p-5 max-md:py-5")} variants={statsItem}>
                     <div className="flex flex-wrap items-start justify-between gap-2">
-                        <h2 className="text-xl font-bold text-primary max-md:text-md max-md:leading-tight">{t("dashboard.workHours")}</h2>
+                        <div className="flex min-w-0 flex-1 items-start gap-1.5">
+                            <h2 className="text-xl font-bold text-primary max-md:text-md max-md:leading-tight">{t("dashboard.workHours")}</h2>
+                            <HoverHint
+                                title={t("dashboard.workHours")}
+                                description={t("dashboard.workHoursCaption")}
+                                className="mt-1 shrink-0 max-md:mt-0.5"
+                            />
+                        </div>
                         <Button color="link-color" size="sm" className="px-0 max-md:text-xs md:size-md" onClick={() => openLimitsEditor()}>
                             {t("dashboard.editLimits")}
                         </Button>
                     </div>
-                    <p className="mt-1 text-md leading-relaxed text-secondary max-md:hidden">{t("dashboard.workHoursCaption")}</p>
-                    <p className="mt-1 text-xs leading-snug text-tertiary md:hidden">{t("dashboard.workHoursCaption")}</p>
                     <div className="mt-3 flex flex-wrap items-end gap-x-2 gap-y-0.5 max-md:mt-2 md:mt-5">
                         <span className="text-display-md font-bold tracking-tight text-primary tabular-nums max-md:text-2xl max-md:leading-none">
                             {workHoursActual.toFixed(1)}
@@ -195,10 +202,15 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
                     />
                 </motion.section>
 
-                <motion.section className={cx(statsCardClass, "max-md:p-4 max-md:py-4")} variants={statsItem}>
-                    <h2 className="text-xl font-bold text-primary max-md:text-md max-md:leading-tight">{t("dashboard.goalTitle")}</h2>
-                    <p className="mt-1 text-md leading-relaxed text-secondary max-md:hidden">{t("dashboard.goalCaption")}</p>
-                    <p className="mt-1 text-xs leading-snug text-tertiary md:hidden">{t("dashboard.goalCaption")}</p>
+                <motion.section className={cx(statsCardClass, "max-md:p-5 max-md:py-5")} variants={statsItem}>
+                    <div className="flex min-w-0 items-start gap-1.5">
+                        <h2 className="text-xl font-bold text-primary max-md:text-md max-md:leading-tight">{t("dashboard.goalTitle")}</h2>
+                        <HoverHint
+                            title={t("dashboard.goalTitle")}
+                            description={t("dashboard.goalCaption")}
+                            className="mt-1 shrink-0 max-md:mt-0.5"
+                        />
+                    </div>
                     <p className="mt-3 text-display-sm font-bold leading-tight tracking-tight text-primary tabular-nums max-md:mt-2 max-md:text-xl md:mt-5">
                         {formatMinutesAsHoursMinutes(weekStudyMinutes)}
                         <span className="text-lg font-semibold text-tertiary max-md:text-sm"> / </span>
@@ -214,15 +226,20 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
                 </motion.section>
             </motion.div>
 
-            <div className="flex flex-col gap-6 max-md:gap-4 lg:gap-8">
-                <div className="order-1 grid gap-6 max-md:gap-3 lg:order-2 lg:grid-cols-2 lg:items-start">
-                    <section className="flex flex-col rounded-2xl border border-secondary bg-primary_alt p-4 shadow-md ring-1 ring-brand-secondary/15 max-md:p-4 dark:ring-brand-secondary/25 md:p-6">
+            <div className="flex flex-col gap-8 max-md:gap-5 lg:gap-10">
+                <div className="order-1 grid gap-7 max-md:gap-4 lg:order-2 lg:grid-cols-2 lg:items-start">
+                    <section className="flex flex-col rounded-2xl border border-secondary bg-primary_alt p-5 shadow-md ring-1 ring-brand-secondary/15 max-md:p-5 dark:ring-brand-secondary/25 md:p-7">
                         <h2 className="text-xl font-bold text-primary max-md:text-md">{t("dashboard.nextAction.title")}</h2>
-                        <p className="mt-1 text-lg font-semibold text-brand-secondary max-md:text-sm max-md:leading-snug md:mt-2">
-                            {t("dashboard.nextAction.headline")}
-                        </p>
-                        <p className="mt-1 text-md text-secondary max-md:hidden md:mt-2">{t("dashboard.nextAction.hint")}</p>
-                        <p className="mt-1 text-xs leading-snug text-tertiary md:hidden">{t("dashboard.nextAction.hint")}</p>
+                        <div className="mt-1 flex flex-wrap items-center gap-1.5 md:mt-2">
+                            <p className="text-lg font-semibold text-brand-secondary max-md:text-sm max-md:leading-snug">
+                                {t("dashboard.nextAction.headline")}
+                            </p>
+                            <HoverHint
+                                title={t("dashboard.nextAction.headline")}
+                                description={t("dashboard.nextAction.hint")}
+                                className="shrink-0"
+                            />
+                        </div>
 
                         {topPick ? (
                             <>
@@ -313,7 +330,7 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
                         </Button>
                     </section>
 
-                    <section className="rounded-2xl border border-secondary bg-primary_alt p-4 shadow-md ring-1 ring-brand-secondary/15 max-md:p-4 dark:ring-brand-secondary/25 md:p-6">
+                    <section className="rounded-2xl border border-secondary bg-primary_alt p-5 shadow-md ring-1 ring-brand-secondary/15 max-md:p-5 dark:ring-brand-secondary/25 md:p-7">
                         <div className="flex items-center justify-between gap-2">
                             <h2 className="text-xl font-bold text-primary max-md:text-md">{t("dashboard.upcoming")}</h2>
                             <Button color="link-color" size="sm" className="px-0 max-md:text-xs" onClick={() => onOpenTab("events")}>
@@ -346,22 +363,22 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
                     </section>
                 </div>
 
-                <section className="order-2 rounded-2xl border border-secondary bg-primary_alt p-4 shadow-md ring-1 ring-brand-secondary/15 max-md:p-4 dark:ring-brand-secondary/25 lg:order-1 md:p-6">
-                    <div className="flex flex-col gap-3 max-md:gap-2 md:gap-4">
+                <section className="order-2 rounded-2xl border border-secondary bg-primary_alt p-5 shadow-md ring-1 ring-brand-secondary/15 max-md:p-5 dark:ring-brand-secondary/25 lg:order-1 md:p-7">
+                    <div className="flex flex-col gap-4 max-md:gap-3 md:gap-5">
                         <div>
-                            <p className="text-xs font-semibold uppercase tracking-wide text-brand-secondary max-md:text-[10px] md:text-sm">
-                                {t("calendar.plannerTitle.day")}
-                            </p>
+                            <div className="flex flex-wrap items-center gap-1.5">
+                                <p className="text-xs font-semibold uppercase tracking-wide text-brand-secondary max-md:text-[10px] md:text-sm">
+                                    {t("calendar.plannerTitle.day")}
+                                </p>
+                                <HoverHint
+                                    title={t("app.hover.plannerDayWeek")}
+                                    description={`${t("dashboard.dayScheduleCaption")} ${t("dashboard.dayScheduleClickHint")}`}
+                                    className="max-md:-mt-0.5"
+                                />
+                            </div>
                             <h2 className="mt-0.5 text-display-xs font-bold tracking-tight text-primary max-md:text-sm max-md:leading-tight md:mt-1 md:text-display-xs">
                                 {dayHeading}
                             </h2>
-                            <p className="mt-1 text-sm text-secondary max-md:hidden md:mt-2 md:text-md">{t("dashboard.dayScheduleCaption")}</p>
-                            <p className="mt-1 text-[11px] leading-snug text-tertiary max-md:line-clamp-2 md:hidden">
-                                {t("dashboard.dayScheduleCaption")}
-                            </p>
-                            <p className="mt-1 text-xs font-medium text-tertiary max-md:hidden md:mt-2 md:text-sm">
-                                {t("dashboard.dayScheduleClickHint")}
-                            </p>
                         </div>
                         <div className="flex flex-wrap items-center gap-1.5 max-md:gap-1 md:gap-2">
                             <Button color="secondary" size="sm" iconLeading={ChevronLeft} aria-label={t("aria.previousDay")} onClick={() => shiftDay(-1)} />
@@ -382,19 +399,39 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
                     </div>
 
                     <div className="mt-3 flex flex-col gap-2 max-md:mt-2 md:mt-4 md:gap-3">
-                        <div className="flex flex-wrap gap-1.5 max-md:gap-1 md:gap-2">
-                            <Badge type="pill-color" color="brand" size="sm">
-                                {t("calendar.legend.shift")}
-                            </Badge>
-                            <Badge type="pill-color" color="warning" size="sm">
-                                {t("calendar.legend.exam")}
-                            </Badge>
-                            <Badge type="pill-color" color="success" size="sm">
-                                {t("calendar.legend.study")}
-                            </Badge>
-                            <Badge type="pill-color" color="success" size="sm">
-                                {t("calendar.legend.completed")}
-                            </Badge>
+                        <div className="flex flex-wrap items-center gap-2 max-md:gap-1.5 md:gap-2.5">
+                            <Tooltip title={t("calendar.legend.shift")} placement="top">
+                                <TooltipTrigger
+                                    className="flex size-8 items-center justify-center rounded-lg ring-1 ring-secondary ring-inset outline-offset-2 transition duration-100 ease-linear hover:bg-primary_hover focus-visible:outline-2 focus-visible:outline-focus-ring"
+                                    aria-label={t("calendar.legend.shift")}
+                                >
+                                    <span className={scheduleKindLegendSwatchClass("shift")} aria-hidden />
+                                </TooltipTrigger>
+                            </Tooltip>
+                            <Tooltip title={t("calendar.legend.exam")} placement="top">
+                                <TooltipTrigger
+                                    className="flex size-8 items-center justify-center rounded-lg ring-1 ring-secondary ring-inset outline-offset-2 transition duration-100 ease-linear hover:bg-primary_hover focus-visible:outline-2 focus-visible:outline-focus-ring"
+                                    aria-label={t("calendar.legend.exam")}
+                                >
+                                    <span className={scheduleKindLegendSwatchClass("exam")} aria-hidden />
+                                </TooltipTrigger>
+                            </Tooltip>
+                            <Tooltip title={t("calendar.legend.study")} placement="top">
+                                <TooltipTrigger
+                                    className="flex size-8 items-center justify-center rounded-lg ring-1 ring-secondary ring-inset outline-offset-2 transition duration-100 ease-linear hover:bg-primary_hover focus-visible:outline-2 focus-visible:outline-focus-ring"
+                                    aria-label={t("calendar.legend.study")}
+                                >
+                                    <span className={scheduleKindLegendSwatchClass("study")} aria-hidden />
+                                </TooltipTrigger>
+                            </Tooltip>
+                            <Tooltip title={t("calendar.legend.completed")} placement="top">
+                                <TooltipTrigger
+                                    className="flex size-8 items-center justify-center rounded-lg ring-1 ring-secondary ring-inset outline-offset-2 transition duration-100 ease-linear hover:bg-primary_hover focus-visible:outline-2 focus-visible:outline-focus-ring"
+                                    aria-label={t("calendar.legend.completed")}
+                                >
+                                    <span className="size-2.5 shrink-0 rounded-full bg-emerald-500 ring-1 ring-secondary" aria-hidden />
+                                </TooltipTrigger>
+                            </Tooltip>
                         </div>
                         <Button
                             color="link-color"

@@ -8,6 +8,7 @@ import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/but
 import type { ScheduleEntry } from "@/components/kira/calendar-month";
 import { DayColumn, DayScheduleTimeline, TimelineRulerColumn } from "@/components/kira/day-schedule-timeline";
 import { ScheduleEntryEditModal } from "@/components/kira/schedule-entry-modal";
+import { HoverHint } from "@/components/kira/hover-hint";
 import { useCollisionGuardedAdd } from "@/hooks/use-collision-guarded-add";
 import { addDays, defaultStartMinutesForNewTaskOnDay, isoFromDate, startOfWeekMonday } from "@/utils/schedule-time";
 import { scheduleKindLegendSwatchClass } from "@/utils/schedule-kind-styles";
@@ -67,6 +68,14 @@ export function SchedulePlanner({ entries }: SchedulePlannerProps) {
     const plannerTitle =
         view === "day" ? t("calendar.plannerTitle.day") : view === "week" ? t("calendar.plannerTitle.week") : t("calendar.plannerTitle.month");
 
+    const plannerHover =
+        view === "month"
+            ? { title: t("app.hover.plannerMonth"), description: t("calendar.monthPlannerClickHint") }
+            : {
+                  title: t("app.hover.plannerDayWeek"),
+                  description: `${t("dashboard.dayScheduleCaption")} ${t("dashboard.dayScheduleClickHint")}`,
+              };
+
     const NEW_BLOCK_MINUTES = 30;
 
     const createTaskAndEdit = (day: Date, startMinutes: number) => {
@@ -96,11 +105,14 @@ export function SchedulePlanner({ entries }: SchedulePlannerProps) {
     };
 
     return (
-        <section className="rounded-xl ring-1 ring-secondary bg-primary_alt p-4 md:p-6">
+        <section className="rounded-xl ring-1 ring-secondary bg-primary_alt p-5 md:p-7">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-quaternary">{plannerTitle}</p>
-                    <h2 className="mt-1 text-lg font-semibold text-secondary">{title}</h2>
+                <div className="flex min-w-0 flex-1 items-start gap-1.5">
+                    <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-quaternary">{plannerTitle}</p>
+                        <h2 className="mt-1 text-lg font-semibold text-secondary">{title}</h2>
+                    </div>
+                    <HoverHint title={plannerHover.title} description={plannerHover.description} className="mt-5 shrink-0 md:mt-6" />
                 </div>
 
                 <ButtonGroup
@@ -149,16 +161,12 @@ export function SchedulePlanner({ entries }: SchedulePlannerProps) {
                     <Button color="secondary" size="sm" onClick={() => setAnchorDate(new Date())}>
                         {t("calendar.goToday")}
                     </Button>
-                    {(view === "day" || view === "week") && (
-                        <p className="mt-2 w-full text-sm text-quaternary">{t("dashboard.dayScheduleClickHint")}</p>
-                    )}
                 </div>
             )}
 
-            <div className="mt-6 space-y-4">
+            <div className="mt-7 space-y-4">
                 {view === "month" && (
                     <div className="overflow-x-auto">
-                        <p className="mb-3 text-sm text-quaternary">{t("calendar.monthPlannerClickHint")}</p>
                         <Calendar
                             highlightedDates={highlightedDates}
                             completionHighlightedDates={completionHighlightedDates}

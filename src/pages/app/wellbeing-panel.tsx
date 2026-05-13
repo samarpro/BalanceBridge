@@ -4,6 +4,7 @@ import { Button } from "@/components/base/buttons/button";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Input } from "@/components/base/input/input";
 import { GlassRadialTile } from "@/components/kira/glass-radial-tile";
+import { HoverHint } from "@/components/kira/hover-hint";
 import { useKiraStore } from "@/stores/kira-store";
 import {
     calendarWeekKindMinutes,
@@ -74,14 +75,21 @@ export function WellbeingPanel() {
         t(id).replace("{{pct}}", String(pct));
 
     return (
-        <div className="flex flex-col gap-5">
-            <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-7">
+            <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0">
-                    <h2 className="text-display-sm font-semibold tracking-tight text-primary max-md:text-lg max-md:leading-snug">
-                        {welcomeHeading}
-                    </h2>
-                    <p className="mt-2 max-w-2xl text-md leading-relaxed text-secondary max-md:mt-1 max-md:text-xs max-md:leading-snug">
-                        {t("wellbeing.subtitle")}
+                    <div className="flex flex-wrap items-start gap-1.5">
+                        <h2 className="text-display-sm font-semibold tracking-tight text-primary max-md:text-lg max-md:leading-snug">
+                            {welcomeHeading}
+                        </h2>
+                        <HoverHint
+                            title={t("wellbeing.hintTitle")}
+                            description={t("wellbeing.subtitle")}
+                            className="mt-1.5 max-md:mt-1"
+                        />
+                    </div>
+                    <p className="mt-3 max-w-2xl text-md leading-relaxed text-secondary max-md:text-xs max-md:leading-snug md:mt-4">
+                        {t("wellbeing.lead")}
                     </p>
                 </div>
                 <Button color="link-color" size="sm" className="shrink-0 self-start sm:self-center" onClick={() => openLimitsEditor()}>
@@ -89,7 +97,7 @@ export function WellbeingPanel() {
                 </Button>
             </div>
 
-            <div className="grid grid-cols-1 items-start gap-3 justify-items-center md:grid-cols-2 md:items-stretch md:justify-items-stretch lg:grid-cols-3">
+            <div className="grid grid-cols-1 items-start gap-4 justify-items-center md:grid-cols-2 md:items-stretch md:justify-items-stretch md:gap-5 lg:grid-cols-3">
                 <GlassRadialTile
                     title={t("wellbeing.ringStudyTitle")}
                     subtitle={t("wellbeing.ringStudySubtitle")}
@@ -146,8 +154,14 @@ export function WellbeingPanel() {
                     aria-label={t("wellbeing.tasksTileTitle")}
                 >
                     <div className="shrink-0">
-                        <h3 className="text-sm font-semibold uppercase tracking-wide text-brand-secondary">{t("wellbeing.tasksTileTitle")}</h3>
-                        <p className="mt-1 text-sm leading-snug text-secondary">{t("wellbeing.tasksTileSubtitle")}</p>
+                        <div className="flex items-start justify-between gap-1.5">
+                            <h3 className="text-sm font-semibold uppercase tracking-wide text-brand-secondary">{t("wellbeing.tasksTileTitle")}</h3>
+                            <HoverHint
+                                title={t("wellbeing.tasksTileHintTitle")}
+                                description={t("wellbeing.tasksTileSubtitle")}
+                                className="-mr-1 shrink-0"
+                            />
+                        </div>
                     </div>
 
                     <div className="mt-3 flex shrink-0 flex-col gap-2 sm:flex-row sm:items-end">

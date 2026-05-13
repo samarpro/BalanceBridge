@@ -4,6 +4,7 @@ import { Badge } from "@/components/base/badges/badges";
 import { Button } from "@/components/base/buttons/button";
 import { RadioButton } from "@/components/base/radio-buttons/radio-buttons";
 import { RadioGroup } from "@/components/base/radio-buttons/radio-buttons";
+import { HoverHint } from "@/components/kira/hover-hint";
 import { MOCK_EVENTS, type CampusEvent, type RsvpStatus } from "@/data/mock-events";
 import { loadEventRsvpOverrides, saveEventRsvpOverrides } from "@/lib/event-rsvp-storage";
 import { tf, t } from "@/i18n/strings";
@@ -49,11 +50,12 @@ export function EventsPanel() {
     };
 
     return (
-        <div className="flex flex-col gap-6">
-            <div>
+        <div className="flex flex-col gap-8">
+            <div className="flex flex-wrap items-start gap-3">
                 <h2 className="text-display-sm font-semibold tracking-tight text-primary">{t("events.title")}</h2>
-                <p className="mt-2 max-w-2xl text-md leading-relaxed text-secondary">{t("events.subtitle")}</p>
+                <HoverHint title={t("events.hintTitle")} description={t("events.subtitle")} className="mt-1.5 shrink-0" />
             </div>
+            <p className="mt-3 max-w-2xl text-md leading-relaxed text-secondary">{t("events.lead")}</p>
 
             <ul className="grid gap-4 md:grid-cols-2">
                 {events.map((ev) => (

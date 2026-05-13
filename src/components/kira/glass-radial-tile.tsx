@@ -1,7 +1,8 @@
+import { HoverHint } from "@/components/kira/hover-hint";
 import { cx } from "@/utils/cx";
 
 const glassTile =
-    "box-border flex w-fit max-w-full min-w-0 flex-col gap-2 justify-self-center rounded-2xl border border-white/30 bg-gradient-to-br from-white/20 to-white/5 p-5 shadow-lg backdrop-blur-xl dark:border-white/12 dark:from-white/[0.14] dark:to-white/[0.05] md:w-full md:justify-self-auto";
+    "box-border flex w-fit max-w-full min-w-0 flex-col gap-2.5 justify-self-center rounded-2xl border border-white/30 bg-gradient-to-br from-white/20 to-white/5 p-6 shadow-lg backdrop-blur-xl dark:border-white/12 dark:from-white/[0.14] dark:to-white/[0.05] md:w-full md:justify-self-auto";
 
 const R = 46;
 const CIRC = 2 * Math.PI * R;
@@ -41,8 +42,10 @@ export function GlassRadialTile({
     return (
         <section className={cx(glassTile, className)} aria-label={ariaLabel}>
             <div className="min-w-0">
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-brand-secondary">{title}</h3>
-                <p className="mt-1 line-clamp-2 text-sm leading-snug text-secondary">{subtitle}</p>
+                <div className="flex items-start justify-between gap-1.5">
+                    <h3 className="text-sm font-semibold uppercase tracking-wide text-brand-secondary">{title}</h3>
+                    <HoverHint title={title} description={subtitle} className="-mr-1 mt-0.5 shrink-0" />
+                </div>
             </div>
             <div className="relative mx-auto mb-2 flex aspect-square w-[min(100%,14rem)] max-w-full shrink-0 items-center justify-center">
                 <svg viewBox="0 0 100 100" className="size-full -rotate-90" aria-hidden>

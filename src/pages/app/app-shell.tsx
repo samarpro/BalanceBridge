@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/base/buttons/button";
 import { LimitsSetupModal } from "@/components/kira/limits-setup-modal";
 import { QuickAddFab } from "@/components/kira/quick-add-fab";
+import { HoverHint } from "@/components/kira/hover-hint";
 import { ThemeToggle } from "@/components/kira/theme-toggle";
 import { FocusModeControl } from "@/components/kira/focus-mode-overlay";
 import { useKiraStore } from "@/stores/kira-store";
@@ -84,7 +85,7 @@ function AppNavLinks({
     const collapsed = variant === "rail-collapsed";
 
     return (
-        <nav className="flex flex-col gap-2" aria-label={t("app.menuTitle")}>
+        <nav className="flex flex-col gap-2.5" aria-label={t("app.menuTitle")}>
             {navItems.map(({ id, icon: Icon, labelKey }) => {
                 const selected = tab === id;
                 const label = t(labelKey);
@@ -178,14 +179,17 @@ function AppContent() {
                     ) : (
                         <div className="min-w-0">
                             <p className="truncate text-sm font-semibold uppercase tracking-wide text-brand-secondary">{t("app.name")}</p>
-                            <p className="truncate text-xs text-secondary">{t("app.tagline")}</p>
+                            <div className="flex min-w-0 items-center gap-1">
+                                <p className="min-w-0 flex-1 truncate text-xs text-secondary">{t("app.tagline")}</p>
+                                <HoverHint title={t("app.hover.tagline")} description={t("app.taglineDetail")} className="shrink-0" />
+                            </div>
                         </div>
                     )}
                 </div>
 
-                <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-3">
+                <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto p-3">
                     {!sidebarCollapsed && (
-                        <div className="shrink-0 space-y-1">
+                        <div className="shrink-0 space-y-2">
                             <p className="text-xs font-semibold uppercase tracking-wide text-brand-secondary">{t("app.menuTitle")}</p>
                         </div>
                     )}
@@ -211,7 +215,7 @@ function AppContent() {
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col">
-                <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-b border-secondary bg-primary/95 px-4 backdrop-blur-md supports-[backdrop-filter]:bg-primary/80 md:px-6">
+                <header className="sticky top-0 z-30 flex min-h-14 shrink-0 items-center gap-4 border-b border-secondary bg-primary/95 px-5 py-3 backdrop-blur-md supports-[backdrop-filter]:bg-primary/80 md:px-8">
                     <div className="lg:hidden">
                         <AriaDialogTrigger>
                             <AriaButton
@@ -265,7 +269,10 @@ function AppContent() {
                                                 <div className="space-y-2 border-b border-secondary pb-5">
                                                     <p className="text-sm font-semibold uppercase tracking-wide text-brand-secondary">{t("app.name")}</p>
                                                     <p className="text-display-sm font-bold tracking-tight text-primary">{t("app.menuTitle")}</p>
-                                                    <p className="text-md leading-snug text-secondary">{t("app.tagline")}</p>
+                                                    <div className="flex flex-wrap items-end gap-1.5 text-md leading-snug text-secondary">
+                                                        <p className="min-w-0 flex-1">{t("app.tagline")}</p>
+                                                        <HoverHint title={t("app.hover.tagline")} description={t("app.taglineDetail")} />
+                                                    </div>
                                                 </div>
 
                                                 <AppNavLinks tab={tab} onSelect={setTab} variant="drawer" closeDrawer={() => state.close()} />
@@ -279,7 +286,10 @@ function AppContent() {
 
                     <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-semibold uppercase tracking-wide text-brand-secondary">{t("app.name")}</p>
-                        <p className="truncate text-md text-secondary">{t("app.tagline")}</p>
+                        <div className="flex min-w-0 items-center gap-1">
+                            <p className="min-w-0 flex-1 truncate text-md text-secondary">{t("app.tagline")}</p>
+                            <HoverHint title={t("app.hover.tagline")} description={t("app.taglineDetail")} className="shrink-0" />
+                        </div>
                     </div>
 
                     <div className="flex shrink-0 items-center gap-2">
@@ -288,7 +298,7 @@ function AppContent() {
                     </div>
                 </header>
 
-                <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-5 pb-24 md:px-8 md:py-7 md:pb-8">
+                <main className="kira-text-flow mx-auto w-full max-w-6xl flex-1 px-5 py-6 pb-24 md:px-10 md:py-9 md:pb-10">
                     {tab === "dashboard" && <DashboardPanel onOpenTab={(id) => setTab(id as AppTabId)} />}
                     {tab === "calendar" && <CalendarPanel />}
                     {tab === "wellbeing" && <WellbeingPanel />}

@@ -244,6 +244,8 @@ export interface InputProps
     label?: string;
     /** Helper text displayed below the input */
     hint?: ReactNode;
+    /** When set with a string `hint`, shows the hint in the label help tooltip instead of below the field. */
+    hintAsLabelTooltip?: boolean;
     /** Whether to hide required indicator from label */
     hideRequiredIndicator?: boolean;
 }
@@ -254,6 +256,7 @@ export const Input = ({
     icon: Icon,
     label,
     hint,
+    hintAsLabelTooltip,
     shortcut,
     hideRequiredIndicator,
     className,
@@ -272,7 +275,12 @@ export const Input = ({
             {({ isRequired, isInvalid }) => (
                 <>
                     {label && (
-                        <Label isRequired={hideRequiredIndicator ? !hideRequiredIndicator : isRequired} isInvalid={isInvalid}>
+                        <Label
+                            isRequired={hideRequiredIndicator ? !hideRequiredIndicator : isRequired}
+                            isInvalid={isInvalid}
+                            tooltip={hintAsLabelTooltip && typeof hint === "string" ? label : undefined}
+                            tooltipDescription={hintAsLabelTooltip && typeof hint === "string" ? hint : undefined}
+                        >
                             {label}
                         </Label>
                     )}
@@ -294,7 +302,7 @@ export const Input = ({
                         }}
                     />
 
-                    {hint && <HintText isInvalid={isInvalid}>{hint}</HintText>}
+                    {hint && !(hintAsLabelTooltip && typeof hint === "string") && <HintText isInvalid={isInvalid}>{hint}</HintText>}
                 </>
             )}
         </TextField>
