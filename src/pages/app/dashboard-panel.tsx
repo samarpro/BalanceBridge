@@ -1,30 +1,23 @@
 import { useMemo, useState } from "react";
-import { motion } from "motion/react";
-import { AlertTriangle, ArrowUpRight, Briefcase01, ChevronLeft, ChevronRight, HeartRounded, Trophy01 } from "@untitledui/icons";
+import { AlertTriangle, ArrowUpRight, ChevronLeft, ChevronRight } from "@untitledui/icons";
 import { Badge } from "@/components/base/badges/badges";
 import { Button } from "@/components/base/buttons/button";
 import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
 import type { ScheduleEntry, ScheduleKind } from "@/components/kira/calendar-month";
 import { DayScheduleTimeline } from "@/components/kira/day-schedule-timeline";
 import { HoverHint } from "@/components/kira/hover-hint";
-import { RevampProgressBar } from "@/components/kira/revamp-progress-bar";
+import { LiquidLevelOrb } from "@/components/kira/liquid-level-orb";
+import { WellbeingSpiritMeter } from "@/components/kira/wellbeing-spirit-meter";
 import { ScheduleEntryEditModal } from "@/components/kira/schedule-entry-modal";
 import { MOCK_EVENTS } from "@/data/mock-events";
 import { useCollisionGuardedAdd } from "@/hooks/use-collision-guarded-add";
 import { useKiraStore } from "@/stores/kira-store";
-import {
-    calendarWeekKindMinutes,
-    formatMinutesAsHoursMinutes,
-    fortnightShiftMinutes,
-} from "@/utils/schedule-aggregates";
+import { calendarWeekKindMinutes, fortnightShiftMinutes } from "@/utils/schedule-aggregates";
 import { effectiveDeadlineIso, sortedIncompleteByAttention } from "@/utils/next-schedule-action";
 import { isoFromDate } from "@/utils/schedule-time";
 import { scheduleKindLegendSwatchClass, scheduleKindPillClass } from "@/utils/schedule-kind-styles";
 import { cx } from "@/utils/cx";
-import { t, tReplace, type MessageId } from "@/i18n/strings";
-
-const metricCardShell =
-    "mx-auto flex w-full max-w-[280px] flex-col items-center rounded-2xl px-4 py-4 text-center shadow-[var(--kira-revamp-shadow-card)] transition duration-150 kira-revamp-focusable hover:-translate-y-px hover:shadow-[var(--kira-revamp-shadow-card-hover)]";
+import { t, type MessageId } from "@/i18n/strings";
 
 interface DashboardPanelProps {
     onOpenTab: (tab: string) => void;
@@ -76,16 +69,6 @@ function priorityLabel(priority: ScheduleEntry["priority"]): string {
     }
 }
 
-function daysFromTodayToIso(iso: string): number {
-    const [y, m, d] = iso.split("-").map(Number);
-    if (!y || !m || !d) return 0;
-    const target = new Date(y, m - 1, d);
-    target.setHours(0, 0, 0, 0);
-    const t0 = new Date();
-    t0.setHours(0, 0, 0, 0);
-    return Math.round((target.getTime() - t0.getTime()) / 86400000);
-}
-
 function VisaStatusBadge({ fortnightPct }: { fortnightPct: number }) {
     if (fortnightPct > 100) {
         return (
@@ -112,7 +95,6 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
     const entries = useKiraStore((s) => s.entries);
     const wellbeingTasks = useKiraStore((s) => s.wellbeingTasks);
     const { tryAdd, collisionModal } = useCollisionGuardedAdd();
-    const weeklyStudyGoalMinutes = useKiraStore((s) => s.weeklyStudyGoalMinutes);
     const fortnightWorkLimitHours = useKiraStore((s) => s.fortnightWorkLimitHours);
     const openLimitsEditor = useKiraStore((s) => s.openLimitsEditor);
     const displayName = useKiraStore((s) => s.userProfile.displayName);
@@ -130,7 +112,6 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
 
     const fortnightWorkMinutes = useMemo(() => fortnightShiftMinutes(entries, refDay), [entries, refDay]);
     const weekShiftMinutes = useMemo(() => calendarWeekKindMinutes(entries, "shift", refDay), [entries, refDay]);
-    const weekStudyMinutes = useMemo(() => calendarWeekKindMinutes(entries, "study", refDay), [entries, refDay]);
 
     const workHoursActual = fortnightWorkMinutes / 60;
     const workCapHours = Math.max(fortnightWorkLimitHours, 1);
@@ -139,6 +120,9 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
     const fortnightPct = (workHoursActual / workCapHours) * 100;
     const hoursToFortnightCap = workCapHours - workHoursActual;
     const showFortnightWarning = fortnightPct >= 85 || (hoursToFortnightCap <= 16 && hoursToFortnightCap > 0);
+
+    const workWeekRatio = weekWorkCapHours > 0 ? Math.min(1, weekWorkHours / weekWorkCapHours) : 0;
+    const fortnightFillRatio = workCapHours > 0 ? Math.min(1, workHoursActual / workCapHours) : 0;
 
     const upcoming = useMemo(() => [...entries].sort((a, b) => a.isoDate.localeCompare(b.isoDate)).slice(0, 4), [entries]);
 
@@ -149,15 +133,7 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
     const topPick = rankedIncomplete[0];
     const runnersUp = rankedIncomplete.slice(1, 3);
 
-    const nextExam = useMemo(() => {
-        const exams = entries.filter((e) => e.kind === "exam" && !e.completed && e.isoDate >= todayIso);
-        exams.sort((a, b) => a.isoDate.localeCompare(b.isoDate) || (a.startMinutes ?? 0) - (b.startMinutes ?? 0));
-        return exams[0] ?? null;
-    }, [entries, todayIso]);
-
-    const examDaysAway = nextExam ? daysFromTodayToIso(nextExam.isoDate) : null;
-
-    const openWellbeingCount = useMemo(() => wellbeingTasks.filter((w) => !w.completed).length, [wellbeingTasks]);
+    const completedWellbeingCount = useMemo(() => wellbeingTasks.filter((w) => w.completed).length, [wellbeingTasks]);
 
     const dayHeading = scheduleDay.toLocaleDateString(undefined, {
         weekday: "long",
@@ -197,19 +173,6 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
         );
     };
 
-    const statsList = {
-        hidden: {},
-        show: { transition: { staggerChildren: 0.08, delayChildren: 0.04 } },
-    };
-    const statsItem = {
-        hidden: { opacity: 0, y: 12 },
-        show: {
-            opacity: 1,
-            y: 0,
-            transition: { type: "spring" as const, stiffness: 380, damping: 30 },
-        },
-    };
-
     const displayFirstName = displayName.trim() || t("profile.revamp.fallbackName");
 
     return (
@@ -222,7 +185,7 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
             </header>
 
             {/* Visa hours */}
-            <section className="kira-revamp-card p-4 md:p-6">
+            <section className="kira-revamp-card kira-visa-dashboard p-4 md:p-6">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                         <p className="kira-revamp-section-label">{t("dashboard.revamp.visaTitle")}</p>
@@ -238,38 +201,82 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
                     </div>
                 </div>
 
-                <div className="mt-4 md:hidden">
-                    <div className="flex items-baseline justify-between gap-2">
-                        <span className="kira-revamp-metric tabular-nums">
-                            {workHoursActual.toFixed(1)}
-                            <span className="text-lg font-semibold text-[var(--kira-revamp-text-muted)]"> / {fortnightWorkLimitHours} h</span>
-                        </span>
-                        <span className="text-xs font-medium text-[var(--kira-revamp-text-muted)]">{t("dashboard.revamp.thisFortnight")}</span>
-                    </div>
-                    <RevampProgressBar className="mt-2" value={workHoursActual} max={workCapHours} />
-                </div>
-
-                <div className="mt-5 hidden gap-6 md:grid lg:grid-cols-2">
-                    <div>
-                        <div className="flex items-baseline justify-between gap-2">
-                            <span className="text-sm font-medium text-[var(--kira-revamp-text-primary)]">{t("dashboard.revamp.thisWeek")}</span>
-                            <span className="text-sm font-semibold tabular-nums text-[var(--kira-revamp-text-primary)]">
+                <div className="mt-6 flex flex-col items-stretch gap-10 lg:flex-row lg:items-stretch lg:justify-between lg:gap-10 xl:gap-12">
+                    <div className="flex w-full flex-col items-stretch gap-10 md:flex-row md:items-stretch md:justify-center md:gap-8 lg:min-h-0 lg:flex-1 xl:gap-12">
+                        <div className="kira-visa-inset mx-auto flex w-full max-w-sm flex-col items-center md:max-w-[min(100%,17.5rem)] lg:mx-auto lg:max-w-none">
+                            <div className="hidden w-full max-w-[17.5rem] shrink-0 md:block">
+                                <div className="flex items-baseline justify-between gap-2">
+                                    <span className="text-sm font-medium text-[var(--kira-revamp-text-primary)]">{t("dashboard.revamp.thisWeek")}</span>
+                                    <span className="text-sm font-semibold tabular-nums text-[var(--kira-revamp-text-primary)]">
+                                        {weekWorkHours.toFixed(1)} / {weekWorkCapHours} h
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="flex min-h-0 w-full flex-1 flex-col items-center justify-center md:mt-0">
+                                <div className="flex w-full justify-center">
+                                    <LiquidLevelOrb
+                                        tone="work"
+                                        fillRatio={workWeekRatio}
+                                        variant="bottom-up"
+                                        size="lg"
+                                        aria-label={t("dashboard.revamp.liquidOrbAriaWork")}
+                                    >
+                                        <span className="text-lg font-bold tabular-nums text-[var(--kira-revamp-text-primary)] drop-shadow-[0_1px_2px_rgb(0_0_0_/_0.12)] dark:drop-shadow-[0_1px_3px_rgb(0_0_0_/_0.45)]">
+                                            {Math.round(workWeekRatio * 100)}%
+                                        </span>
+                                    </LiquidLevelOrb>
+                                </div>
+                            </div>
+                            <p className="kira-revamp-section-label mt-3 shrink-0 text-center md:hidden">{t("dashboard.revamp.thisWeek")}</p>
+                            <p className="mt-1 shrink-0 text-center text-xs font-medium text-[var(--kira-revamp-text-muted)] md:hidden">
                                 {weekWorkHours.toFixed(1)} / {weekWorkCapHours} h
-                            </span>
+                            </p>
+                            <p className="mt-3 hidden max-w-xs shrink-0 text-center text-xs text-[var(--kira-revamp-text-muted)] md:mt-auto md:block">
+                                {t("dashboard.revamp.weekWorkHint")}
+                            </p>
                         </div>
-                        <RevampProgressBar className="mt-2" value={weekWorkHours} max={weekWorkCapHours} />
-                        <p className="mt-1.5 text-xs text-[var(--kira-revamp-text-muted)]">{t("dashboard.revamp.weekWorkHint")}</p>
-                    </div>
-                    <div>
-                        <div className="flex items-baseline justify-between gap-2">
-                            <span className="text-sm font-medium text-[var(--kira-revamp-text-primary)]">{t("dashboard.revamp.thisFortnight")}</span>
-                            <span className="text-sm font-semibold tabular-nums text-[var(--kira-revamp-text-primary)]">
+
+                        <div className="kira-visa-inset flex w-full max-w-sm flex-col items-center md:max-w-[min(100%,17.5rem)] lg:max-w-none">
+                            <div className="hidden w-full max-w-[17.5rem] shrink-0 md:block">
+                                <div className="flex items-baseline justify-between gap-2">
+                                    <span className="text-sm font-medium text-[var(--kira-revamp-text-primary)]">{t("dashboard.revamp.thisFortnight")}</span>
+                                    <span className="text-sm font-semibold tabular-nums text-[var(--kira-revamp-text-primary)]">
+                                        {workHoursActual.toFixed(1)} / {fortnightWorkLimitHours} h
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="flex min-h-0 w-full flex-1 flex-col items-center justify-center md:mt-0">
+                                <div className="flex w-full justify-center">
+                                    <LiquidLevelOrb
+                                        tone="work"
+                                        fillRatio={fortnightFillRatio}
+                                        variant="top-down"
+                                        size="xl"
+                                        emphasized
+                                        aria-label={t("dashboard.revamp.visaLiquidOrbFortnightAria")}
+                                    >
+                                        <span className="text-center text-xl font-bold leading-tight text-[var(--kira-revamp-accent-work-dark)] drop-shadow-[0_1px_2px_rgb(255_255_255_/_0.35)] dark:text-[var(--kira-revamp-text-primary)] dark:drop-shadow-[0_1px_3px_rgb(0_0_0_/_0.5)]">
+                                            {workHoursActual.toFixed(1)}
+                                            <span className="block text-sm font-semibold text-[var(--kira-revamp-text-muted)]">h</span>
+                                        </span>
+                                    </LiquidLevelOrb>
+                                </div>
+                            </div>
+                            <p className="kira-revamp-section-label mt-3 shrink-0 text-center md:hidden">{t("dashboard.revamp.thisFortnight")}</p>
+                            <p className="mt-1 shrink-0 text-center text-xs font-medium text-[var(--kira-revamp-text-muted)] md:hidden">
                                 {workHoursActual.toFixed(1)} / {fortnightWorkLimitHours} h
-                            </span>
+                            </p>
+                            <p className="mt-3 hidden max-w-xs shrink-0 text-center text-xs text-[var(--kira-revamp-text-muted)] md:mt-auto md:block">
+                                {t("dashboard.revamp.fortnightHint")}
+                            </p>
                         </div>
-                        <RevampProgressBar className="mt-2" value={workHoursActual} max={workCapHours} />
-                        <p className="mt-1.5 text-xs text-[var(--kira-revamp-text-muted)]">{t("dashboard.revamp.fortnightHint")}</p>
                     </div>
+
+                    <WellbeingSpiritMeter
+                        completedCount={completedWellbeingCount}
+                        totalCount={wellbeingTasks.length}
+                        className="kira-visa-inset mx-auto flex h-full min-h-0 w-full max-w-xs shrink-0 flex-col justify-center lg:mx-0 lg:max-w-[12rem]"
+                    />
                 </div>
 
                 {showFortnightWarning ? (
@@ -279,113 +286,6 @@ export function DashboardPanel({ onOpenTab }: DashboardPanelProps) {
                     </div>
                 ) : null}
             </section>
-
-            {/* Summary metrics */}
-            <motion.div
-                className="grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 xl:grid-cols-3"
-                variants={statsList}
-                initial="hidden"
-                animate="show"
-            >
-                <motion.article
-                    variants={statsItem}
-                    className={cx(
-                        metricCardShell,
-                        "border-2 border-[var(--kira-revamp-border)]",
-                        "bg-[color-mix(in_srgb,var(--kira-revamp-accent-work)_42%,var(--kira-revamp-bg-card))]",
-                    )}
-                >
-                    <div
-                        className="flex size-10 items-center justify-center rounded-full"
-                        style={{ background: "color-mix(in srgb, var(--kira-revamp-accent-work) 22%, transparent)" }}
-                    >
-                        <Briefcase01 data-icon aria-hidden className="size-5 text-[var(--kira-revamp-accent-work-dark)]" />
-                    </div>
-                    <div className="mt-3 flex items-center justify-center gap-1.5">
-                        <p className="kira-revamp-section-label">{t("dashboard.revamp.metricWorkTitle")}</p>
-                        <HoverHint
-                            tone="work"
-                            title={t("dashboard.revamp.metricWorkTooltipTitle")}
-                            description={t("dashboard.revamp.metricWorkTooltipBody")}
-                            className="shrink-0 text-[var(--kira-revamp-accent-work-dark)]"
-                        />
-                    </div>
-                    <p className="kira-revamp-metric mt-2 tabular-nums">
-                        {weekWorkHours.toFixed(1)} / {weekWorkCapHours}
-                    </p>
-                    <p className="mt-1 max-w-[16rem] text-[13px] text-[var(--kira-revamp-text-muted)]">
-                        {tReplace("dashboard.revamp.metricWorkSub", { hours: weekWorkHours.toFixed(1) })}
-                    </p>
-                </motion.article>
-
-                <motion.article
-                    variants={statsItem}
-                    className={cx(
-                        metricCardShell,
-                        "border-2 border-[var(--kira-revamp-border)]",
-                        "bg-[color-mix(in_srgb,var(--kira-revamp-accent-study)_44%,var(--kira-revamp-bg-card))]",
-                    )}
-                >
-                    <div
-                        className="flex size-10 items-center justify-center rounded-full"
-                        style={{ background: "color-mix(in srgb, var(--kira-revamp-accent-study) 25%, transparent)" }}
-                    >
-                        <Trophy01 data-icon aria-hidden className="size-5 text-[var(--kira-revamp-accent-study-dark)]" />
-                    </div>
-                    <div className="mt-3 flex items-center justify-center gap-1.5">
-                        <p className="kira-revamp-section-label">{t("dashboard.revamp.metricExamTitle")}</p>
-                        <HoverHint
-                            tone="exam"
-                            title={t("dashboard.revamp.metricExamTooltipTitle")}
-                            description={t("dashboard.revamp.metricExamTooltipBody")}
-                            className="shrink-0 text-[var(--kira-revamp-accent-study-dark)]"
-                        />
-                    </div>
-                    <p className="kira-revamp-metric mt-2 tabular-nums">
-                        {formatMinutesAsHoursMinutes(weekStudyMinutes)}
-                        <span className="text-lg font-semibold text-[var(--kira-revamp-text-muted)]"> / </span>
-                        {formatMinutesAsHoursMinutes(weeklyStudyGoalMinutes)}
-                    </p>
-                    <p className="mt-1 max-w-[16rem] text-[13px] text-[var(--kira-revamp-text-muted)]">
-                        {tReplace("dashboard.revamp.metricExamSub", { hours: formatMinutesAsHoursMinutes(weekStudyMinutes) })}
-                    </p>
-                    <p className="mt-0.5 max-w-[16rem] text-[13px] text-[var(--kira-revamp-text-muted)]">
-                        {examDaysAway !== null && examDaysAway >= 0
-                            ? tReplace("dashboard.revamp.metricExamCountdown", { days: examDaysAway })
-                            : t("dashboard.revamp.metricExamNone")}
-                    </p>
-                </motion.article>
-
-                <motion.article
-                    variants={statsItem}
-                    className={cx(
-                        metricCardShell,
-                        "min-[480px]:col-span-2 xl:col-span-1",
-                        "border-2 border-[var(--kira-revamp-border)]",
-                        "bg-[color-mix(in_srgb,var(--kira-revamp-accent-wellbeing)_40%,var(--kira-revamp-bg-card))]",
-                    )}
-                >
-                    <div
-                        className="flex size-10 items-center justify-center rounded-full"
-                        style={{ background: "color-mix(in srgb, var(--kira-revamp-accent-wellbeing) 28%, transparent)" }}
-                    >
-                        <HeartRounded data-icon aria-hidden className="size-5 text-[var(--kira-revamp-text-secondary)]" />
-                    </div>
-                    <div className="mt-3 flex items-center justify-center gap-1.5">
-                        <p className="kira-revamp-section-label">{t("dashboard.revamp.metricBreakTitle")}</p>
-                        <HoverHint
-                            tone="wellbeing"
-                            title={t("dashboard.revamp.metricWellbeingTooltipTitle")}
-                            description={t("dashboard.revamp.metricWellbeingTooltipBody")}
-                            className="shrink-0 text-[var(--kira-revamp-accent-wellbeing-fg)]"
-                        />
-                    </div>
-                    <p className="kira-revamp-metric mt-2 tabular-nums">{openWellbeingCount}</p>
-                    <p className="mt-1 max-w-[16rem] text-[13px] text-[var(--kira-revamp-text-muted)]">
-                        {tReplace("dashboard.revamp.metricBreakSub", { open: openWellbeingCount })}
-                    </p>
-                </motion.article>
-            </motion.div>
 
             <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
                 <section className="kira-revamp-card space-y-3 p-5">

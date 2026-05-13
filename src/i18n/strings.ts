@@ -110,13 +110,13 @@ export const catalog = {
     "aria.nextDay": "Next day",
 
     "dashboard.calendarPreview": "This month",
-    "dashboard.editLimits": "Adjust study & work limits",
+    "dashboard.editLimits": "Adjust",
 
     "dashboard.revamp.greetingMorning": "Good morning",
     "dashboard.revamp.greetingAfternoon": "Good afternoon",
     "dashboard.revamp.greetingEvening": "Good evening",
 
-    "dashboard.revamp.visaTitle": "Visa-style work hours",
+    "dashboard.revamp.visaTitle": "Schedule health at a glance",
     "dashboard.revamp.visaSubtitle": "Paid shifts in your calendar compared to typical weekly and fortnight caps.",
     "dashboard.revamp.thisWeek": "This week",
     "dashboard.revamp.thisFortnight": "This fortnight",
@@ -137,6 +137,11 @@ export const catalog = {
     "dashboard.revamp.metricExamTooltipBody": "Study blocks logged this week versus your weekly study goal. Countdown uses the next upcoming exam on your calendar.",
     "dashboard.revamp.metricWellbeingTooltipTitle": "Wellbeing",
     "dashboard.revamp.metricWellbeingTooltipBody": "How many wellbeing checklist tasks are still open — small wins you can tick off between shifts and study.",
+    "dashboard.revamp.liquidOrbAriaWork": "Animated gauge: this week’s shift hours compared to your weekly planning cap.",
+    "dashboard.revamp.visaLiquidOrbFortnightAria": "Animated gauge: rolling fortnight shift hours compared to your saved cap.",
+    "dashboard.revamp.wellbeingSpiritCaption": "{{completed}} of {{total}} checklist tasks completed.",
+    "dashboard.revamp.wellbeingSpiritCaptionEmpty": "No wellbeing tasks yet — add a small win on the Wellbeing tab.",
+    "dashboard.revamp.wellbeingSpiritAria": "Wellbeing spirit level: {{completed}} of {{total}} wellbeing checklist tasks completed.",
     "dashboard.revamp.statusCompliant": "Compliant",
     "dashboard.revamp.statusAtRisk": "At risk",
     "dashboard.revamp.statusOver": "Over limit",

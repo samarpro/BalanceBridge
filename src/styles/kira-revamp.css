@@ -1,48 +1,91 @@
 /**
- * Kira dashboard revamp — warm cream shell (see docs/revamp.md).
- * Scoped to `.kira-app-revamp` so marketing/onboarding keep existing tokens.
+ * Kira app shell — color, type, and elevation from docs/dsign.md (Serene Well-being System).
+ * YAML `colors` in that file are the source of truth; `--kira-revamp-*` maps them for existing UI.
  */
 .kira-app-revamp {
-    --kira-revamp-bg-base: #f5efe6;
-    --kira-revamp-bg-sidebar: #eee5d8;
-    --kira-revamp-bg-card: #ffffff;
-    --kira-revamp-accent-work: #e8b4a0;
-    --kira-revamp-accent-work-dark: #c47a5a;
-    --kira-revamp-accent-study: #c9c2e8;
-    --kira-revamp-accent-study-dark: #8f86c4;
-    --kira-revamp-accent-social: #d4c9ef;
-    --kira-revamp-accent-wellbeing: #bcd9c4;
-    --kira-revamp-accent-warning: #e8c97e;
-    --kira-revamp-accent-success: #6bae8a;
-    --kira-revamp-accent-danger: #c45a5a;
-    --kira-revamp-text-primary: #2c2420;
-    --kira-revamp-text-secondary: #7a6e68;
-    --kira-revamp-text-muted: #a89e98;
-    --kira-revamp-border: rgb(120 100 80 / 0.12);
-    --kira-revamp-shadow-card: 0 2px 8px rgb(100 70 40 / 0.07);
-    --kira-revamp-shadow-card-hover: 0 6px 16px rgb(100 70 40 / 0.1);
-    --kira-revamp-focus-ring: rgb(196 122 90 / 0.6);
+    /* --- docs/dsign.md — light surfaces --- */
+    --ds-background: #faf9f6;
+    --ds-surface: #faf9f6;
+    --ds-surface-container-lowest: #ffffff;
+    --ds-surface-container-low: #f4f3f1;
+    --ds-surface-container: #efeeeb;
+    --ds-surface-container-high: #e9e8e5;
+    --ds-on-surface: #1a1c1a;
+    --ds-on-surface-variant: #424842;
+    --ds-outline: #737972;
+    --ds-outline-variant: #c2c8c0;
+    --ds-primary: #4a654e;
+    --ds-primary-container: #8ba88e;
+    --ds-on-primary-container: #233d29;
+    --ds-inverse-primary: #b0ceb2;
+    --ds-secondary: #266868;
+    --ds-secondary-container: #aeeeee;
+    --ds-on-secondary-container: #2e6e6e;
+    --ds-tertiary-container: #a4a196;
+    --ds-on-tertiary-container: #393830;
+    --ds-primary-fixed: #cceace;
+    --ds-on-primary-fixed: #07200f;
+    --ds-on-primary-fixed-variant: #334d38;
+    --ds-secondary-fixed: #aeeeee;
+    --ds-error: #ba1a1a;
+    --ds-error-container: #ffdad6;
+    --ds-inverse-surface: #2f312f;
+    --ds-inverse-on-surface: #f2f1ee;
+
+    /* --- App token mapping (existing components) --- */
+    --kira-revamp-bg-base: var(--ds-background);
+    --kira-revamp-bg-sidebar: var(--ds-surface-container-high);
+    --kira-revamp-bg-card: var(--ds-surface-container-lowest);
+    --kira-revamp-accent-work: var(--ds-primary-container);
+    --kira-revamp-accent-work-dark: var(--ds-primary);
+    --kira-revamp-accent-study: var(--ds-secondary-container);
+    --kira-revamp-accent-study-dark: var(--ds-secondary);
+    --kira-revamp-accent-social: var(--ds-tertiary-container);
+    --kira-revamp-accent-wellbeing: var(--ds-primary-fixed);
+    /* Soft terracotta (doc: warnings); not in YAML — tuned for legibility on cream) */
+    --kira-revamp-accent-warning: #deb19a;
+    --kira-revamp-accent-success: var(--ds-primary);
+    --kira-revamp-accent-danger: var(--ds-error);
+    --kira-revamp-text-primary: var(--ds-on-surface);
+    --kira-revamp-text-secondary: var(--ds-on-surface-variant);
+    --kira-revamp-text-muted: var(--ds-outline);
+    --kira-revamp-border: rgb(194 200 192 / 0.55);
+    /* Ambient sage-tinted shadow (dsign.md — Elevation) */
+    --kira-revamp-shadow-card: 0 6px 32px rgb(139 168 142 / 0.12);
+    --kira-revamp-shadow-card-hover: 0 14px 40px rgb(74 101 78 / 0.14);
+    --kira-revamp-focus-ring: rgb(74 101 78 / 0.45);
     --kira-revamp-sidebar-w: 220px;
     --kira-revamp-rail-w: 56px;
     --kira-revamp-bottom-nav-h: 56px;
-    font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+
+    /* Typography: Atkinson body, Plus Jakarta headings (docs/dsign.md) */
+    font-family: "Atkinson Hyperlegible Next", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
 html.dark-mode .kira-app-revamp {
-    --kira-revamp-bg-base: #1a1714;
-    --kira-revamp-bg-sidebar: #252019;
-    --kira-revamp-bg-card: #3a342f;
-    --kira-revamp-text-primary: #f7f1ea;
-    --kira-revamp-text-secondary: #d8cfc6;
-    --kira-revamp-text-muted: #a89f96;
-    --kira-revamp-border: rgb(247 241 234 / 0.22);
-    --kira-revamp-shadow-card: 0 2px 14px rgb(0 0 0 / 0.45);
-    --kira-revamp-shadow-card-hover: 0 8px 24px rgb(0 0 0 / 0.55);
-    --kira-revamp-focus-ring: rgb(232 180 160 / 0.55);
+    --kira-revamp-bg-base: var(--ds-inverse-surface);
+    --kira-revamp-bg-sidebar: #282a28;
+    --kira-revamp-bg-card: #3a3c3a;
+    --kira-revamp-accent-work: #3d5240;
+    --kira-revamp-accent-work-dark: var(--ds-inverse-primary);
+    --kira-revamp-accent-study: #2a4545;
+    --kira-revamp-accent-study-dark: #aeeeee;
+    --kira-revamp-accent-social: #5a5850;
+    --kira-revamp-accent-wellbeing: #3d5240;
+    --kira-revamp-accent-warning: #c9a089;
+    --kira-revamp-accent-success: var(--ds-inverse-primary);
+    --kira-revamp-accent-danger: #ffb4ab;
+    --kira-revamp-text-primary: var(--ds-inverse-on-surface);
+    --kira-revamp-text-secondary: #c9cbc7;
+    --kira-revamp-text-muted: #9da29b;
+    --kira-revamp-border: rgb(242 241 238 / 0.14);
+    --kira-revamp-shadow-card: 0 6px 32px rgb(0 0 0 / 0.38);
+    --kira-revamp-shadow-card-hover: 0 14px 44px rgb(0 0 0 / 0.48);
+    --kira-revamp-focus-ring: rgb(176 206 178 / 0.55);
 }
 
 .kira-app-revamp :where(.kira-revamp-card) {
-    border-radius: 16px;
+    border-radius: 1.5rem;
     background: var(--kira-revamp-bg-card);
     border: 1px solid var(--kira-revamp-border);
     box-shadow: var(--kira-revamp-shadow-card);
@@ -56,7 +99,44 @@ html.dark-mode .kira-app-revamp {
     box-shadow: var(--kira-revamp-shadow-card-hover);
 }
 
+/** Dashboard visa hours block — outer soft grey tray */
+.kira-app-revamp :where(.kira-revamp-card.kira-visa-dashboard) {
+    background: color-mix(in srgb, var(--kira-revamp-text-muted) 5%, var(--kira-revamp-bg-card));
+    border: 1px solid color-mix(in srgb, var(--kira-revamp-text-muted) 22%, var(--kira-revamp-border));
+}
+
+html.dark-mode .kira-app-revamp :where(.kira-revamp-card.kira-visa-dashboard) {
+    background: color-mix(in srgb, var(--kira-revamp-text-secondary) 8%, var(--kira-revamp-bg-card));
+    border: 1px solid color-mix(in srgb, var(--kira-revamp-text-secondary) 16%, var(--kira-revamp-border));
+}
+
+/** Nested panels (week / fortnight / wellbeing) inside the visa card */
+.kira-app-revamp :where(.kira-visa-dashboard .kira-visa-inset) {
+    display: flex;
+    flex-direction: column;
+    /* Same panel height across week / fortnight / wellbeing; width stays content-driven */
+    min-height: clamp(17rem, 32vmin, 21.5rem);
+    border-radius: 1.25rem;
+    border: 1px solid color-mix(in srgb, var(--kira-revamp-text-muted) 24%, var(--kira-revamp-border));
+    background: color-mix(in srgb, var(--kira-revamp-bg-card) 92%, var(--kira-revamp-text-muted) 5%);
+    padding: 1rem 1rem 1.25rem;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.28);
+}
+
+@media (min-width: 768px) {
+    .kira-app-revamp :where(.kira-visa-dashboard .kira-visa-inset) {
+        padding: 1.125rem 1.25rem 1.375rem;
+    }
+}
+
+html.dark-mode .kira-app-revamp :where(.kira-visa-dashboard .kira-visa-inset) {
+    border: 1px solid color-mix(in srgb, var(--kira-revamp-text-secondary) 18%, var(--kira-revamp-border));
+    background: color-mix(in srgb, var(--kira-revamp-bg-card) 86%, var(--kira-revamp-text-secondary) 7%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06);
+}
+
 .kira-app-revamp :where(.kira-revamp-section-label) {
+    font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.08em;
@@ -65,15 +145,249 @@ html.dark-mode .kira-app-revamp {
 }
 
 .kira-app-revamp :where(.kira-revamp-metric) {
+    font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
     font-size: clamp(1.5rem, 2.5vw, 2rem);
     font-weight: 700;
     line-height: 1.1;
     color: var(--kira-revamp-text-primary);
 }
 
+.kira-app-revamp .kira-text-flow :where(h1, h2, h3) {
+    font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
 .kira-app-revamp :where(.kira-revamp-focusable):focus-visible {
     outline: 2px solid var(--kira-revamp-focus-ring);
     outline-offset: 2px;
+}
+
+/* --- Liquid level orb — uses revamp accent tokens --- */
+@keyframes kira-liquid-wave {
+    from {
+        transform: translateY(5%) scaleX(1);
+        border-radius: 40% 60% 0 0;
+    }
+    to {
+        transform: translateY(0%) scaleX(1.05);
+        border-radius: 60% 40% 0 0;
+    }
+}
+
+@keyframes kira-liquid-wave-inverted {
+    from {
+        transform: translateY(-5%) scaleX(1);
+        border-radius: 0 0 40% 60%;
+    }
+    to {
+        transform: translateY(0%) scaleX(1.05);
+        border-radius: 0 0 60% 40%;
+    }
+}
+
+@keyframes kira-liquid-ripple {
+    0% {
+        transform: translateX(-12%) skewX(-2deg) scale(1, 1);
+    }
+    100% {
+        transform: translateX(14%) skewX(2deg) scale(1.08, 0.96);
+    }
+}
+
+@keyframes kira-liquid-ripple-inverted {
+    0% {
+        transform: translateX(14%) skewX(2deg) scale(1, 1);
+    }
+    100% {
+        transform: translateX(-12%) skewX(-2deg) scale(1.08, 0.96);
+    }
+}
+
+@keyframes kira-liquid-glow-pulse {
+    0% {
+        opacity: 0.72;
+        box-shadow:
+            inset 0 0 18px color-mix(in srgb, var(--kira-liquid-glow) 32%, transparent),
+            0 0 16px color-mix(in srgb, var(--kira-liquid-glow) 38%, transparent),
+            0 0 40px color-mix(in srgb, var(--kira-liquid-glow) 22%, transparent);
+    }
+    100% {
+        opacity: 1;
+        box-shadow:
+            inset 0 0 28px color-mix(in srgb, var(--kira-liquid-glow) 42%, transparent),
+            0 0 28px color-mix(in srgb, var(--kira-liquid-glow) 52%, transparent),
+            0 0 64px color-mix(in srgb, var(--kira-liquid-glow) 32%, transparent);
+    }
+}
+
+.kira-app-revamp .kira-liquid-orb {
+    position: relative;
+    width: 6rem;
+    height: 6rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--kira-liquid-tone-mid, var(--kira-revamp-accent-work)) 14%, var(--kira-revamp-bg-card));
+    --kira-liquid-glow: color-mix(in srgb, var(--kira-liquid-tone-mid, var(--kira-revamp-accent-work)) 38%, white);
+    box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--kira-revamp-border) 80%, transparent),
+        0 8px 24px color-mix(in srgb, var(--kira-liquid-tone-dark, var(--kira-revamp-accent-work-dark)) 18%, transparent),
+        0 0 32px color-mix(in srgb, var(--kira-liquid-glow) 26%, transparent);
+}
+
+.kira-app-revamp .kira-liquid-orb--lg {
+    width: 8rem;
+    height: 8rem;
+}
+
+.kira-app-revamp .kira-liquid-orb--xl {
+    width: 10rem;
+    height: 10rem;
+}
+
+.kira-app-revamp .kira-liquid-orb--emphasized {
+    box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--kira-revamp-border) 80%, transparent),
+        0 0 0 4px color-mix(in srgb, var(--kira-liquid-tone-mid, var(--kira-revamp-accent-work)) 12%, transparent),
+        0 10px 28px color-mix(in srgb, var(--kira-liquid-tone-dark, var(--kira-revamp-accent-work-dark)) 22%, transparent),
+        0 0 44px color-mix(in srgb, var(--kira-liquid-glow) 34%, transparent);
+}
+
+.kira-app-revamp .kira-liquid-orb[data-tone="work"] {
+    --kira-liquid-tone-mid: var(--kira-revamp-accent-work);
+    --kira-liquid-tone-dark: var(--kira-revamp-accent-work-dark);
+    --kira-liquid-glow: color-mix(in srgb, var(--kira-revamp-accent-work) 40%, rgb(220 255 245));
+}
+
+.kira-app-revamp .kira-liquid-orb[data-tone="study"] {
+    --kira-liquid-tone-mid: var(--kira-revamp-accent-study);
+    --kira-liquid-tone-dark: var(--kira-revamp-accent-study-dark);
+    --kira-liquid-glow: color-mix(in srgb, var(--kira-revamp-accent-study) 40%, rgb(230 248 255));
+}
+
+.kira-app-revamp .kira-liquid-orb[data-tone="wellbeing"] {
+    --kira-liquid-tone-mid: var(--kira-revamp-accent-wellbeing);
+    --kira-liquid-tone-dark: var(--kira-revamp-accent-wellbeing-fg);
+    --kira-liquid-glow: color-mix(in srgb, var(--kira-revamp-accent-wellbeing) 42%, rgb(255 252 235));
+}
+
+.kira-app-revamp .kira-liquid-orb-glow {
+    z-index: 0;
+    animation: kira-liquid-glow-pulse 3.2s ease-in-out infinite alternate;
+    will-change: box-shadow, opacity;
+}
+
+.kira-app-revamp .kira-liquid-body {
+    z-index: 1;
+}
+
+.kira-app-revamp .kira-liquid-body .kira-liquid-fill {
+    position: absolute;
+    inset: 0;
+    border-top: 2px solid color-mix(in srgb, var(--kira-revamp-bg-card) 55%, transparent);
+    border-radius: 42% 58% 0 0;
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--kira-liquid-tone-mid) 82%, var(--kira-revamp-bg-card)) 0%,
+        var(--kira-liquid-tone-dark) 100%
+    );
+    animation: kira-liquid-wave 4s ease-in-out infinite alternate;
+    will-change: transform;
+}
+
+.kira-app-revamp .kira-liquid-body .kira-liquid-fill--inverted {
+    border-top: none;
+    border-bottom: 2px solid color-mix(in srgb, var(--kira-revamp-bg-card) 55%, transparent);
+    border-radius: 0 0 42% 58%;
+    background: linear-gradient(
+        0deg,
+        color-mix(in srgb, var(--kira-liquid-tone-mid) 12%, var(--kira-revamp-bg-card)) 0%,
+        color-mix(in srgb, var(--kira-liquid-tone-dark) 92%, var(--kira-revamp-bg-card)) 100%
+    );
+    animation: kira-liquid-wave-inverted 4s ease-in-out infinite alternate;
+}
+
+.kira-app-revamp .kira-liquid-ripple {
+    position: absolute;
+    top: -18%;
+    left: -35%;
+    width: 170%;
+    height: 48%;
+    border-radius: 48% 52% 46% 54% / 62% 38% 55% 45%;
+    background: radial-gradient(
+        ellipse 65% 70% at 50% 100%,
+        color-mix(in srgb, var(--kira-revamp-bg-card) 25%, transparent) 0%,
+        color-mix(in srgb, var(--kira-liquid-glow) 45%, transparent) 38%,
+        transparent 70%
+    );
+    opacity: 0.5;
+    mix-blend-mode: soft-light;
+    animation: kira-liquid-ripple 5.8s ease-in-out infinite alternate;
+    will-change: transform;
+}
+
+.kira-app-revamp .kira-liquid-ripple--inverted {
+    top: auto;
+    bottom: -18%;
+    left: -35%;
+    background: radial-gradient(
+        ellipse 65% 70% at 50% 0%,
+        color-mix(in srgb, var(--kira-revamp-bg-card) 25%, transparent) 0%,
+        color-mix(in srgb, var(--kira-liquid-glow) 45%, transparent) 38%,
+        transparent 70%
+    );
+    animation: kira-liquid-ripple-inverted 5.8s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .kira-app-revamp .kira-liquid-body .kira-liquid-fill,
+    .kira-app-revamp .kira-liquid-body .kira-liquid-fill--inverted {
+        animation: none;
+    }
+
+    .kira-app-revamp .kira-liquid-ripple,
+    .kira-app-revamp .kira-liquid-ripple--inverted {
+        animation: none;
+    }
+
+    .kira-app-revamp .kira-liquid-orb-glow {
+        animation: none;
+        opacity: 0.88;
+        box-shadow:
+            inset 0 0 22px color-mix(in srgb, var(--kira-liquid-glow) 34%, transparent),
+            0 0 22px color-mix(in srgb, var(--kira-liquid-glow) 40%, transparent),
+            0 0 48px color-mix(in srgb, var(--kira-liquid-glow) 26%, transparent);
+    }
+}
+
+/* Wellbeing “spirit level” meter — energy-bar pulse (see t-animation-dash.html) */
+@keyframes kira-wellbeing-spirit-pulse {
+    0%,
+    100% {
+        opacity: 0.9;
+        box-shadow:
+            0 0 6px color-mix(in srgb, var(--kira-revamp-accent-wellbeing) 35%, transparent),
+            0 0 16px color-mix(in srgb, var(--kira-revamp-accent-wellbeing) 42%, transparent);
+    }
+    50% {
+        opacity: 1;
+        box-shadow:
+            0 0 12px color-mix(in srgb, var(--kira-revamp-accent-wellbeing) 55%, transparent),
+            0 0 26px color-mix(in srgb, var(--kira-revamp-accent-wellbeing) 38%, transparent);
+    }
+}
+
+.kira-app-revamp .kira-wellbeing-spirit-pulse {
+    animation: kira-wellbeing-spirit-pulse 2.1s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .kira-app-revamp .kira-wellbeing-spirit-pulse {
+        animation: none;
+        opacity: 1;
+        box-shadow:
+            0 0 10px color-mix(in srgb, var(--kira-revamp-accent-wellbeing) 45%, transparent),
+            0 0 20px color-mix(in srgb, var(--kira-revamp-accent-wellbeing) 32%, transparent);
+    }
 }
 
 /* Bottom safe area for fixed nav + FAB */
@@ -88,46 +402,46 @@ html.dark-mode .kira-app-revamp {
 }
 
 /**
- * Portals (e.g. RAC Tooltip) render outside `.kira-app-revamp`, so shared tokens used there live on :root.
+ * Portals (e.g. RAC Tooltip) render outside `.kira-app-revamp` — aligned to docs/dsign.md.
  */
 :root {
-    --kira-revamp-popover-work-bg: #f6ebe6;
-    --kira-revamp-popover-work-text: #2c2420;
-    --kira-revamp-popover-work-muted: #574c45;
-    --kira-revamp-popover-work-border: rgb(196 122 90 / 0.42);
+    --kira-revamp-popover-work-bg: #f4f3f1;
+    --kira-revamp-popover-work-text: #1a1c1a;
+    --kira-revamp-popover-work-muted: #424842;
+    --kira-revamp-popover-work-border: rgb(74 101 78 / 0.28);
 
-    --kira-revamp-popover-exam-bg: #eceaf7;
-    --kira-revamp-popover-exam-text: #2c2420;
-    --kira-revamp-popover-exam-muted: #534a62;
-    --kira-revamp-popover-exam-border: rgb(143 134 196 / 0.42);
+    --kira-revamp-popover-exam-bg: #aeeeee;
+    --kira-revamp-popover-exam-text: #072020;
+    --kira-revamp-popover-exam-muted: #266868;
+    --kira-revamp-popover-exam-border: rgb(38 104 104 / 0.35);
 
-    --kira-revamp-popover-wellbeing-bg: #e8f2eb;
-    --kira-revamp-popover-wellbeing-text: #2c2420;
-    --kira-revamp-popover-wellbeing-muted: #4a5c52;
-    --kira-revamp-popover-wellbeing-border: rgb(107 174 138 / 0.4);
+    --kira-revamp-popover-wellbeing-bg: #cceace;
+    --kira-revamp-popover-wellbeing-text: #07200f;
+    --kira-revamp-popover-wellbeing-muted: #334d38;
+    --kira-revamp-popover-wellbeing-border: rgb(74 101 78 / 0.32);
 
-    --kira-revamp-accent-wellbeing-fg: #3d6b52;
-    --kira-revamp-drawer-scrim: rgb(20 18 16 / 0.92);
-    --kira-revamp-shadow-bottom-nav: 0 -6px 16px rgb(44 36 32 / 0.1);
+    --kira-revamp-accent-wellbeing-fg: #233d29;
+    --kira-revamp-drawer-scrim: rgb(26 28 26 / 0.88);
+    --kira-revamp-shadow-bottom-nav: 0 -8px 28px rgb(139 168 142 / 0.14);
 }
 
 html.dark-mode {
-    --kira-revamp-popover-work-bg: #3d2f2a;
-    --kira-revamp-popover-work-text: #faf6f1;
-    --kira-revamp-popover-work-muted: #d8c8c0;
-    --kira-revamp-popover-work-border: rgb(232 180 160 / 0.42);
+    --kira-revamp-popover-work-bg: #3a3c3a;
+    --kira-revamp-popover-work-text: #f2f1ee;
+    --kira-revamp-popover-work-muted: #c9cbc7;
+    --kira-revamp-popover-work-border: rgb(176 206 178 / 0.35);
 
-    --kira-revamp-popover-exam-bg: #353044;
-    --kira-revamp-popover-exam-text: #f2f0fb;
-    --kira-revamp-popover-exam-muted: #cfc8e8;
-    --kira-revamp-popover-exam-border: rgb(180 168 220 / 0.45);
+    --kira-revamp-popover-exam-bg: #2a4545;
+    --kira-revamp-popover-exam-text: #e8fffe;
+    --kira-revamp-popover-exam-muted: #aeeeee;
+    --kira-revamp-popover-exam-border: rgb(174 238 238 / 0.35);
 
-    --kira-revamp-popover-wellbeing-bg: #2a3830;
-    --kira-revamp-popover-wellbeing-text: #f0faf4;
-    --kira-revamp-popover-wellbeing-muted: #c5ddd0;
-    --kira-revamp-popover-wellbeing-border: rgb(150 200 175 / 0.4);
+    --kira-revamp-popover-wellbeing-bg: #354538;
+    --kira-revamp-popover-wellbeing-text: #f2faf0;
+    --kira-revamp-popover-wellbeing-muted: #b0ceb2;
+    --kira-revamp-popover-wellbeing-border: rgb(176 206 178 / 0.32);
 
-    --kira-revamp-accent-wellbeing-fg: #b8e8d0;
+    --kira-revamp-accent-wellbeing-fg: #cceace;
     --kira-revamp-drawer-scrim: rgb(0 0 0 / 0.72);
-    --kira-revamp-shadow-bottom-nav: 0 -8px 24px rgb(0 0 0 / 0.45);
+    --kira-revamp-shadow-bottom-nav: 0 -10px 32px rgb(0 0 0 / 0.42);
 }

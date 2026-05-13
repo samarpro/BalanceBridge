@@ -222,7 +222,7 @@ function AppContent() {
 
     return (
         <div className="flex min-h-dvh flex-col overflow-x-clip bg-[var(--kira-revamp-bg-base)] text-[var(--kira-revamp-text-primary)]">
-            <header className="sticky top-0 z-30 flex min-h-14 shrink-0 items-center gap-4 border-b-2 border-[var(--kira-revamp-border)] bg-[var(--kira-revamp-bg-base)] px-5 py-4 shadow-sm md:gap-6 md:px-8 md:py-4 lg:px-10">
+            <header className="kira-app-header fixed top-0 right-0 left-0 z-50 flex h-16 shrink-0 items-center gap-4 border-b-2 border-[var(--kira-revamp-border)] bg-[var(--kira-revamp-bg-base)] px-5 shadow-sm md:gap-6 md:px-8 lg:px-10">
                 <button
                     type="button"
                     onClick={() => setTab("dashboard")}
@@ -245,12 +245,12 @@ function AppContent() {
                 </div>
             </header>
 
-            <div className="flex min-h-0 min-w-0 flex-1 flex-row">
-                {/* md+: in-flow collapsible sidebar */}
+            <div className="flex min-h-0 min-w-0 flex-1 flex-row pt-16">
+                {/* md+: fixed left rail — does not scroll with main */}
                 <aside
                     aria-label={t("app.menuTitle")}
                     className={cx(
-                        "relative z-10 hidden min-h-0 shrink-0 flex-col self-stretch border-r border-[var(--kira-revamp-border)] bg-[var(--kira-revamp-bg-sidebar)] transition-[width] duration-200 ease-out md:flex",
+                        "fixed top-16 bottom-0 left-0 z-[30] hidden min-h-0 flex-col border-r border-[var(--kira-revamp-border)] bg-[var(--kira-revamp-bg-sidebar)] pb-[max(0.5rem,env(safe-area-inset-bottom,0px))] transition-[width] duration-200 ease-out md:flex",
                         sidebarExpanded ? "w-[var(--kira-revamp-sidebar-w)]" : "w-14",
                     )}
                 >
@@ -289,10 +289,10 @@ function AppContent() {
                     {sidebarExpanded ? <SidebarFooter /> : null}
                 </aside>
 
-                {/* Mobile: fixed icon rail */}
+                {/* Mobile: fixed icon rail — top aligns to fixed header (h-16) */}
                 <aside
                     aria-label={t("app.menuTitle")}
-                    className="fixed top-14 left-0 z-20 flex h-[calc(100dvh-3.5rem)] w-14 shrink-0 flex-col border-r border-[var(--kira-revamp-border)] bg-[var(--kira-revamp-bg-sidebar)] md:hidden"
+                    className="fixed top-16 bottom-0 left-0 z-[38] flex w-14 shrink-0 flex-col border-r border-[var(--kira-revamp-border)] bg-[var(--kira-revamp-bg-sidebar)] pb-[max(0.5rem,env(safe-area-inset-bottom,0px))] md:hidden"
                 >
                     <div className="flex shrink-0 border-b border-[var(--kira-revamp-border)] p-1.5">
                         <button
@@ -329,10 +329,10 @@ function AppContent() {
                         <button
                             type="button"
                             aria-label={t("aria.collapseAppSidebar")}
-                            className="fixed top-14 right-0 bottom-0 left-0 z-40 cursor-default bg-[var(--kira-revamp-drawer-scrim)] backdrop-blur-sm"
+                            className="fixed top-16 right-0 bottom-0 left-0 z-40 cursor-default bg-[var(--kira-revamp-drawer-scrim)] backdrop-blur-sm"
                             onClick={() => persistSidebar(false)}
                         />
-                        <div className="fixed top-14 left-0 z-50 flex h-[calc(100dvh-3.5rem)] w-[min(20rem,calc(100vw-1rem))] flex-col border-r border-[var(--kira-revamp-border)] bg-[var(--kira-revamp-bg-sidebar)] shadow-xl">
+                        <div className="fixed top-16 bottom-0 left-0 z-[42] flex w-[min(20rem,calc(100vw-1rem))] flex-col border-r border-[var(--kira-revamp-border)] bg-[var(--kira-revamp-bg-sidebar)] pb-[max(0.5rem,env(safe-area-inset-bottom,0px))] shadow-xl">
                             <div className="flex shrink-0 items-center justify-between gap-2 border-b border-[var(--kira-revamp-border)] p-3">
                                 <p className="min-w-0 truncate text-sm font-semibold text-[var(--kira-revamp-text-primary)]">{t("app.menuTitle")}</p>
                                 <button
@@ -359,7 +359,12 @@ function AppContent() {
                     </>
                 ) : null}
 
-                <div className="flex min-h-0 min-w-0 flex-1 flex-col md:min-w-0">
+                <div
+                    className={cx(
+                        "flex min-h-0 min-w-0 flex-1 flex-col transition-[padding] duration-200 ease-out md:min-w-0",
+                        sidebarExpanded ? "md:pl-[var(--kira-revamp-sidebar-w)]" : "md:pl-14",
+                    )}
+                >
                     <main className="kira-app-revamp-main kira-text-flow mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col overflow-y-auto overscroll-y-contain px-4 py-6 pl-[calc(3.5rem+1rem)] md:px-8 md:py-8 md:pl-8">
                         {tab === "dashboard" && <DashboardPanel onOpenTab={(id) => setTab(id as AppTabId)} />}
                         {tab === "calendar" && <CalendarPanel />}
