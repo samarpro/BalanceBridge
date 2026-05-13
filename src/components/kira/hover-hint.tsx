@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { HelpCircle } from "@untitledui/icons";
-import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
+import { Tooltip, TooltipTrigger, type TooltipTone } from "@/components/base/tooltip/tooltip";
 import { cx } from "@/utils/cx";
 
 export interface HoverHintProps {
@@ -9,6 +9,8 @@ export interface HoverHintProps {
     /** Supporting detail (optional). */
     description?: ReactNode;
     className?: string;
+    /** Tinted tooltip surface (centered, capped width). @default "inverse" */
+    tone?: TooltipTone;
 }
 
 function srSummary(title: string, description?: ReactNode): string {
@@ -16,9 +18,9 @@ function srSummary(title: string, description?: ReactNode): string {
     return title;
 }
 
-export function HoverHint({ title, description, className }: HoverHintProps) {
+export function HoverHint({ title, description, className, tone = "inverse" }: HoverHintProps) {
     return (
-        <Tooltip title={title} description={description} placement="top">
+        <Tooltip title={title} description={description} placement="top" tone={tone}>
             <TooltipTrigger
                 type="button"
                 className={cx(

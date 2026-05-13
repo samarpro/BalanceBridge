@@ -16,7 +16,7 @@ export const ModalOverlay = (props: AriaModalOverlayProps) => {
             {...props}
             className={(state) =>
                 cx(
-                    "pointer-events-auto fixed inset-0 z-[100] flex min-h-dvh w-full items-end justify-center overflow-y-auto bg-overlay/70 px-4 pt-4 pb-[clamp(16px,8vh,64px)] outline-hidden backdrop-blur-[6px] sm:items-center sm:justify-center sm:p-8",
+                    "pointer-events-auto fixed inset-0 z-[100] flex min-h-dvh w-full items-end justify-center overflow-y-auto bg-neutral-950/92 px-4 pt-4 pb-[clamp(16px,8vh,64px)] outline-hidden backdrop-blur-sm sm:items-center sm:justify-center sm:p-8 dark:bg-neutral-900/94",
                     state.isEntering && overlayEnter,
                     state.isExiting && overlayExit,
                     typeof props.className === "function" ? props.className(state) : props.className,

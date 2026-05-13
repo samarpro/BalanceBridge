@@ -6,7 +6,7 @@ import { loadScheduleEntries, saveScheduleEntries } from "@/lib/schedule-entries
 import { loadWellbeingTasks, saveWellbeingTasks } from "@/lib/wellbeing-tasks-storage";
 import type { LifePriorityId } from "@/types/life-priority";
 import type { WellbeingTask } from "@/types/wellbeing-task";
-import { isoFromDate } from "@/utils/schedule-time";
+import { addDays, isoFromDate, startOfWeekMonday } from "@/utils/schedule-time";
 
 export type { WellbeingTask } from "@/types/wellbeing-task";
 
@@ -27,6 +27,9 @@ function seedEntries(): ScheduleEntry[] {
     d4.setDate(d4.getDate() + 4);
     const soon = new Date(today);
     soon.setDate(soon.getDate() + 1);
+    const weekStart = startOfWeekMonday(today);
+    const tue = addDays(weekStart, 1);
+    const wed = addDays(weekStart, 2);
     return [
         {
             id: "seed-1",
@@ -37,6 +40,26 @@ function seedEntries(): ScheduleEntry[] {
             completed: false,
             startMinutes: 9 * 60 + 30,
             durationMinutes: 450,
+        },
+        {
+            id: "seed-sit216-tue",
+            isoDate: isoFromDate(tue),
+            title: "SIT216 — lecture",
+            kind: "study",
+            priority: "medium",
+            completed: false,
+            startMinutes: 10 * 60,
+            durationMinutes: 60,
+        },
+        {
+            id: "seed-sit216-wed",
+            isoDate: isoFromDate(wed),
+            title: "SIT216 — lecture",
+            kind: "study",
+            priority: "medium",
+            completed: false,
+            startMinutes: 10 * 60,
+            durationMinutes: 60,
         },
         {
             id: "seed-2",

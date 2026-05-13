@@ -3,26 +3,15 @@ import { Trash01 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Input } from "@/components/base/input/input";
-import { GlassRadialTile } from "@/components/kira/glass-radial-tile";
 import { HoverHint } from "@/components/kira/hover-hint";
+import { RevampProgressBar } from "@/components/kira/revamp-progress-bar";
 import { useKiraStore } from "@/stores/kira-store";
-import {
-    calendarWeekKindMinutes,
-    calendarWeekMinutesByDay,
-    estimatedWeekScreenMinutes,
-    formatMinutesAsHoursMinutes,
-    fortnightShiftMinutes,
-    monthlyShiftMinutesByWeek,
-} from "@/utils/schedule-aggregates";
+import { calendarWeekKindMinutes, calendarWeekMinutesByDay, formatMinutesAsHoursMinutes, fortnightShiftMinutes } from "@/utils/schedule-aggregates";
 import { cx } from "@/utils/cx";
-import { t, tWellbeingWelcome } from "@/i18n/strings";
+import { t, tReplace, tWellbeingWelcome } from "@/i18n/strings";
 
-const SCREEN_SOFT_CAP_MINUTES = 960;
-const MONTH_REFERENCE_MINUTES = 80 * 60;
-const WEEK_LOAD_BASE_MINUTES = 40 * 60;
-
-const tasksGlass =
-    "flex min-h-0 flex-col rounded-2xl border border-white/25 bg-gradient-to-br from-white/15 to-white/5 p-4 shadow-lg backdrop-blur-xl dark:border-white/10 dark:from-white/[0.12] dark:to-white/[0.05]";
+const softCard =
+    "rounded-2xl border-2 border-[var(--kira-revamp-border)] bg-[color-mix(in_srgb,var(--kira-revamp-bg-card)_88%,var(--kira-revamp-bg-base))] p-5 shadow-[var(--kira-revamp-shadow-card)]";
 
 export function WellbeingPanel() {
     const entries = useKiraStore((s) => s.entries);
@@ -41,175 +30,179 @@ export function WellbeingPanel() {
 
     const weekStudyMinutes = useMemo(() => calendarWeekKindMinutes(entries, "study", refDay), [entries, refDay]);
     const fortnightWorkMinutes = useMemo(() => fortnightShiftMinutes(entries, refDay), [entries, refDay]);
-    const screenMinutesWeek = useMemo(() => estimatedWeekScreenMinutes(weekStudyMinutes), [weekStudyMinutes]);
-    const workMonthSeries = useMemo(() => monthlyShiftMinutesByWeek(entries, refDay), [entries, refDay]);
-    const monthShiftTotalMinutes = useMemo(() => workMonthSeries.reduce((s, w) => s + w.minutes, 0), [workMonthSeries]);
-
     const weekLoadSeries = useMemo(() => calendarWeekMinutesByDay(entries, refDay), [entries, refDay]);
     const weekTotalMinutes = useMemo(
         () => weekLoadSeries.reduce((s, r) => s + r.shift + r.study + r.exam, 0),
         [weekLoadSeries],
     );
-    const peakDayMinutes = useMemo(() => {
-        let m = 0;
-        for (const row of weekLoadSeries) {
-            const d = row.shift + row.study + row.exam;
-            if (d > m) m = d;
-        }
-        return m;
-    }, [weekLoadSeries]);
-    const weekLoadCapMinutes = Math.max(WEEK_LOAD_BASE_MINUTES, peakDayMinutes * 1.2);
 
     const workCapMinutes = Math.max(fortnightWorkLimitHours * 60, 1);
     const studyGoalSafe = Math.max(weeklyStudyGoalMinutes, 1);
-
-    const studyPct = Math.round((weekStudyMinutes / studyGoalSafe) * 100);
-    const workPct = Math.round((fortnightWorkMinutes / workCapMinutes) * 100);
-    const screenPct = Math.round((screenMinutesWeek / SCREEN_SOFT_CAP_MINUTES) * 100);
-    const weekLoadPct = weekLoadCapMinutes > 0 ? Math.round((weekTotalMinutes / weekLoadCapMinutes) * 100) : 0;
-    const monthPct = Math.round((monthShiftTotalMinutes / MONTH_REFERENCE_MINUTES) * 100);
+    const workHours = fortnightWorkMinutes / 60;
+    const workCapHours = Math.max(fortnightWorkLimitHours, 1);
+    const studyHours = weekStudyMinutes / 60;
+    const studyGoalHours = studyGoalSafe / 60;
+    const workPct = (fortnightWorkMinutes / workCapMinutes) * 100;
 
     const welcomeHeading = tWellbeingWelcome(displayName);
 
-    const pctOf = (id: "wellbeing.ringPercentOfGoal" | "wellbeing.ringPercentOfCap" | "wellbeing.ringPercentOfGuide", pct: number) =>
-        t(id).replace("{{pct}}", String(pct));
-
     return (
-        <div className="flex flex-col gap-7">
-            <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div className="min-w-0">
-                    <div className="flex flex-wrap items-start gap-1.5">
-                        <h2 className="text-display-sm font-semibold tracking-tight text-primary max-md:text-lg max-md:leading-snug">
-                            {welcomeHeading}
-                        </h2>
-                        <HoverHint
-                            title={t("wellbeing.hintTitle")}
-                            description={t("wellbeing.subtitle")}
-                            className="mt-1.5 max-md:mt-1"
-                        />
-                    </div>
-                    <p className="mt-3 max-w-2xl text-md leading-relaxed text-secondary max-md:text-xs max-md:leading-snug md:mt-4">
-                        {t("wellbeing.lead")}
-                    </p>
+        <div className="mx-auto flex w-full max-w-xl flex-col gap-8 pb-6 sm:max-w-2xl sm:gap-10 md:pb-8">
+            <header className="space-y-4">
+                <div className="flex flex-wrap items-start gap-2">
+                    <h1 className="text-[1.65rem] font-semibold leading-snug tracking-tight text-[var(--kira-revamp-text-primary)] sm:text-3xl sm:leading-tight">
+                        {welcomeHeading}
+                    </h1>
+                    <HoverHint
+                        title={t("wellbeing.hintTitle")}
+                        description={t("wellbeing.subtitle")}
+                        tone="wellbeing"
+                        className="mt-1 shrink-0 text-[var(--kira-revamp-text-secondary)]"
+                    />
                 </div>
-                <Button color="link-color" size="sm" className="shrink-0 self-start sm:self-center" onClick={() => openLimitsEditor()}>
+                <p className="text-base leading-relaxed text-[var(--kira-revamp-text-secondary)] sm:text-lg">{t("wellbeing.revamp.intro")}</p>
+                <Button
+                    color="link-color"
+                    size="sm"
+                    className="self-start px-0 text-[var(--kira-revamp-accent-work-dark)]"
+                    onClick={() => openLimitsEditor()}
+                >
                     {t("wellbeing.editLimits")}
                 </Button>
-            </div>
+            </header>
 
-            <div className="grid grid-cols-1 items-start gap-4 justify-items-center md:grid-cols-2 md:items-stretch md:justify-items-stretch md:gap-5 lg:grid-cols-3">
-                <GlassRadialTile
-                    title={t("wellbeing.ringStudyTitle")}
-                    subtitle={t("wellbeing.ringStudySubtitle")}
-                    numerator={weekStudyMinutes}
-                    denominator={studyGoalSafe}
-                    centerPrimary={formatMinutesAsHoursMinutes(weekStudyMinutes)}
-                    centerSecondary={pctOf("wellbeing.ringPercentOfGoal", studyPct)}
-                    strokeClassName="stroke-fg-success-primary"
-                    ariaLabel={`${t("wellbeing.ringStudyTitle")}: ${formatMinutesAsHoursMinutes(weekStudyMinutes)} of ${formatMinutesAsHoursMinutes(weeklyStudyGoalMinutes)}`}
-                />
-                <GlassRadialTile
-                    title={t("wellbeing.ringWorkTitle")}
-                    subtitle={t("wellbeing.ringWorkSubtitle")}
-                    numerator={fortnightWorkMinutes}
-                    denominator={workCapMinutes}
-                    centerPrimary={formatMinutesAsHoursMinutes(fortnightWorkMinutes)}
-                    centerSecondary={pctOf("wellbeing.ringPercentOfCap", workPct)}
-                    strokeClassName={workPct > 100 ? "stroke-fg-error-primary" : "stroke-fg-brand-primary"}
-                    ariaLabel={`${t("wellbeing.ringWorkTitle")}: ${formatMinutesAsHoursMinutes(fortnightWorkMinutes)} of ${formatMinutesAsHoursMinutes(workCapMinutes)}`}
-                />
-                <GlassRadialTile
-                    title={t("wellbeing.ringScreenTitle")}
-                    subtitle={t("wellbeing.ringScreenSubtitle")}
-                    numerator={screenMinutesWeek}
-                    denominator={SCREEN_SOFT_CAP_MINUTES}
-                    centerPrimary={formatMinutesAsHoursMinutes(screenMinutesWeek)}
-                    centerSecondary={pctOf("wellbeing.ringPercentOfGuide", screenPct)}
-                    strokeClassName="stroke-fg-brand-secondary"
-                    ariaLabel={`${t("wellbeing.ringScreenTitle")}: ${formatMinutesAsHoursMinutes(screenMinutesWeek)} of ${formatMinutesAsHoursMinutes(SCREEN_SOFT_CAP_MINUTES)}`}
-                />
-                <GlassRadialTile
-                    title={t("wellbeing.ringWeekLoadTitle")}
-                    subtitle={t("wellbeing.ringWeekLoadSubtitle")}
-                    numerator={weekTotalMinutes}
-                    denominator={Math.max(weekLoadCapMinutes, 1)}
-                    centerPrimary={formatMinutesAsHoursMinutes(weekTotalMinutes)}
-                    centerSecondary={pctOf("wellbeing.ringPercentOfGuide", weekLoadPct)}
-                    strokeClassName="stroke-fg-warning-primary"
-                    ariaLabel={`${t("wellbeing.ringWeekLoadTitle")}: ${formatMinutesAsHoursMinutes(weekTotalMinutes)} of ${formatMinutesAsHoursMinutes(weekLoadCapMinutes)}`}
-                />
-                <GlassRadialTile
-                    title={t("wellbeing.ringMonthTitle")}
-                    subtitle={t("wellbeing.ringMonthSubtitle")}
-                    numerator={monthShiftTotalMinutes}
-                    denominator={MONTH_REFERENCE_MINUTES}
-                    centerPrimary={formatMinutesAsHoursMinutes(monthShiftTotalMinutes)}
-                    centerSecondary={pctOf("wellbeing.ringPercentOfGuide", monthPct)}
-                    strokeClassName="stroke-fg-brand-primary"
-                    ariaLabel={`${t("wellbeing.ringMonthTitle")}: ${formatMinutesAsHoursMinutes(monthShiftTotalMinutes)} of ${formatMinutesAsHoursMinutes(MONTH_REFERENCE_MINUTES)}`}
-                />
-
-                <section
-                    className={cx(tasksGlass, "w-full max-w-sm justify-self-center md:max-w-none md:justify-self-auto lg:self-stretch")}
-                    aria-label={t("wellbeing.tasksTileTitle")}
-                >
-                    <div className="shrink-0">
-                        <div className="flex items-start justify-between gap-1.5">
-                            <h3 className="text-sm font-semibold uppercase tracking-wide text-brand-secondary">{t("wellbeing.tasksTileTitle")}</h3>
-                            <HoverHint
-                                title={t("wellbeing.tasksTileHintTitle")}
-                                description={t("wellbeing.tasksTileSubtitle")}
-                                className="-mr-1 shrink-0"
-                            />
-                        </div>
+            <section className={softCard} aria-labelledby="wellbeing-study-heading">
+                <h2 id="wellbeing-study-heading" className="text-lg font-semibold text-[var(--kira-revamp-text-primary)]">
+                    {t("wellbeing.revamp.studyTitle")}
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-[var(--kira-revamp-text-secondary)] sm:text-base">
+                    {tReplace("wellbeing.revamp.studyBody", {
+                        logged: formatMinutesAsHoursMinutes(weekStudyMinutes),
+                        goal: formatMinutesAsHoursMinutes(weeklyStudyGoalMinutes),
+                    })}
+                </p>
+                <div className="mt-4 space-y-2">
+                    <div className="flex justify-between text-sm font-medium text-[var(--kira-revamp-text-muted)]">
+                        <span>{formatMinutesAsHoursMinutes(weekStudyMinutes)}</span>
+                        <span>{formatMinutesAsHoursMinutes(weeklyStudyGoalMinutes)}</span>
                     </div>
+                    <RevampProgressBar value={studyHours} max={studyGoalHours} />
+                </div>
+            </section>
 
-                    <div className="mt-3 flex shrink-0 flex-col gap-2 sm:flex-row sm:items-end">
-                        <Input className="min-w-0 flex-1" placeholder={t("wellbeing.taskPlaceholder")} value={task} onChange={setTask} />
-                        <Button
-                            color="primary"
-                            size="md"
-                            className="shrink-0 sm:w-auto"
-                            onClick={() => {
-                                const trimmed = task.trim();
-                                if (!trimmed) return;
-                                addWellbeingTask(trimmed);
-                                setTask("");
-                            }}
-                        >
-                            {t("wellbeing.addTaskButton")}
-                        </Button>
+            <section className={softCard} aria-labelledby="wellbeing-work-heading">
+                <h2 id="wellbeing-work-heading" className="text-lg font-semibold text-[var(--kira-revamp-text-primary)]">
+                    {t("wellbeing.revamp.workTitle")}
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-[var(--kira-revamp-text-secondary)] sm:text-base">
+                    {tReplace("wellbeing.revamp.workBody", {
+                        logged: formatMinutesAsHoursMinutes(fortnightWorkMinutes),
+                        cap: `${fortnightWorkLimitHours} h`,
+                    })}
+                </p>
+                <div className="mt-4 space-y-2">
+                    <div className="flex justify-between text-sm font-medium text-[var(--kira-revamp-text-muted)]">
+                        <span>{workHours.toFixed(1)} h</span>
+                        <span>{fortnightWorkLimitHours} h</span>
                     </div>
+                    <RevampProgressBar value={workHours} max={workCapHours} />
+                </div>
+                {workPct >= 80 ? (
+                    <p className="mt-4 rounded-xl bg-[color-mix(in_srgb,var(--kira-revamp-accent-warning)_22%,transparent)] px-3 py-2.5 text-sm leading-relaxed text-[var(--kira-revamp-text-primary)]">
+                        {t("wellbeing.revamp.workGentle")}
+                    </p>
+                ) : null}
+            </section>
 
-                    <ul className="mt-3 space-y-0 rounded-xl bg-primary/60 ring-1 ring-secondary/80 ring-inset">
-                        {wellbeingTasks.map((item) => (
+            <section className={softCard} aria-labelledby="wellbeing-pace-heading">
+                <h2 id="wellbeing-pace-heading" className="text-lg font-semibold text-[var(--kira-revamp-text-primary)]">
+                    {t("wellbeing.revamp.paceTitle")}
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-[var(--kira-revamp-text-secondary)] sm:text-base">
+                    {tReplace("wellbeing.revamp.paceBody", { hours: formatMinutesAsHoursMinutes(weekTotalMinutes) })}
+                </p>
+            </section>
+
+            <section
+                className={cx(softCard, "flex max-h-[min(70vh,32rem)] flex-col")}
+                aria-labelledby="wellbeing-tasks-heading"
+            >
+                <div className="shrink-0 space-y-2">
+                    <div className="flex flex-wrap items-start justify-between gap-2">
+                        <h2 id="wellbeing-tasks-heading" className="text-lg font-semibold text-[var(--kira-revamp-text-primary)]">
+                            {t("wellbeing.revamp.tasksTitle")}
+                        </h2>
+                        <HoverHint
+                            title={t("wellbeing.tasksTileHintTitle")}
+                            description={t("wellbeing.revamp.tasksBody")}
+                            tone="wellbeing"
+                            className="shrink-0 text-[var(--kira-revamp-text-secondary)]"
+                        />
+                    </div>
+                    <p className="text-sm leading-relaxed text-[var(--kira-revamp-text-secondary)]">{t("wellbeing.revamp.tasksBody")}</p>
+                </div>
+
+                <div className="mt-4 flex shrink-0 flex-col gap-3 sm:flex-row sm:items-end">
+                    <Input
+                        className="min-w-0 flex-1"
+                        placeholder={t("wellbeing.taskPlaceholder")}
+                        value={task}
+                        onChange={setTask}
+                        wrapperClassName="bg-[var(--kira-revamp-bg-card)] ring-[var(--kira-revamp-border)]"
+                    />
+                    <Button
+                        color="primary"
+                        size="md"
+                        className="shrink-0 bg-[var(--kira-revamp-accent-work-dark)] text-white ring-0 hover:brightness-105 sm:w-auto"
+                        onClick={() => {
+                            const trimmed = task.trim();
+                            if (!trimmed) return;
+                            addWellbeingTask(trimmed);
+                            setTask("");
+                        }}
+                    >
+                        {t("wellbeing.addTaskButton")}
+                    </Button>
+                </div>
+
+                <ul className="mt-4 min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-y-contain pr-0.5 [-webkit-overflow-scrolling:touch]">
+                    {wellbeingTasks.length === 0 ? (
+                        <li className="rounded-xl border border-dashed border-[var(--kira-revamp-border)] bg-[var(--kira-revamp-bg-base)]/80 px-3 py-6 text-center text-sm text-[var(--kira-revamp-text-muted)]">
+                            {t("wellbeing.revamp.tasksEmpty")}
+                        </li>
+                    ) : (
+                        wellbeingTasks.map((item) => (
                             <li
                                 key={item.id}
                                 className={cx(
-                                    "flex items-start gap-2 border-b border-secondary/60 px-3 py-2.5 last:border-b-0",
-                                    item.completed && "bg-secondary_alt/50",
+                                    "flex items-start gap-3 rounded-xl border border-[var(--kira-revamp-border)] bg-[var(--kira-revamp-bg-base)]/60 px-3 py-3",
+                                    item.completed && "opacity-75",
                                 )}
                             >
                                 <Checkbox
                                     size="md"
-                                    className="min-w-0 flex-1 [&_[role=checkbox]]:mt-1"
+                                    className="min-w-0 flex-1 [&_[role=checkbox]]:mt-0.5"
                                     isSelected={item.completed}
                                     onChange={() => toggleWellbeingTask(item.id)}
-                                    label={<span className={cx(item.completed && "text-tertiary line-through")}>{item.label}</span>}
+                                    label={
+                                        <span className={cx("text-base text-[var(--kira-revamp-text-primary)]", item.completed && "text-[var(--kira-revamp-text-muted)] line-through")}>
+                                            {item.label}
+                                        </span>
+                                    }
                                 />
                                 <Button
                                     color="tertiary"
                                     size="sm"
                                     iconLeading={Trash01}
-                                    className="shrink-0"
+                                    className="shrink-0 text-[var(--kira-revamp-text-muted)]"
                                     aria-label={t("wellbeing.removeTask")}
                                     onClick={() => removeWellbeingTask(item.id)}
                                 />
                             </li>
-                        ))}
-                    </ul>
-                </section>
-            </div>
+                        ))
+                    )}
+                </ul>
+            </section>
         </div>
     );
 }

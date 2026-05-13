@@ -7,6 +7,30 @@ import type {
 import { Button as AriaButton, OverlayArrow as AriaOverlayArrow, Tooltip as AriaTooltip, TooltipTrigger as AriaTooltipTrigger } from "react-aria-components";
 import { cx } from "@/utils/cx";
 
+export type TooltipTone = "inverse" | "work" | "exam" | "wellbeing";
+
+function tooltipSurfaceClass(tone: TooltipTone): string {
+    switch (tone) {
+        case "work":
+            return cx(
+                "w-max max-w-[min(18rem,calc(100vw-2rem))] flex-col items-center gap-1.5 rounded-xl border px-3 py-3 text-center shadow-xl ring-1",
+                "border-[var(--kira-revamp-popover-work-border)] bg-[var(--kira-revamp-popover-work-bg)] ring-[color-mix(in_srgb,var(--kira-revamp-popover-work-border)_38%,transparent)]",
+            );
+        case "exam":
+            return cx(
+                "w-max max-w-[min(18rem,calc(100vw-2rem))] flex-col items-center gap-1.5 rounded-xl border px-3 py-3 text-center shadow-xl ring-1",
+                "border-[var(--kira-revamp-popover-exam-border)] bg-[var(--kira-revamp-popover-exam-bg)] ring-[color-mix(in_srgb,var(--kira-revamp-popover-exam-border)_38%,transparent)]",
+            );
+        case "wellbeing":
+            return cx(
+                "w-max max-w-[min(18rem,calc(100vw-2rem))] flex-col items-center gap-1.5 rounded-xl border px-3 py-3 text-center shadow-xl ring-1",
+                "border-[var(--kira-revamp-popover-wellbeing-border)] bg-[var(--kira-revamp-popover-wellbeing-bg)] ring-[color-mix(in_srgb,var(--kira-revamp-popover-wellbeing-border)_38%,transparent)]",
+            );
+        default:
+            return cx("max-w-xs flex-col items-start gap-1 rounded-lg bg-primary-solid px-3 shadow-lg");
+    }
+}
+
 interface TooltipProps extends AriaTooltipTriggerComponentProps, Omit<AriaTooltipProps, "children"> {
     /**
      * The title of the tooltip.
@@ -16,6 +40,11 @@ interface TooltipProps extends AriaTooltipTriggerComponentProps, Omit<AriaToolti
      * The description of the tooltip.
      */
     description?: ReactNode;
+    /**
+     * Visual treatment: default dark popover, or warm tinted panels (centered, max-width).
+     * @default "inverse"
+     */
+    tone?: TooltipTone;
     /**
      * Whether to show the arrow on the tooltip.
      *
@@ -34,6 +63,7 @@ export const Tooltip = ({
     title,
     description,
     children,
+    tone = "inverse",
     arrow = false,
     delay = 300,
     closeDelay = 0,
@@ -66,8 +96,10 @@ export const Tooltip = ({
                 {({ isEntering, isExiting }) => (
                     <div
                         className={cx(
-                            "z-50 flex max-w-xs origin-(--trigger-anchor-point) flex-col items-start gap-1 rounded-lg bg-primary-solid px-3 shadow-lg will-change-transform",
-                            description ? "py-3" : "py-2",
+                            "z-50 flex origin-(--trigger-anchor-point) will-change-transform",
+                            tooltipSurfaceClass(tone),
+                            tone === "inverse" && !description && "py-2",
+                            tone === "inverse" && description && "py-3",
 
                             isEntering &&
                                 "ease-out animate-in fade-in zoom-in-95 in-placement-left:slide-in-from-right-0.5 in-placement-right:slide-in-from-left-0.5 in-placement-top:slide-in-from-bottom-0.5 in-placement-bottom:slide-in-from-top-0.5",
@@ -75,9 +107,39 @@ export const Tooltip = ({
                                 "ease-in animate-out fade-out zoom-out-95 in-placement-left:slide-out-to-right-0.5 in-placement-right:slide-out-to-left-0.5 in-placement-top:slide-out-to-bottom-0.5 in-placement-bottom:slide-out-to-top-0.5",
                         )}
                     >
-                        <span className="text-xs font-semibold text-white">{title}</span>
+                        <span
+                            className={cx(
+                                "text-xs font-semibold",
+                                tone === "inverse"
+                                    ? "text-white"
+                                    : cx(
+                                          "w-full",
+                                          tone === "work" && "text-[var(--kira-revamp-popover-work-text)]",
+                                          tone === "exam" && "text-[var(--kira-revamp-popover-exam-text)]",
+                                          tone === "wellbeing" && "text-[var(--kira-revamp-popover-wellbeing-text)]",
+                                      ),
+                            )}
+                        >
+                            {title}
+                        </span>
 
-                        {description && <span className="text-xs font-medium text-tooltip-supporting-text">{description}</span>}
+                        {description && (
+                            <span
+                                className={cx(
+                                    "text-xs font-medium leading-snug",
+                                    tone === "inverse"
+                                        ? "text-tooltip-supporting-text"
+                                        : cx(
+                                              "w-full",
+                                              tone === "work" && "text-[var(--kira-revamp-popover-work-muted)]",
+                                              tone === "exam" && "text-[var(--kira-revamp-popover-exam-muted)]",
+                                              tone === "wellbeing" && "text-[var(--kira-revamp-popover-wellbeing-muted)]",
+                                          ),
+                                )}
+                            >
+                                {description}
+                            </span>
+                        )}
 
                         {arrow && (
                             <AriaOverlayArrow>

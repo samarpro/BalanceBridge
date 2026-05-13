@@ -83,7 +83,7 @@ export function LimitsSetupModal({ isOpen, isRequired, onOpenChange }: LimitsSet
             className={cx(
                 "m-0 h-dvh max-h-none w-full max-w-none border-0 bg-transparent p-0 shadow-none ring-0",
                 "open:grid open:place-items-stretch",
-                "[&::backdrop]:bg-overlay/70 [&::backdrop]:backdrop-blur-[6px]",
+                "[&::backdrop]:bg-neutral-950/92 [&::backdrop]:backdrop-blur-sm dark:[&::backdrop]:bg-neutral-900/94",
             )}
             onCancel={onDialogCancel}
             onClose={onDialogClose}
@@ -94,8 +94,7 @@ export function LimitsSetupModal({ isOpen, isRequired, onOpenChange }: LimitsSet
             >
                 <div
                     className={cx(
-                        "w-full max-w-md rounded-2xl border border-white/30 bg-primary/95 p-6 shadow-2xl ring-1 ring-secondary",
-                        "backdrop-blur-xl dark:border-white/10 dark:bg-primary/90",
+                        "w-full max-w-md rounded-2xl border border-secondary bg-primary p-6 shadow-2xl ring-1 ring-secondary",
                         "max-h-[min(90dvh,720px)] overflow-y-auto",
                     )}
                 >

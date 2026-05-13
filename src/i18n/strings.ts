@@ -75,9 +75,13 @@ export const catalog = {
     "app.tab.events": "🎉 Events",
     "app.nav.dashboard": "Dashboard",
     "app.nav.calendar": "Calendar",
+    "app.nav.schedule": "Schedule",
+    "app.nav.explore": "Explore",
     "app.nav.wellbeing": "Wellbeing",
     "app.nav.events": "Events",
+    "app.nav.profile": "Profile",
     "app.menuTitle": "✨ Where to next?",
+    "app.searchPlaceholder": "Search schedule, events, tasks…",
     "app.hover.tagline": "About KIRA",
 
     "theme.light": "Light",
@@ -107,6 +111,49 @@ export const catalog = {
 
     "dashboard.calendarPreview": "This month",
     "dashboard.editLimits": "Adjust study & work limits",
+
+    "dashboard.revamp.greetingMorning": "Good morning",
+    "dashboard.revamp.greetingAfternoon": "Good afternoon",
+    "dashboard.revamp.greetingEvening": "Good evening",
+
+    "dashboard.revamp.visaTitle": "Visa-style work hours",
+    "dashboard.revamp.visaSubtitle": "Paid shifts in your calendar compared to typical weekly and fortnight caps.",
+    "dashboard.revamp.thisWeek": "This week",
+    "dashboard.revamp.thisFortnight": "This fortnight",
+    "dashboard.revamp.weekWorkHint": "Shift hours this ISO week vs half your fortnight cap (planning guide).",
+    "dashboard.revamp.fortnightHint": "Rolling last 14 days of shift blocks vs your saved cap.",
+    "dashboard.revamp.warningNearCap": "You are close to your fortnight shift cap — double-check upcoming rosters.",
+    "dashboard.revamp.metricWorkTitle": "Work this week",
+    "dashboard.revamp.metricWorkSub": "{{hours}} hrs logged · shifts",
+    "dashboard.revamp.metricExamTitle": "Exam focus",
+    "dashboard.revamp.metricExamSub": "{{hours}} hrs study logged this week",
+    "dashboard.revamp.metricExamCountdown": "Next exam in {{days}} days",
+    "dashboard.revamp.metricExamNone": "No exam blocks this week — keep steady study.",
+    "dashboard.revamp.metricBreakTitle": "Wellbeing",
+    "dashboard.revamp.metricBreakSub": "{{open}} open wellbeing tasks",
+    "dashboard.revamp.metricWorkTooltipTitle": "Work this week",
+    "dashboard.revamp.metricWorkTooltipBody": "Paid shift hours scheduled this ISO week, compared to half your saved fortnight cap (planning guide).",
+    "dashboard.revamp.metricExamTooltipTitle": "Exam focus",
+    "dashboard.revamp.metricExamTooltipBody": "Study blocks logged this week versus your weekly study goal. Countdown uses the next upcoming exam on your calendar.",
+    "dashboard.revamp.metricWellbeingTooltipTitle": "Wellbeing",
+    "dashboard.revamp.metricWellbeingTooltipBody": "How many wellbeing checklist tasks are still open — small wins you can tick off between shifts and study.",
+    "dashboard.revamp.statusCompliant": "Compliant",
+    "dashboard.revamp.statusAtRisk": "At risk",
+    "dashboard.revamp.statusOver": "Over limit",
+    "dashboard.revamp.sidebarFortnight": "Fortnight shifts",
+    "dashboard.revamp.sidebarHeadsUp": "Heads up — within 16 h of your cap.",
+    "dashboard.revamp.language": "Language",
+    "dashboard.revamp.langEn": "English",
+
+    "profile.revamp.section": "Profile",
+    "profile.revamp.fallbackName": "Student",
+    "profile.revamp.noEmail": "No university email on file yet.",
+    "profile.revamp.limits": "Schedule limits",
+    "profile.revamp.limitsBody": "Study targets and work caps power your progress bars on the dashboard and wellbeing view.",
+    "profile.revamp.version": "KIRA v{{version}} — local demo",
+
+    "aria.search": "Search",
+    "aria.bottomNav": "Primary",
 
     "limits.modalTitle": "Set your weekly guardrails",
     "limits.modalBodyRequired":
@@ -204,6 +251,18 @@ export const catalog = {
     "wellbeing.taskPlaceholder": "e.g. Walk 20 minutes after lab",
     "wellbeing.removeTask": "Remove task",
 
+    "wellbeing.revamp.intro": "This page is a gentle read — not a report card. It looks at what's already on your calendar and nudges you toward rest, not perfection.",
+    "wellbeing.revamp.studyTitle": "Time for coursework",
+    "wellbeing.revamp.studyBody": "You've logged {{logged}} of study blocks this week. Your own goal sits around {{goal}} — small steady stretches count more than hero days.",
+    "wellbeing.revamp.workTitle": "Paid shifts (last 14 days)",
+    "wellbeing.revamp.workBody": "That's about {{logged}} of shift time in the last fortnight, next to the cap you chose ({{cap}}).",
+    "wellbeing.revamp.workGentle": "If you're close to that ceiling, breathe — rosters can shift, and it's fine to ask someone to swap.",
+    "wellbeing.revamp.paceTitle": "How full the week looks",
+    "wellbeing.revamp.paceBody": "Roughly {{hours}} of classes, shifts, and exams are on the calendar this week. Leave white space on purpose — you don't owe anyone a packed grid.",
+    "wellbeing.revamp.tasksTitle": "Little things that help",
+    "wellbeing.revamp.tasksBody": "Not KPIs — just reminders: water, air, a walk. Check them off when you can; skip them without guilt.",
+    "wellbeing.revamp.tasksEmpty": "Nothing here yet — add one small thing that would feel good today.",
+
     "events.title": "Campus events",
     "events.lead": "Pilot listings — tap a card to RSVP.",
     "events.subtitle":
@@ -277,6 +336,14 @@ export function tWellbeingWelcome(displayName: string): string {
 /** Simple interpolation helper for numeric placeholders. */
 export function tf(id: "events.peopleGoing", values: { count: number }): string {
     return catalog[id].replace("{{count}}", String(values.count));
+}
+
+export function tReplace(id: MessageId, values: Record<string, string | number>): string {
+    let s = catalog[id] as string;
+    for (const [k, v] of Object.entries(values)) {
+        s = s.replaceAll(`{{${k}}}`, String(v));
+    }
+    return s;
 }
 
 export function tCollisionSuggested(time: string): string {

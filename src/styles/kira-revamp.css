@@ -1,0 +1,133 @@
+/**
+ * Kira dashboard revamp — warm cream shell (see docs/revamp.md).
+ * Scoped to `.kira-app-revamp` so marketing/onboarding keep existing tokens.
+ */
+.kira-app-revamp {
+    --kira-revamp-bg-base: #f5efe6;
+    --kira-revamp-bg-sidebar: #eee5d8;
+    --kira-revamp-bg-card: #ffffff;
+    --kira-revamp-accent-work: #e8b4a0;
+    --kira-revamp-accent-work-dark: #c47a5a;
+    --kira-revamp-accent-study: #c9c2e8;
+    --kira-revamp-accent-study-dark: #8f86c4;
+    --kira-revamp-accent-social: #d4c9ef;
+    --kira-revamp-accent-wellbeing: #bcd9c4;
+    --kira-revamp-accent-warning: #e8c97e;
+    --kira-revamp-accent-success: #6bae8a;
+    --kira-revamp-accent-danger: #c45a5a;
+    --kira-revamp-text-primary: #2c2420;
+    --kira-revamp-text-secondary: #7a6e68;
+    --kira-revamp-text-muted: #a89e98;
+    --kira-revamp-border: rgb(120 100 80 / 0.12);
+    --kira-revamp-shadow-card: 0 2px 8px rgb(100 70 40 / 0.07);
+    --kira-revamp-shadow-card-hover: 0 6px 16px rgb(100 70 40 / 0.1);
+    --kira-revamp-focus-ring: rgb(196 122 90 / 0.6);
+    --kira-revamp-sidebar-w: 220px;
+    --kira-revamp-rail-w: 56px;
+    --kira-revamp-bottom-nav-h: 56px;
+    font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+html.dark-mode .kira-app-revamp {
+    --kira-revamp-bg-base: #1a1714;
+    --kira-revamp-bg-sidebar: #252019;
+    --kira-revamp-bg-card: #3a342f;
+    --kira-revamp-text-primary: #f7f1ea;
+    --kira-revamp-text-secondary: #d8cfc6;
+    --kira-revamp-text-muted: #a89f96;
+    --kira-revamp-border: rgb(247 241 234 / 0.22);
+    --kira-revamp-shadow-card: 0 2px 14px rgb(0 0 0 / 0.45);
+    --kira-revamp-shadow-card-hover: 0 8px 24px rgb(0 0 0 / 0.55);
+    --kira-revamp-focus-ring: rgb(232 180 160 / 0.55);
+}
+
+.kira-app-revamp :where(.kira-revamp-card) {
+    border-radius: 16px;
+    background: var(--kira-revamp-bg-card);
+    border: 1px solid var(--kira-revamp-border);
+    box-shadow: var(--kira-revamp-shadow-card);
+    transition:
+        transform 150ms ease,
+        box-shadow 150ms ease;
+}
+
+.kira-app-revamp :where(.kira-revamp-card-interactive):hover {
+    transform: translateY(-2px);
+    box-shadow: var(--kira-revamp-shadow-card-hover);
+}
+
+.kira-app-revamp :where(.kira-revamp-section-label) {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--kira-revamp-text-muted);
+}
+
+.kira-app-revamp :where(.kira-revamp-metric) {
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--kira-revamp-text-primary);
+}
+
+.kira-app-revamp :where(.kira-revamp-focusable):focus-visible {
+    outline: 2px solid var(--kira-revamp-focus-ring);
+    outline-offset: 2px;
+}
+
+/* Bottom safe area for fixed nav + FAB */
+.kira-app-revamp-main {
+    padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+}
+
+@media (min-width: 768px) {
+    .kira-app-revamp-main {
+        padding-bottom: 2.25rem;
+    }
+}
+
+/**
+ * Portals (e.g. RAC Tooltip) render outside `.kira-app-revamp`, so shared tokens used there live on :root.
+ */
+:root {
+    --kira-revamp-popover-work-bg: #f6ebe6;
+    --kira-revamp-popover-work-text: #2c2420;
+    --kira-revamp-popover-work-muted: #574c45;
+    --kira-revamp-popover-work-border: rgb(196 122 90 / 0.42);
+
+    --kira-revamp-popover-exam-bg: #eceaf7;
+    --kira-revamp-popover-exam-text: #2c2420;
+    --kira-revamp-popover-exam-muted: #534a62;
+    --kira-revamp-popover-exam-border: rgb(143 134 196 / 0.42);
+
+    --kira-revamp-popover-wellbeing-bg: #e8f2eb;
+    --kira-revamp-popover-wellbeing-text: #2c2420;
+    --kira-revamp-popover-wellbeing-muted: #4a5c52;
+    --kira-revamp-popover-wellbeing-border: rgb(107 174 138 / 0.4);
+
+    --kira-revamp-accent-wellbeing-fg: #3d6b52;
+    --kira-revamp-drawer-scrim: rgb(20 18 16 / 0.92);
+    --kira-revamp-shadow-bottom-nav: 0 -6px 16px rgb(44 36 32 / 0.1);
+}
+
+html.dark-mode {
+    --kira-revamp-popover-work-bg: #3d2f2a;
+    --kira-revamp-popover-work-text: #faf6f1;
+    --kira-revamp-popover-work-muted: #d8c8c0;
+    --kira-revamp-popover-work-border: rgb(232 180 160 / 0.42);
+
+    --kira-revamp-popover-exam-bg: #353044;
+    --kira-revamp-popover-exam-text: #f2f0fb;
+    --kira-revamp-popover-exam-muted: #cfc8e8;
+    --kira-revamp-popover-exam-border: rgb(180 168 220 / 0.45);
+
+    --kira-revamp-popover-wellbeing-bg: #2a3830;
+    --kira-revamp-popover-wellbeing-text: #f0faf4;
+    --kira-revamp-popover-wellbeing-muted: #c5ddd0;
+    --kira-revamp-popover-wellbeing-border: rgb(150 200 175 / 0.4);
+
+    --kira-revamp-accent-wellbeing-fg: #b8e8d0;
+    --kira-revamp-drawer-scrim: rgb(0 0 0 / 0.72);
+    --kira-revamp-shadow-bottom-nav: 0 -8px 24px rgb(0 0 0 / 0.45);
+}
