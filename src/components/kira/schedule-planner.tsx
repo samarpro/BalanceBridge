@@ -1,16 +1,17 @@
 import { useMemo, useState } from "react";
 import { parseDate } from "@internationalized/date";
+import { AnimatePresence, motion } from "motion/react";
 import type { DateValue } from "react-aria-components";
 import { ChevronLeft, ChevronRight } from "@untitledui/icons";
 import { Calendar } from "@/components/application/date-picker/calendar";
 import { Button } from "@/components/base/buttons/button";
 import { ButtonGroup, ButtonGroupItem } from "@/components/base/button-group/button-group";
 import type { ScheduleEntry } from "@/components/kira/calendar-month";
-import { DayColumn, DayScheduleTimeline, TimelineRulerColumn } from "@/components/kira/day-schedule-timeline";
+import { DayScheduleTimeline, WeekScheduleTimeline } from "@/components/kira/day-schedule-timeline";
 import { ScheduleEntryEditModal } from "@/components/kira/schedule-entry-modal";
 import { HoverHint } from "@/components/kira/hover-hint";
 import { useCollisionGuardedAdd } from "@/hooks/use-collision-guarded-add";
-import { addDays, defaultStartMinutesForNewTaskOnDay, isoFromDate, startOfWeekMonday } from "@/utils/schedule-time";
+import { addDays, dateFromIso, defaultStartMinutesForNewTaskOnDay, isoFromDate, startOfWeekMonday } from "@/utils/schedule-time";
 import { scheduleKindLegendSwatchClass } from "@/utils/schedule-kind-styles";
 import { t } from "@/i18n/strings";
 
@@ -75,6 +76,7 @@ export function SchedulePlanner({ entries }: SchedulePlannerProps) {
                   title: t("app.hover.plannerDayWeek"),
                   description: `${t("dashboard.dayScheduleCaption")} ${t("dashboard.dayScheduleClickHint")}`,
               };
+    const panelMotion = { duration: 0.24, ease: [0.22, 1, 0.36, 1] as const };
 
     const NEW_BLOCK_MINUTES = 30;
 
@@ -105,12 +107,28 @@ export function SchedulePlanner({ entries }: SchedulePlannerProps) {
     };
 
     return (
-        <section className="rounded-xl ring-1 ring-secondary bg-primary_alt p-5 md:p-7">
+        <motion.section
+            className="rounded-xl ring-1 ring-secondary bg-primary_alt p-5 md:p-7"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={panelMotion}
+        >
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div className="flex min-w-0 flex-1 items-start gap-1.5">
                     <div>
                         <p className="text-xs font-semibold uppercase tracking-wide text-quaternary">{plannerTitle}</p>
-                        <h2 className="mt-1 text-lg font-semibold text-secondary">{title}</h2>
+                        <AnimatePresence mode="wait" initial={false}>
+                            <motion.h2
+                                key={`${view}-${title}`}
+                                className="mt-1 text-lg font-semibold text-secondary"
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -6 }}
+                                transition={{ duration: 0.18, ease: "easeOut" }}
+                            >
+                                {title}
+                            </motion.h2>
+                        </AnimatePresence>
                     </div>
                     <HoverHint title={plannerHover.title} description={plannerHover.description} className="mt-5 shrink-0 md:mt-6" />
                 </div>
@@ -165,64 +183,72 @@ export function SchedulePlanner({ entries }: SchedulePlannerProps) {
             )}
 
             <div className="mt-7 space-y-4">
-                {view === "month" && (
-                    <div className="overflow-x-auto">
-                        <Calendar
-                            highlightedDates={highlightedDates}
-                            completionHighlightedDates={completionHighlightedDates}
-                            focusedValue={calendarDateFromJs(anchorDate)}
-                            onFocusChange={(v) => v && setAnchorDate(jsFromCalendarDate(v))}
-                            onDayPress={handleMonthDayPress}
-                            className="min-w-max"
+                <AnimatePresence mode="wait" initial={false}>
+                    {view === "month" ? (
+                        <motion.div
+                            key="planner-month"
+                            className="overflow-x-auto scrollbar-hide"
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={panelMotion}
                         >
-                            <div className="flex justify-end">
-                                <Button
-                                    slot={null}
-                                    size="sm"
-                                    color="secondary"
-                                    onClick={() => {
-                                        const n = new Date();
-                                        n.setHours(0, 0, 0, 0);
-                                        setAnchorDate(n);
-                                    }}
-                                >
-                                    {t("calendar.goToday")}
-                                </Button>
-                            </div>
-                        </Calendar>
-                    </div>
-                )}
-
-                {view === "week" && (
-                    <div className="overflow-x-auto rounded-lg ring-1 ring-secondary" aria-label={t("aria.weekPlannerGrid")}>
-                        <div className="flex min-w-[720px]">
-                            <TimelineRulerColumn />
-                            {Array.from({ length: 7 }, (_, i) => {
-                                const d = addDays(weekStart, i);
-                                const iso = isoFromDate(d);
-                                return (
-                                    <DayColumn
-                                        key={iso}
-                                        iso={iso}
-                                        dayLabel={d.toLocaleDateString(undefined, { weekday: "short" })}
-                                        entries={entries}
-                                        onEntryClick={(entry) => setEditingEntryId(entry.id)}
-                                        onTimelineBackgroundClick={(startMinutes) => createTaskAndEdit(d, startMinutes)}
-                                    />
-                                );
-                            })}
-                        </div>
-                    </div>
-                )}
-
-                {view === "day" && (
-                    <DayScheduleTimeline
-                        entries={entries}
-                        day={anchorDate}
-                        onEntryClick={(entry) => setEditingEntryId(entry.id)}
-                        onTimelineBackgroundClick={handleTimelineCreate}
-                    />
-                )}
+                            <Calendar
+                                highlightedDates={highlightedDates}
+                                completionHighlightedDates={completionHighlightedDates}
+                                focusedValue={calendarDateFromJs(anchorDate)}
+                                onFocusChange={(v) => v && setAnchorDate(jsFromCalendarDate(v))}
+                                onDayPress={handleMonthDayPress}
+                                className="min-w-max"
+                            >
+                                <div className="flex justify-end">
+                                    <Button
+                                        slot={null}
+                                        size="sm"
+                                        color="secondary"
+                                        onClick={() => {
+                                            const n = new Date();
+                                            n.setHours(0, 0, 0, 0);
+                                            setAnchorDate(n);
+                                        }}
+                                    >
+                                        {t("calendar.goToday")}
+                                    </Button>
+                                </div>
+                            </Calendar>
+                        </motion.div>
+                    ) : view === "week" ? (
+                        <motion.div
+                            key={`planner-week-${isoFromDate(weekStart)}`}
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={panelMotion}
+                        >
+                            <WeekScheduleTimeline
+                                entries={entries}
+                                weekStart={weekStart}
+                                onEntryClick={(entry) => setEditingEntryId(entry.id)}
+                                onTimelineBackgroundClick={(payload) => createTaskAndEdit(dateFromIso(payload.iso), payload.startMinutes)}
+                            />
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key={`planner-day-${isoFromDate(anchorDate)}`}
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={panelMotion}
+                        >
+                            <DayScheduleTimeline
+                                entries={entries}
+                                day={anchorDate}
+                                onEntryClick={(entry) => setEditingEntryId(entry.id)}
+                                onTimelineBackgroundClick={handleTimelineCreate}
+                            />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
 
             <ScheduleEntryEditModal
@@ -245,9 +271,9 @@ export function SchedulePlanner({ entries }: SchedulePlannerProps) {
                     <span className={scheduleKindLegendSwatchClass("study")} /> {t("calendar.legend.study")}
                 </li>
                 <li className="flex items-center gap-1.5">
-                    <span className="size-2 shrink-0 rounded-full bg-emerald-500 ring-1 ring-secondary" /> {t("calendar.legend.completed")}
+                    <span className="size-2 shrink-0 rounded-full bg-[#4F9A72] ring-1 ring-secondary dark:bg-[#90C9A5]" /> {t("calendar.legend.completed")}
                 </li>
             </ul>
-        </section>
+        </motion.section>
     );
 }

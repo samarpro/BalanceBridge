@@ -1,5 +1,5 @@
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { BarChartSquare02, Calendar as CalendarIcon, HeartRounded, Menu02, User01, Users01, X as CloseIcon } from "@untitledui/icons";
 import { Avatar } from "@/components/base/avatar/avatar";
 import { LimitsSetupModal } from "@/components/kira/limits-setup-modal";
@@ -47,8 +47,23 @@ function revampNavSelectedText(id: AppTabId): string {
     }
 }
 
+function revampNavSelectedPill(id: AppTabId): string {
+    switch (id) {
+        case "dashboard":
+            return "bg-[linear-gradient(135deg,rgba(226,157,126,0.62),rgba(240,214,152,0.56))] shadow-[inset_0_0_0_1px_rgba(188,99,66,0.28)] dark:bg-[linear-gradient(135deg,rgba(107,61,47,0.98),rgba(138,90,40,0.96))] dark:shadow-[inset_0_0_0_1px_rgba(240,178,154,0.22)]";
+        case "calendar":
+            return "bg-[linear-gradient(135deg,rgba(185,175,230,0.66),rgba(210,190,236,0.58))] shadow-[inset_0_0_0_1px_rgba(125,114,191,0.24)] dark:bg-[linear-gradient(135deg,rgba(89,79,135,0.98),rgba(108,90,154,0.96))] dark:shadow-[inset_0_0_0_1px_rgba(195,182,240,0.22)]";
+        case "events":
+            return "bg-[linear-gradient(135deg,rgba(199,184,235,0.68),rgba(168,209,179,0.42))] shadow-[inset_0_0_0_1px_rgba(108,90,154,0.22)] dark:bg-[linear-gradient(135deg,rgba(108,90,154,0.98),rgba(61,102,77,0.9))] dark:shadow-[inset_0_0_0_1px_rgba(199,184,235,0.22)]";
+        case "wellbeing":
+            return "bg-[linear-gradient(135deg,rgba(168,209,179,0.62),rgba(220,174,69,0.4))] shadow-[inset_0_0_0_1px_rgba(79,154,114,0.22)] dark:bg-[linear-gradient(135deg,rgba(61,102,77,0.98),rgba(112,84,24,0.9))] dark:shadow-[inset_0_0_0_1px_rgba(144,201,165,0.22)]";
+        case "profile":
+            return "bg-[linear-gradient(135deg,rgba(220,174,69,0.54),rgba(226,157,126,0.44))] shadow-[inset_0_0_0_1px_rgba(220,174,69,0.22)] dark:bg-[linear-gradient(135deg,rgba(112,84,24,0.98),rgba(107,61,47,0.92))] dark:shadow-[inset_0_0_0_1px_rgba(223,178,75,0.22)]";
+    }
+}
+
 function revampNavIdleClass(): string {
-    return "text-[var(--kira-revamp-text-primary)] hover:bg-[color-mix(in_srgb,var(--kira-revamp-bg-base)_55%,var(--kira-revamp-bg-sidebar))]";
+    return "text-[var(--kira-revamp-text-primary)] hover:bg-[color-mix(in_srgb,var(--kira-revamp-bg-card)_78%,white)] dark:hover:bg-[color-mix(in_srgb,var(--kira-revamp-bg-card)_88%,white_4%)]";
 }
 
 function initialsFromName(name: string): string {
@@ -73,7 +88,7 @@ function SidebarFortnightCard() {
     const headsUp = maxH - hours <= 16 && maxH - hours > 0;
 
     return (
-        <div className="kira-revamp-card space-y-2 p-3">
+        <div className="kira-revamp-card space-y-2 bg-[linear-gradient(180deg,rgba(226,157,126,0.42),rgba(240,214,152,0.32))] p-3 dark:bg-[linear-gradient(180deg,rgba(107,61,47,0.76),rgba(138,90,40,0.78))]">
             <p className="kira-revamp-section-label">{t("dashboard.revamp.sidebarFortnight")}</p>
             <p className="text-lg font-bold tabular-nums text-[var(--kira-revamp-text-primary)]">
                 {hours.toFixed(1)} / {cap} h
@@ -91,6 +106,8 @@ function AppSidebarNav({
     afterSelect,
     navId,
     pillLayoutId,
+    direction = "vertical",
+    showTooltips = !labelsVisible,
 }: {
     tab: AppTabId;
     labelsVisible: boolean;
@@ -98,13 +115,16 @@ function AppSidebarNav({
     afterSelect?: () => void;
     navId: string;
     pillLayoutId: string;
+    direction?: "vertical" | "horizontal";
+    showTooltips?: boolean;
 }) {
     const hitArea = (id: AppTabId, Icon: (typeof navItems)[number]["icon"], labelKey: (typeof navItems)[number]["labelKey"]) => {
         const selected = tab === id;
         const label = t(labelKey);
+        const isBottomDock = direction === "horizontal";
         const shell = cx(
-            "relative z-0 flex w-full min-h-11 items-center rounded-xl py-2.5 text-left text-sm font-medium outline-hidden transition-[color] duration-150 ease-out",
-            labelsVisible ? "gap-3 px-3" : "justify-center px-0",
+            "relative z-0 flex w-full min-h-11 items-center text-left text-sm font-medium outline-hidden transition-[color] duration-150 ease-out",
+            labelsVisible ? "gap-3 rounded-xl px-3 py-2.5" : isBottomDock ? "justify-center rounded-full px-0 py-3" : "justify-center rounded-xl px-0 py-2.5",
             !selected && revampNavIdleClass(),
             selected && `font-semibold ${revampNavSelectedText(id)}`,
         );
@@ -113,13 +133,26 @@ function AppSidebarNav({
                 {selected ? (
                     <motion.div
                         layoutId={pillLayoutId}
-                        className="absolute inset-0 z-0 rounded-xl bg-[color-mix(in_srgb,var(--kira-revamp-text-primary)_8%,var(--kira-revamp-bg-card))] shadow-[inset_0_0_0_1px_var(--kira-revamp-border)]"
+                        className={cx("absolute inset-0 z-0", isBottomDock ? "rounded-full" : "rounded-xl", revampNavSelectedPill(id))}
                         transition={{ type: "spring", stiffness: 420, damping: 34 }}
                     />
                 ) : null}
                 <span className={cx("relative z-10 flex min-w-0 items-center", labelsVisible ? "gap-3" : "justify-center")}>
                     <Icon data-icon aria-hidden className="size-5 shrink-0" />
-                    {labelsVisible ? <span className="truncate">{label}</span> : null}
+                    <AnimatePresence initial={false}>
+                        {labelsVisible ? (
+                            <motion.span
+                                key={`${id}-label`}
+                                className="truncate"
+                                initial={{ opacity: 0, x: -8 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -8 }}
+                                transition={{ duration: 0.16, ease: "easeOut" }}
+                            >
+                                {label}
+                            </motion.span>
+                        ) : null}
+                    </AnimatePresence>
                 </span>
             </>
         );
@@ -129,6 +162,23 @@ function AppSidebarNav({
                 <button
                     type="button"
                     aria-current={selected ? "page" : undefined}
+                    onClick={() => {
+                        onSelect(id);
+                        afterSelect?.();
+                    }}
+                    className={shell}
+                >
+                    {inner}
+                </button>
+            );
+        }
+
+        if (!showTooltips) {
+            return (
+                <button
+                    type="button"
+                    aria-current={selected ? "page" : undefined}
+                    aria-label={label}
                     onClick={() => {
                         onSelect(id);
                         afterSelect?.();
@@ -158,7 +208,7 @@ function AppSidebarNav({
     };
 
     return (
-        <nav id={navId} className="flex flex-col gap-1.5" aria-label={t("app.menuTitle")}>
+        <nav id={navId} className={cx(direction === "horizontal" ? "grid grid-cols-5 gap-1" : "flex flex-col gap-1.5")} aria-label={t("app.menuTitle")}>
             {navItems.map(({ id, icon: Icon, labelKey }) => (
                 <Fragment key={id}>{hitArea(id, Icon, labelKey)}</Fragment>
             ))}
@@ -170,7 +220,7 @@ function SidebarFooter() {
     return (
         <div className="mt-auto flex flex-col gap-3 border-t border-[var(--kira-revamp-border)] p-3">
             <SidebarFortnightCard />
-            <div className="kira-revamp-card space-y-2 p-3">
+            <div className="kira-revamp-card space-y-2 bg-[linear-gradient(180deg,rgba(199,184,235,0.46),rgba(168,209,179,0.22))] p-3 dark:bg-[linear-gradient(180deg,rgba(108,90,154,0.7),rgba(61,102,77,0.72))]">
                 <p className="kira-revamp-section-label">{t("dashboard.revamp.language")}</p>
                 <p className="text-sm font-medium text-[var(--kira-revamp-text-secondary)]">{t("dashboard.revamp.langEn")}</p>
             </div>
@@ -216,17 +266,23 @@ function AppContent() {
     }, [persistSidebar, sidebarExpanded]);
 
     const labelsInRail = isMdUp && sidebarExpanded;
-    const showMobileOverlay = !isMdUp && sidebarExpanded;
 
     const sidebarToggleLabel = sidebarExpanded ? t("aria.collapseAppSidebar") : t("aria.expandAppSidebar");
+    const activePanel = (() => {
+        if (tab === "dashboard") return <DashboardPanel onOpenTab={(id) => setTab(id as AppTabId)} />;
+        if (tab === "calendar") return <CalendarPanel />;
+        if (tab === "wellbeing") return <WellbeingPanel />;
+        if (tab === "events") return <EventsPanel />;
+        return <ProfilePanel />;
+    })();
 
     return (
         <div className="flex min-h-dvh flex-col overflow-x-clip bg-[var(--kira-revamp-bg-base)] text-[var(--kira-revamp-text-primary)]">
-            <header className="kira-app-header fixed top-0 right-0 left-0 z-50 flex h-16 shrink-0 items-center gap-4 border-b-2 border-[var(--kira-revamp-border)] bg-[var(--kira-revamp-bg-base)] px-5 shadow-sm md:gap-6 md:px-8 lg:px-10">
+            <header className="kira-app-header fixed top-0 right-0 left-0 z-50 flex h-16 shrink-0 items-center gap-4 border-b border-[var(--kira-revamp-border)] bg-[linear-gradient(90deg,rgba(247,220,208,0.9),rgba(240,214,152,0.52),rgba(199,184,235,0.44))] px-5 shadow-[0_12px_30px_rgba(120,100,80,0.1)] backdrop-blur-xl md:gap-6 md:px-8 lg:px-10 dark:bg-[linear-gradient(90deg,rgba(31,25,22,0.96),rgba(107,61,47,0.32),rgba(89,79,135,0.3))] dark:shadow-[0_12px_30px_rgba(0,0,0,0.28)]">
                 <button
                     type="button"
                     onClick={() => setTab("dashboard")}
-                    className="kira-revamp-focusable shrink-0 rounded-lg px-1 py-0.5 text-lg font-semibold tracking-tight text-[var(--kira-revamp-text-primary)] transition duration-100 ease-linear hover:bg-[color-mix(in_srgb,var(--kira-revamp-text-primary)_6%,transparent)]"
+                    className="kira-revamp-focusable shrink-0 rounded-xl px-3 py-1.5 text-lg font-semibold tracking-tight text-[var(--kira-revamp-text-primary)] transition duration-100 ease-linear hover:bg-[linear-gradient(135deg,rgba(226,157,126,0.4),rgba(185,175,230,0.34))]"
                 >
                     {t("app.name")}
                 </button>
@@ -247,12 +303,14 @@ function AppContent() {
 
             <div className="flex min-h-0 min-w-0 flex-1 flex-row pt-16">
                 {/* md+: fixed left rail — does not scroll with main */}
-                <aside
+                <motion.aside
                     aria-label={t("app.menuTitle")}
                     className={cx(
-                        "fixed top-16 bottom-0 left-0 z-[30] hidden min-h-0 flex-col border-r border-[var(--kira-revamp-border)] bg-[var(--kira-revamp-bg-sidebar)] pb-[max(0.5rem,env(safe-area-inset-bottom,0px))] transition-[width] duration-200 ease-out md:flex",
-                        sidebarExpanded ? "w-[var(--kira-revamp-sidebar-w)]" : "w-14",
+                        "fixed top-16 bottom-0 left-0 z-[30] hidden min-h-0 flex-col overflow-hidden border-r border-[var(--kira-revamp-border)] bg-[linear-gradient(180deg,rgba(247,220,208,0.58),rgba(240,214,152,0.18),rgba(199,184,235,0.18))] pb-[max(0.5rem,env(safe-area-inset-bottom,0px))] md:flex dark:bg-[linear-gradient(180deg,rgba(36,29,26,0.98),rgba(107,61,47,0.18),rgba(89,79,135,0.16))]",
                     )}
+                    initial={false}
+                    animate={{ width: sidebarExpanded ? 220 : 56 }}
+                    transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
                 >
                     <div className="flex shrink-0 flex-col gap-1 border-b border-[var(--kira-revamp-border)] p-2">
                         <button
@@ -269,11 +327,20 @@ function AppContent() {
                                 <Menu02 data-icon aria-hidden className="size-5" />
                             )}
                         </button>
-                        {sidebarExpanded ? (
-                            <p className="hidden px-1 pt-1 md:block">
-                                <span className="kira-revamp-section-label">{t("app.menuTitle")}</span>
-                            </p>
-                        ) : null}
+                        <AnimatePresence initial={false}>
+                            {sidebarExpanded ? (
+                                <motion.p
+                                    key="desktop-sidebar-title"
+                                    className="hidden px-1 pt-1 md:block"
+                                    initial={{ opacity: 0, y: -6 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -6 }}
+                                    transition={{ duration: 0.16, ease: "easeOut" }}
+                                >
+                                    <span className="kira-revamp-section-label">{t("app.menuTitle")}</span>
+                                </motion.p>
+                            ) : null}
+                        </AnimatePresence>
                     </div>
 
                     <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-2 md:p-3">
@@ -286,77 +353,35 @@ function AppContent() {
                         />
                     </div>
 
-                    {sidebarExpanded ? <SidebarFooter /> : null}
-                </aside>
+                    <AnimatePresence initial={false}>
+                        {sidebarExpanded ? (
+                            <motion.div
+                                key="desktop-sidebar-footer"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 10 }}
+                                transition={{ duration: 0.18, ease: "easeOut" }}
+                            >
+                                <SidebarFooter />
+                            </motion.div>
+                        ) : null}
+                    </AnimatePresence>
+                </motion.aside>
 
-                {/* Mobile: fixed icon rail — top aligns to fixed header (h-16) */}
-                <aside
-                    aria-label={t("app.menuTitle")}
-                    className="fixed top-16 bottom-0 left-0 z-[38] flex w-14 shrink-0 flex-col border-r border-[var(--kira-revamp-border)] bg-[var(--kira-revamp-bg-sidebar)] pb-[max(0.5rem,env(safe-area-inset-bottom,0px))] md:hidden"
-                >
-                    <div className="flex shrink-0 border-b border-[var(--kira-revamp-border)] p-1.5">
-                        <button
-                            type="button"
-                            aria-expanded={sidebarExpanded}
-                            aria-controls={showMobileOverlay ? "kira-app-sidebar-nav-mobile-sheet" : "kira-app-sidebar-nav-mobile"}
-                            aria-label={sidebarToggleLabel}
-                            onClick={toggleSidebar}
-                            className="kira-revamp-focusable flex size-11 items-center justify-center rounded-xl border border-[var(--kira-revamp-border)] bg-[var(--kira-revamp-bg-card)] text-[var(--kira-revamp-text-primary)] shadow-sm"
-                        >
-                            {sidebarExpanded ? (
-                                <CloseIcon data-icon aria-hidden className="size-5" />
-                            ) : (
-                                <Menu02 data-icon aria-hidden className="size-5" />
-                            )}
-                        </button>
-                    </div>
-                    <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-1.5">
-                        {!showMobileOverlay ? (
+                {!isMdUp ? (
+                    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[38] flex justify-center px-3 pb-[calc(env(safe-area-inset-bottom,0px)+0.75rem)] md:hidden">
+                        <div className="pointer-events-auto w-full max-w-sm rounded-full border border-[var(--kira-revamp-border)] bg-[linear-gradient(180deg,rgba(247,220,208,0.84),rgba(240,214,152,0.48),rgba(199,184,235,0.38))] p-1.5 shadow-[var(--kira-revamp-shadow-bottom-nav)] backdrop-blur-xl dark:bg-[linear-gradient(180deg,rgba(36,29,26,0.96),rgba(107,61,47,0.36),rgba(89,79,135,0.3))]">
                             <AppSidebarNav
-                                navId="kira-app-sidebar-nav-mobile"
-                                pillLayoutId="kira-nav-pill-mobile-rail"
+                                navId="kira-app-sidebar-nav-mobile-dock"
+                                pillLayoutId="kira-nav-pill-mobile-dock"
                                 tab={tab}
                                 labelsVisible={false}
                                 onSelect={setTab}
-                                afterSelect={() => persistSidebar(false)}
+                                direction="horizontal"
+                                showTooltips={false}
                             />
-                        ) : null}
-                    </div>
-                </aside>
-
-                {showMobileOverlay ? (
-                    <>
-                        <button
-                            type="button"
-                            aria-label={t("aria.collapseAppSidebar")}
-                            className="fixed top-16 right-0 bottom-0 left-0 z-40 cursor-default bg-[var(--kira-revamp-drawer-scrim)] backdrop-blur-sm"
-                            onClick={() => persistSidebar(false)}
-                        />
-                        <div className="fixed top-16 bottom-0 left-0 z-[42] flex w-[min(20rem,calc(100vw-1rem))] flex-col border-r border-[var(--kira-revamp-border)] bg-[var(--kira-revamp-bg-sidebar)] pb-[max(0.5rem,env(safe-area-inset-bottom,0px))] shadow-xl">
-                            <div className="flex shrink-0 items-center justify-between gap-2 border-b border-[var(--kira-revamp-border)] p-3">
-                                <p className="min-w-0 truncate text-sm font-semibold text-[var(--kira-revamp-text-primary)]">{t("app.menuTitle")}</p>
-                                <button
-                                    type="button"
-                                    aria-label={t("aria.collapseAppSidebar")}
-                                    onClick={() => persistSidebar(false)}
-                                    className="kira-revamp-focusable flex size-10 shrink-0 items-center justify-center rounded-xl border border-[var(--kira-revamp-border)] bg-[var(--kira-revamp-bg-card)]"
-                                >
-                                    <CloseIcon data-icon aria-hidden className="size-5" />
-                                </button>
-                            </div>
-                            <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-3">
-                                <AppSidebarNav
-                                    navId="kira-app-sidebar-nav-mobile-sheet"
-                                    pillLayoutId="kira-nav-pill-mobile-sheet"
-                                    tab={tab}
-                                    labelsVisible
-                                    onSelect={setTab}
-                                    afterSelect={() => persistSidebar(false)}
-                                />
-                            </div>
-                            <SidebarFooter />
                         </div>
-                    </>
+                    </div>
                 ) : null}
 
                 <div
@@ -365,12 +390,19 @@ function AppContent() {
                         sidebarExpanded ? "md:pl-[var(--kira-revamp-sidebar-w)]" : "md:pl-14",
                     )}
                 >
-                    <main className="kira-app-revamp-main kira-text-flow mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col overflow-y-auto overscroll-y-contain px-4 py-6 pl-[calc(3.5rem+1rem)] md:px-8 md:py-8 md:pl-8">
-                        {tab === "dashboard" && <DashboardPanel onOpenTab={(id) => setTab(id as AppTabId)} />}
-                        {tab === "calendar" && <CalendarPanel />}
-                        {tab === "wellbeing" && <WellbeingPanel />}
-                        {tab === "events" && <EventsPanel />}
-                        {tab === "profile" && <ProfilePanel />}
+                    <main className="kira-app-revamp-main kira-text-flow mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col overflow-y-auto overscroll-y-contain px-3 py-4 md:px-8 md:py-8 md:pl-8">
+                        <AnimatePresence mode="wait" initial={false}>
+                            <motion.div
+                                key={tab}
+                                className="flex min-h-0 flex-1 flex-col"
+                                initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
+                                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                                exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+                                transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+                            >
+                                {activePanel}
+                            </motion.div>
+                        </AnimatePresence>
                     </main>
                 </div>
             </div>
@@ -385,7 +417,7 @@ function AppShellBody() {
     return (
         <div className="kira-app-revamp">
             <AppContent />
-            <QuickAddFab fabClassName="bottom-6 right-4 md:bottom-6 md:right-6" />
+            <QuickAddFab fabClassName="right-4 bottom-[calc(var(--kira-revamp-bottom-nav-h)+1rem+env(safe-area-inset-bottom,0px))] md:right-6 md:bottom-6" />
             <LimitsSetupModal isOpen={!limitsConfigured || limitsEditorOpen} isRequired={!limitsConfigured} onOpenChange={() => undefined} />
         </div>
     );

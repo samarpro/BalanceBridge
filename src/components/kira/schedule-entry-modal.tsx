@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { motion } from "motion/react";
 import { Trash01 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
@@ -121,16 +122,41 @@ export function ScheduleEntryEditModal({ entry, isOpen, onOpenChange }: Schedule
             <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} isDismissable className="z-[60]">
                 <Modal className={cx("max-h-[min(90vh,720px)] w-full overflow-y-auto rounded-2xl bg-primary p-6 shadow-xl ring-1 ring-secondary sm:max-w-lg")}>
                     <Dialog aria-label={t("calendar.editModal.title")} className="outline-hidden">
-                        <div className="w-full">
+                        <motion.div
+                            className="w-full"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                        >
                             <h2 className="text-md font-semibold text-secondary">{t("calendar.editModal.title")}</h2>
 
-                            <div className="mt-5 space-y-4">
+                            <motion.div
+                                className="mt-5 space-y-4"
+                                initial="hidden"
+                                animate="visible"
+                                variants={{
+                                    hidden: {},
+                                    visible: {
+                                        transition: {
+                                            staggerChildren: 0.04,
+                                            delayChildren: 0.04,
+                                        },
+                                    },
+                                }}
+                            >
+                                <motion.div variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}>
                                 <Checkbox isSelected={completed} onChange={setCompleted} label={t("calendar.editModal.completed")} />
+                                </motion.div>
 
+                                <motion.div variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}>
                                 <Input label={t("calendar.modal.nameLabel")} value={title} onChange={setTitle} />
+                                </motion.div>
 
+                                <motion.div variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}>
                                 <Input label={t("calendar.modal.dateLabel")} type="date" value={isoDate} onChange={setIsoDate} />
+                                </motion.div>
 
+                                <motion.div variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}>
                                 <Input
                                     label={t("calendar.modal.deadlineOptional")}
                                     type="date"
@@ -138,35 +164,40 @@ export function ScheduleEntryEditModal({ entry, isOpen, onOpenChange }: Schedule
                                     onChange={setDeadlineIso}
                                     hint={t("calendar.modal.deadlineHint")}
                                 />
+                                </motion.div>
 
+                                <motion.div variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}>
                                 <Input label={t("calendar.modal.startOptional")} type="time" value={startTime} onChange={setStartTime} hint={t("calendar.modal.startHint")} />
+                                </motion.div>
 
+                                <motion.div variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}>
                                 <NativeSelect
                                     label={t("calendar.modal.duration")}
                                     options={durationOptions}
                                     value={durationMinutes}
                                     onChange={(e) => setDurationMinutes(e.target.value)}
                                 />
+                                </motion.div>
 
-                                <div>
+                                <motion.div variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}>
                                     <p className="mb-2 text-sm font-medium text-secondary">{t("calendar.modal.typeLabel")}</p>
                                     <RadioGroup value={kind} onChange={(v) => setKind(v as ScheduleKind)} className="gap-3">
                                         <RadioButton value="shift" label={t("calendar.modal.type.shift")} />
                                         <RadioButton value="exam" label={t("calendar.modal.type.exam")} />
                                         <RadioButton value="study" label={t("calendar.modal.type.study")} />
                                     </RadioGroup>
-                                </div>
+                                </motion.div>
 
-                                <div>
+                                <motion.div variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}>
                                     <p className="mb-2 text-sm font-medium text-secondary">{t("calendar.modal.priorityLabel")}</p>
                                     <RadioGroup value={priority} onChange={(v) => setPriority(v as typeof priority)} className="gap-3">
                                         <RadioButton value="low" label={t("calendar.priority.low")} />
                                         <RadioButton value="medium" label={t("calendar.priority.medium")} />
                                         <RadioButton value="high" label={t("calendar.priority.high")} />
                                     </RadioGroup>
-                                </div>
+                                </motion.div>
 
-                                <div className="flex flex-wrap gap-3 pt-2">
+                                <motion.div className="flex flex-wrap gap-3 pt-2" variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}>
                                     <Button color="primary" size="lg" onClick={handleSave}>
                                         {t("calendar.editModal.save")}
                                     </Button>
@@ -176,9 +207,9 @@ export function ScheduleEntryEditModal({ entry, isOpen, onOpenChange }: Schedule
                                     <Button color="secondary-destructive" size="lg" iconLeading={Trash01} className="ml-auto" onClick={handleDelete}>
                                         {t("calendar.editModal.delete")}
                                     </Button>
-                                </div>
-                            </div>
-                        </div>
+                                </motion.div>
+                            </motion.div>
+                        </motion.div>
                     </Dialog>
                 </Modal>
             </ModalOverlay>
@@ -301,15 +332,38 @@ export function ScheduleEntryCreateDetailsModal({ isOpen, onOpenChange, initialT
             <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} isDismissable className="z-[60]">
                 <Modal className={cx("max-h-[min(90vh,720px)] w-full overflow-y-auto rounded-2xl bg-primary p-6 shadow-xl ring-1 ring-secondary sm:max-w-lg")}>
                     <Dialog aria-label={t("calendar.detailsModal.title")} className="outline-hidden">
-                        <div className="w-full">
+                        <motion.div
+                            className="w-full"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                        >
                             <h2 className="text-md font-semibold text-secondary">{t("calendar.detailsModal.title")}</h2>
                             <p className="mt-1 text-sm text-tertiary">{t("calendar.detailsModal.subtitle")}</p>
 
-                            <div className="mt-5 space-y-4">
+                            <motion.div
+                                className="mt-5 space-y-4"
+                                initial="hidden"
+                                animate="visible"
+                                variants={{
+                                    hidden: {},
+                                    visible: {
+                                        transition: {
+                                            staggerChildren: 0.04,
+                                            delayChildren: 0.04,
+                                        },
+                                    },
+                                }}
+                            >
+                                <motion.div variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}>
                                 <Input label={t("calendar.modal.nameLabel")} value={title} onChange={setTitle} />
+                                </motion.div>
 
+                                <motion.div variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}>
                                 <Input label={t("calendar.modal.dateLabel")} type="date" value={isoDate} onChange={setIsoDate} />
+                                </motion.div>
 
+                                <motion.div variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}>
                                 <Input
                                     label={t("calendar.modal.deadlineOptional")}
                                     type="date"
@@ -317,44 +371,49 @@ export function ScheduleEntryCreateDetailsModal({ isOpen, onOpenChange, initialT
                                     onChange={setDeadlineIso}
                                     hint={t("calendar.modal.deadlineHint")}
                                 />
+                                </motion.div>
 
+                                <motion.div variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}>
                                 <Input label={t("calendar.modal.startOptional")} type="time" value={startTime} onChange={setStartTime} hint={t("calendar.modal.startHint")} />
+                                </motion.div>
 
+                                <motion.div variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}>
                                 <NativeSelect
                                     label={t("calendar.modal.duration")}
                                     options={durationOptions}
                                     value={durationMinutes}
                                     onChange={(e) => setDurationMinutes(e.target.value)}
                                 />
+                                </motion.div>
 
-                                <div>
+                                <motion.div variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}>
                                     <p className="mb-2 text-sm font-medium text-secondary">{t("calendar.modal.typeLabel")}</p>
                                     <RadioGroup value={kind} onChange={(v) => setKind(v as ScheduleKind)} className="gap-3">
                                         <RadioButton value="shift" label={t("calendar.modal.type.shift")} />
                                         <RadioButton value="exam" label={t("calendar.modal.type.exam")} />
                                         <RadioButton value="study" label={t("calendar.modal.type.study")} />
                                     </RadioGroup>
-                                </div>
+                                </motion.div>
 
-                                <div>
+                                <motion.div variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}>
                                     <p className="mb-2 text-sm font-medium text-secondary">{t("calendar.modal.priorityLabel")}</p>
                                     <RadioGroup value={priority} onChange={(v) => setPriority(v as typeof priority)} className="gap-3">
                                         <RadioButton value="low" label={t("calendar.priority.low")} />
                                         <RadioButton value="medium" label={t("calendar.priority.medium")} />
                                         <RadioButton value="high" label={t("calendar.priority.high")} />
                                     </RadioGroup>
-                                </div>
+                                </motion.div>
 
-                                <div className="flex flex-wrap gap-3 pt-2">
+                                <motion.div className="flex flex-wrap gap-3 pt-2" variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}>
                                     <Button color="primary" size="lg" onClick={handleSave}>
                                         {t("calendar.save")}
                                     </Button>
                                     <Button color="secondary" size="lg" onClick={() => onOpenChange(false)}>
                                         {t("calendar.cancel")}
                                     </Button>
-                                </div>
-                            </div>
-                        </div>
+                                </motion.div>
+                            </motion.div>
+                        </motion.div>
                     </Dialog>
                 </Modal>
             </ModalOverlay>

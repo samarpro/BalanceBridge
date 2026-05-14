@@ -4,29 +4,29 @@
  */
 .kira-app-revamp {
     /* --- docs/dsign.md — light surfaces --- */
-    --ds-background: #faf9f6;
-    --ds-surface: #faf9f6;
+    --ds-background: #f5efe6;
+    --ds-surface: #f5efe6;
     --ds-surface-container-lowest: #ffffff;
-    --ds-surface-container-low: #f4f3f1;
-    --ds-surface-container: #efeeeb;
-    --ds-surface-container-high: #e9e8e5;
-    --ds-on-surface: #1a1c1a;
-    --ds-on-surface-variant: #424842;
-    --ds-outline: #737972;
-    --ds-outline-variant: #c2c8c0;
-    --ds-primary: #4a654e;
-    --ds-primary-container: #8ba88e;
-    --ds-on-primary-container: #233d29;
-    --ds-inverse-primary: #b0ceb2;
-    --ds-secondary: #266868;
-    --ds-secondary-container: #aeeeee;
-    --ds-on-secondary-container: #2e6e6e;
-    --ds-tertiary-container: #a4a196;
-    --ds-on-tertiary-container: #393830;
-    --ds-primary-fixed: #cceace;
-    --ds-on-primary-fixed: #07200f;
-    --ds-on-primary-fixed-variant: #334d38;
-    --ds-secondary-fixed: #aeeeee;
+    --ds-surface-container-low: #f3ecdf;
+    --ds-surface-container: #efe6d8;
+    --ds-surface-container-high: #eee5d8;
+    --ds-on-surface: #2c2420;
+    --ds-on-surface-variant: #7a6e68;
+    --ds-outline: #a89e98;
+    --ds-outline-variant: rgba(120, 100, 80, 0.12);
+    --ds-primary: #bc6342;
+    --ds-primary-container: #e8a78d;
+    --ds-on-primary-container: #533326;
+    --ds-inverse-primary: #f1c7b6;
+    --ds-secondary: #7d72bf;
+    --ds-secondary-container: #b9afe6;
+    --ds-on-secondary-container: #433d68;
+    --ds-tertiary-container: #c7b8eb;
+    --ds-on-tertiary-container: #473d6b;
+    --ds-primary-fixed: #a8d1b3;
+    --ds-on-primary-fixed: #274231;
+    --ds-on-primary-fixed-variant: #45684f;
+    --ds-secondary-fixed: #d4c9ef;
     --ds-error: #ba1a1a;
     --ds-error-container: #ffdad6;
     --ds-inverse-surface: #2f312f;
@@ -43,45 +43,45 @@
     --kira-revamp-accent-social: var(--ds-tertiary-container);
     --kira-revamp-accent-wellbeing: var(--ds-primary-fixed);
     /* Soft terracotta (doc: warnings); not in YAML — tuned for legibility on cream) */
-    --kira-revamp-accent-warning: #deb19a;
-    --kira-revamp-accent-success: var(--ds-primary);
+    --kira-revamp-accent-warning: #dcae45;
+    --kira-revamp-accent-success: #4f9a72;
     --kira-revamp-accent-danger: var(--ds-error);
     --kira-revamp-text-primary: var(--ds-on-surface);
     --kira-revamp-text-secondary: var(--ds-on-surface-variant);
     --kira-revamp-text-muted: var(--ds-outline);
-    --kira-revamp-border: rgb(194 200 192 / 0.55);
-    /* Ambient sage-tinted shadow (dsign.md — Elevation) */
-    --kira-revamp-shadow-card: 0 6px 32px rgb(139 168 142 / 0.12);
-    --kira-revamp-shadow-card-hover: 0 14px 40px rgb(74 101 78 / 0.14);
-    --kira-revamp-focus-ring: rgb(74 101 78 / 0.45);
+    --kira-revamp-border: rgb(120 100 80 / 0.16);
+    /* Warm card shadows */
+    --kira-revamp-shadow-card: 0 2px 8px rgb(100 70 40 / 0.07);
+    --kira-revamp-shadow-card-hover: 0 14px 34px rgb(100 70 40 / 0.12);
+    --kira-revamp-focus-ring: rgb(188 99 66 / 0.68);
     --kira-revamp-sidebar-w: 220px;
     --kira-revamp-rail-w: 56px;
-    --kira-revamp-bottom-nav-h: 56px;
+    --kira-revamp-bottom-nav-h: 64px;
 
     /* Typography: Atkinson body, Plus Jakarta headings (docs/dsign.md) */
     font-family: "Atkinson Hyperlegible Next", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
 html.dark-mode .kira-app-revamp {
-    --kira-revamp-bg-base: var(--ds-inverse-surface);
-    --kira-revamp-bg-sidebar: #282a28;
-    --kira-revamp-bg-card: #3a3c3a;
-    --kira-revamp-accent-work: #3d5240;
-    --kira-revamp-accent-work-dark: var(--ds-inverse-primary);
-    --kira-revamp-accent-study: #2a4545;
-    --kira-revamp-accent-study-dark: #aeeeee;
-    --kira-revamp-accent-social: #5a5850;
-    --kira-revamp-accent-wellbeing: #3d5240;
-    --kira-revamp-accent-warning: #c9a089;
-    --kira-revamp-accent-success: var(--ds-inverse-primary);
+    --kira-revamp-bg-base: #1f1916;
+    --kira-revamp-bg-sidebar: #241d1a;
+    --kira-revamp-bg-card: #2f2824;
+    --kira-revamp-accent-work: #6b3d2f;
+    --kira-revamp-accent-work-dark: #f0b29a;
+    --kira-revamp-accent-study: #594f87;
+    --kira-revamp-accent-study-dark: #c3b6f0;
+    --kira-revamp-accent-social: #6c5a9a;
+    --kira-revamp-accent-wellbeing: #3d664d;
+    --kira-revamp-accent-warning: #dfb24b;
+    --kira-revamp-accent-success: #90c9a5;
     --kira-revamp-accent-danger: #ffb4ab;
-    --kira-revamp-text-primary: var(--ds-inverse-on-surface);
-    --kira-revamp-text-secondary: #c9cbc7;
-    --kira-revamp-text-muted: #9da29b;
-    --kira-revamp-border: rgb(242 241 238 / 0.14);
-    --kira-revamp-shadow-card: 0 6px 32px rgb(0 0 0 / 0.38);
-    --kira-revamp-shadow-card-hover: 0 14px 44px rgb(0 0 0 / 0.48);
-    --kira-revamp-focus-ring: rgb(176 206 178 / 0.55);
+    --kira-revamp-text-primary: #f7f1ea;
+    --kira-revamp-text-secondary: #d0c2bb;
+    --kira-revamp-text-muted: #b09e96;
+    --kira-revamp-border: rgb(247 241 234 / 0.18);
+    --kira-revamp-shadow-card: 0 10px 30px rgb(0 0 0 / 0.34);
+    --kira-revamp-shadow-card-hover: 0 18px 44px rgb(0 0 0 / 0.44);
+    --kira-revamp-focus-ring: rgb(240 178 154 / 0.64);
 }
 
 .kira-app-revamp :where(.kira-revamp-card) {
@@ -91,23 +91,189 @@ html.dark-mode .kira-app-revamp {
     box-shadow: var(--kira-revamp-shadow-card);
     transition:
         transform 150ms ease,
-        box-shadow 150ms ease;
+        box-shadow 150ms ease,
+        background-color 150ms ease;
 }
 
 .kira-app-revamp :where(.kira-revamp-card-interactive):hover {
     transform: translateY(-2px);
+    background: color-mix(in srgb, var(--kira-revamp-bg-card) 88%, white);
     box-shadow: var(--kira-revamp-shadow-card-hover);
+}
+
+@keyframes kira-dashboard-ambient {
+    0% {
+        transform: translate3d(-2%, 1%, 0) scale(1);
+        opacity: 0.78;
+    }
+    100% {
+        transform: translate3d(2%, -1%, 0) scale(1.04);
+        opacity: 1;
+    }
+}
+
+@keyframes kira-visa-aurora {
+    0% {
+        transform: translate3d(-3%, -2%, 0) rotate(0deg) scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translate3d(2%, 1%, 0) rotate(3deg) scale(1.04);
+        opacity: 0.95;
+    }
+    100% {
+        transform: translate3d(4%, -1%, 0) rotate(-2deg) scale(1.02);
+        opacity: 0.78;
+    }
+}
+
+@keyframes kira-visa-panel-float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+@keyframes kira-liquid-soft-sheen {
+    0% {
+        transform: translate3d(-38%, -18%, 0) rotate(-8deg);
+        opacity: 0.18;
+    }
+    50% {
+        opacity: 0.36;
+    }
+    100% {
+        transform: translate3d(36%, 16%, 0) rotate(8deg);
+        opacity: 0.18;
+    }
+}
+
+.kira-app-revamp :where(.kira-dashboard-hero) {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: 1.75rem;
+    border: 1px solid var(--kira-revamp-border);
+    background: var(--kira-revamp-bg-card);
+    box-shadow: var(--kira-revamp-shadow-card);
+}
+
+.kira-app-revamp :where(.kira-dashboard-hero)::before {
+    content: none;
+    display: none;
+}
+
+.kira-app-revamp :where(.kira-dashboard-card) {
+    position: relative;
+    overflow: hidden;
+    border-color: color-mix(in srgb, var(--kira-revamp-accent-work-dark) 14%, var(--kira-revamp-border));
+    background:
+        linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--kira-revamp-accent-work) 10%, var(--kira-revamp-bg-card)),
+            color-mix(in srgb, var(--kira-revamp-accent-study) 8%, var(--kira-revamp-bg-card))
+        ),
+        var(--kira-revamp-bg-card);
+}
+
+.kira-app-revamp :where(.kira-dashboard-card)::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: linear-gradient(
+        90deg,
+        var(--kira-revamp-accent-work-dark),
+        var(--kira-revamp-accent-study-dark),
+        var(--kira-revamp-accent-wellbeing-fg)
+    );
+    opacity: 0.85;
+}
+
+.kira-app-revamp :where(.kira-card-variant-work) {
+    border-color: color-mix(in srgb, var(--kira-revamp-accent-work-dark) 24%, var(--kira-revamp-border));
+    background:
+        radial-gradient(circle at 90% 10%, color-mix(in srgb, var(--kira-revamp-accent-work) 28%, transparent) 0%, transparent 34%),
+        linear-gradient(180deg, rgb(247 220 208 / 0.96), rgb(248 235 227 / 0.98));
+    box-shadow:
+        0 14px 30px color-mix(in srgb, var(--kira-revamp-accent-work-dark) 12%, transparent),
+        inset 0 1px 0 rgb(255 255 255 / 0.64);
+}
+
+.kira-app-revamp :where(.kira-card-variant-study) {
+    border-color: color-mix(in srgb, var(--kira-revamp-accent-study-dark) 24%, var(--kira-revamp-border));
+    background:
+        radial-gradient(circle at 88% 12%, color-mix(in srgb, var(--kira-revamp-accent-study) 32%, transparent) 0%, transparent 34%),
+        linear-gradient(180deg, rgb(218 210 242 / 0.94), rgb(243 239 252 / 0.98));
+    box-shadow:
+        0 14px 30px color-mix(in srgb, var(--kira-revamp-accent-study-dark) 12%, transparent),
+        inset 0 1px 0 rgb(255 255 255 / 0.64);
+}
+
+.kira-app-revamp :where(.kira-card-variant-wellbeing) {
+    border-color: color-mix(in srgb, var(--kira-revamp-accent-success) 26%, var(--kira-revamp-border));
+    background:
+        radial-gradient(circle at 88% 12%, color-mix(in srgb, var(--kira-revamp-accent-success) 28%, transparent) 0%, transparent 34%),
+        linear-gradient(180deg, rgb(206 231 214 / 0.94), rgb(236 246 239 / 0.98));
+    box-shadow:
+        0 14px 30px color-mix(in srgb, var(--kira-revamp-accent-success) 12%, transparent),
+        inset 0 1px 0 rgb(255 255 255 / 0.64);
+}
+
+.kira-app-revamp :where(.kira-card-variant-work)::before {
+    background: linear-gradient(90deg, var(--kira-revamp-accent-work-dark), color-mix(in srgb, var(--kira-revamp-accent-warning) 72%, white));
+}
+
+.kira-app-revamp :where(.kira-card-variant-study)::before {
+    background: linear-gradient(90deg, var(--kira-revamp-accent-study-dark), color-mix(in srgb, var(--kira-revamp-accent-social) 82%, white));
+}
+
+.kira-app-revamp :where(.kira-card-variant-wellbeing)::before {
+    background: linear-gradient(90deg, var(--kira-revamp-accent-success), color-mix(in srgb, var(--kira-revamp-accent-wellbeing-fg) 74%, white));
+}
+
+.kira-app-revamp :where(.kira-dashboard-block) {
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.34);
+    transition:
+        transform 150ms ease,
+        box-shadow 150ms ease,
+        border-color 150ms ease;
+}
+
+.kira-app-revamp :where(.kira-dashboard-block:hover) {
+    transform: translateY(-1px);
+    box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 0.42),
+        0 10px 24px color-mix(in srgb, var(--kira-revamp-text-primary) 8%, transparent);
 }
 
 /** Dashboard visa hours block — outer soft grey tray */
 .kira-app-revamp :where(.kira-revamp-card.kira-visa-dashboard) {
-    background: color-mix(in srgb, var(--kira-revamp-text-muted) 5%, var(--kira-revamp-bg-card));
-    border: 1px solid color-mix(in srgb, var(--kira-revamp-text-muted) 22%, var(--kira-revamp-border));
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border: 1px solid var(--kira-revamp-border);
+    background: var(--kira-revamp-bg-card);
+    box-shadow: var(--kira-revamp-shadow-card);
+}
+
+.kira-app-revamp :where(.kira-revamp-card.kira-visa-dashboard)::before {
+    content: none;
+    display: none;
+}
+
+.kira-app-revamp :where(.kira-revamp-card.kira-visa-dashboard)::after {
+    content: none;
+    display: none;
 }
 
 html.dark-mode .kira-app-revamp :where(.kira-revamp-card.kira-visa-dashboard) {
-    background: color-mix(in srgb, var(--kira-revamp-text-secondary) 8%, var(--kira-revamp-bg-card));
-    border: 1px solid color-mix(in srgb, var(--kira-revamp-text-secondary) 16%, var(--kira-revamp-border));
+    border: 1px solid var(--kira-revamp-border);
+    background: var(--kira-revamp-bg-card);
+    box-shadow: var(--kira-revamp-shadow-card);
 }
 
 /** Nested panels (week / fortnight / wellbeing) inside the visa card */
@@ -115,12 +281,41 @@ html.dark-mode .kira-app-revamp :where(.kira-revamp-card.kira-visa-dashboard) {
     display: flex;
     flex-direction: column;
     /* Same panel height across week / fortnight / wellbeing; width stays content-driven */
-    min-height: clamp(17rem, 32vmin, 21.5rem);
-    border-radius: 1.25rem;
-    border: 1px solid color-mix(in srgb, var(--kira-revamp-text-muted) 24%, var(--kira-revamp-border));
-    background: color-mix(in srgb, var(--kira-revamp-bg-card) 92%, var(--kira-revamp-text-muted) 5%);
-    padding: 1rem 1rem 1.25rem;
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.28);
+    min-height: clamp(13.5rem, 44vmin, 21.5rem);
+    border-radius: 1.125rem;
+    border: 1px solid var(--kira-revamp-border);
+    background: #ffffff;
+    padding: 0.875rem 0.875rem 1rem;
+    box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 0.55),
+        0 8px 20px color-mix(in srgb, var(--kira-revamp-text-primary) 5%, transparent);
+    animation: kira-visa-panel-float 6.5s ease-in-out infinite;
+    will-change: transform;
+}
+
+.kira-app-revamp :where(.kira-visa-dashboard .kira-visa-inset--week) {
+    border-color: var(--kira-revamp-border);
+    background:
+        radial-gradient(circle at 84% 14%, rgb(226 157 126 / 0.16) 0%, transparent 34%),
+        radial-gradient(circle at 16% 18%, rgb(240 214 152 / 0.2) 0%, transparent 38%),
+        linear-gradient(180deg, rgb(248 240 231 / 0.98), rgb(244 234 222 / 0.98));
+}
+
+.kira-app-revamp :where(.kira-visa-dashboard .kira-visa-inset--fortnight) {
+    border-color: color-mix(in srgb, var(--kira-revamp-accent-study-dark) 46%, var(--kira-revamp-border));
+    background:
+        radial-gradient(circle at 18% 18%, rgb(199 184 235 / 0.28) 0%, transparent 34%),
+        linear-gradient(180deg, rgb(196 185 239 / 0.96), rgb(228 222 250 / 0.98));
+    animation-delay: -2.1s;
+}
+
+.kira-app-revamp :where(.kira-visa-dashboard .kira-visa-inset--wellbeing) {
+    border-color: color-mix(in srgb, var(--kira-revamp-accent-warning) 42%, var(--kira-revamp-border));
+    background:
+        radial-gradient(circle at 18% 18%, rgb(220 174 69 / 0.24) 0%, transparent 34%),
+        radial-gradient(circle at 84% 16%, rgb(199 184 235 / 0.28) 0%, transparent 36%),
+        linear-gradient(180deg, rgb(240 214 152 / 0.88), rgb(241 226 245 / 0.82));
+    animation-delay: -4.2s;
 }
 
 @media (min-width: 768px) {
@@ -130,9 +325,87 @@ html.dark-mode .kira-app-revamp :where(.kira-revamp-card.kira-visa-dashboard) {
 }
 
 html.dark-mode .kira-app-revamp :where(.kira-visa-dashboard .kira-visa-inset) {
-    border: 1px solid color-mix(in srgb, var(--kira-revamp-text-secondary) 18%, var(--kira-revamp-border));
-    background: color-mix(in srgb, var(--kira-revamp-bg-card) 86%, var(--kira-revamp-text-secondary) 7%);
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06);
+    border: 1px solid var(--kira-revamp-border);
+    background: var(--kira-revamp-bg-card);
+    box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 0.08),
+        0 12px 26px rgb(0 0 0 / 0.18);
+}
+
+html.dark-mode .kira-app-revamp :where(.kira-visa-dashboard .kira-visa-inset--week) {
+    border-color: var(--kira-revamp-border);
+    background:
+        radial-gradient(circle at 84% 14%, rgb(240 178 154 / 0.12) 0%, transparent 34%),
+        radial-gradient(circle at 18% 18%, rgb(223 178 75 / 0.12) 0%, transparent 36%),
+        linear-gradient(180deg, rgb(66 46 39 / 0.98), rgb(50 37 32 / 0.98));
+}
+
+html.dark-mode .kira-app-revamp :where(.kira-visa-dashboard .kira-visa-inset--fortnight) {
+    border-color: color-mix(in srgb, var(--kira-revamp-accent-study-dark) 42%, var(--kira-revamp-border));
+    background:
+        radial-gradient(circle at 18% 18%, rgb(195 182 240 / 0.18) 0%, transparent 34%),
+        linear-gradient(180deg, rgb(99 85 150 / 0.98), rgb(73 61 118 / 0.98));
+}
+
+html.dark-mode .kira-app-revamp :where(.kira-visa-dashboard .kira-visa-inset--wellbeing) {
+    border-color: color-mix(in srgb, var(--kira-revamp-accent-warning) 42%, var(--kira-revamp-border));
+    background:
+        radial-gradient(circle at 18% 18%, rgb(223 178 75 / 0.2) 0%, transparent 34%),
+        radial-gradient(circle at 84% 16%, rgb(195 182 240 / 0.18) 0%, transparent 36%),
+        linear-gradient(180deg, rgb(77 52 28 / 0.94), rgb(52 38 33 / 0.98));
+}
+
+html.dark-mode .kira-app-revamp :where(.kira-card-variant-work) {
+    border-color: color-mix(in srgb, var(--kira-revamp-accent-work-dark) 26%, var(--kira-revamp-border));
+    background:
+        radial-gradient(circle at 90% 10%, rgb(240 178 154 / 0.12) 0%, transparent 34%),
+        linear-gradient(180deg, rgb(88 51 41 / 0.98), rgb(63 41 34 / 0.98));
+}
+
+html.dark-mode .kira-app-revamp :where(.kira-card-variant-study) {
+    border-color: color-mix(in srgb, var(--kira-revamp-accent-study-dark) 26%, var(--kira-revamp-border));
+    background:
+        radial-gradient(circle at 90% 10%, rgb(195 182 240 / 0.14) 0%, transparent 34%),
+        linear-gradient(180deg, rgb(84 72 124 / 0.98), rgb(63 54 92 / 0.98));
+}
+
+html.dark-mode .kira-app-revamp :where(.kira-card-variant-wellbeing) {
+    border-color: color-mix(in srgb, var(--kira-revamp-accent-success) 28%, var(--kira-revamp-border));
+    background:
+        radial-gradient(circle at 90% 10%, rgb(144 201 165 / 0.14) 0%, transparent 34%),
+        linear-gradient(180deg, rgb(58 84 66 / 0.98), rgb(44 66 52 / 0.98));
+}
+
+/** DashboardPanel only — flat surfaces (wrapper `kira-dashboard-surface`); Profile keeps tinted `kira-dashboard-card` */
+.kira-app-revamp :where(.kira-dashboard-surface .kira-dashboard-card) {
+    background: var(--kira-revamp-bg-card);
+    border-color: var(--kira-revamp-border);
+}
+
+.kira-app-revamp :where(.kira-dashboard-surface .kira-dashboard-card)::before {
+    display: none;
+}
+
+.kira-app-revamp :where(.kira-dashboard-surface .kira-card-variant-work),
+.kira-app-revamp :where(.kira-dashboard-surface .kira-card-variant-study),
+.kira-app-revamp :where(.kira-dashboard-surface .kira-card-variant-wellbeing) {
+    background: var(--kira-revamp-bg-card);
+    border-color: var(--kira-revamp-border);
+    box-shadow: var(--kira-revamp-shadow-card);
+}
+
+.kira-app-revamp :where(.kira-dashboard-surface .kira-card-variant-work)::before,
+.kira-app-revamp :where(.kira-dashboard-surface .kira-card-variant-study)::before,
+.kira-app-revamp :where(.kira-dashboard-surface .kira-card-variant-wellbeing)::before {
+    display: none;
+}
+
+html.dark-mode .kira-app-revamp :where(.kira-dashboard-surface .kira-dashboard-card),
+html.dark-mode .kira-app-revamp :where(.kira-dashboard-surface .kira-card-variant-work),
+html.dark-mode .kira-app-revamp :where(.kira-dashboard-surface .kira-card-variant-study),
+html.dark-mode .kira-app-revamp :where(.kira-dashboard-surface .kira-card-variant-wellbeing) {
+    background: var(--kira-revamp-bg-card);
+    border-color: var(--kira-revamp-border);
 }
 
 .kira-app-revamp :where(.kira-revamp-section-label) {
@@ -159,6 +432,7 @@ html.dark-mode .kira-app-revamp :where(.kira-visa-dashboard .kira-visa-inset) {
 .kira-app-revamp :where(.kira-revamp-focusable):focus-visible {
     outline: 2px solid var(--kira-revamp-focus-ring);
     outline-offset: 2px;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--kira-revamp-focus-ring) 30%, transparent);
 }
 
 /* --- Liquid level orb — uses revamp accent tokens --- */
@@ -278,6 +552,7 @@ html.dark-mode .kira-app-revamp :where(.kira-visa-dashboard .kira-visa-inset) {
 
 .kira-app-revamp .kira-liquid-body {
     z-index: 1;
+    will-change: height;
 }
 
 .kira-app-revamp .kira-liquid-body .kira-liquid-fill {
@@ -290,8 +565,16 @@ html.dark-mode .kira-app-revamp :where(.kira-visa-dashboard .kira-visa-inset) {
         color-mix(in srgb, var(--kira-liquid-tone-mid) 82%, var(--kira-revamp-bg-card)) 0%,
         var(--kira-liquid-tone-dark) 100%
     );
-    animation: kira-liquid-wave 4s ease-in-out infinite alternate;
-    will-change: transform;
+    animation: none;
+}
+
+.kira-app-revamp .kira-liquid-body .kira-liquid-fill::after {
+    content: "";
+    position: absolute;
+    inset: -18%;
+    background: linear-gradient(115deg, transparent 18%, rgb(255 255 255 / 0.36) 46%, transparent 68%);
+    transform: translateX(-40%) rotate(-8deg);
+    animation: kira-liquid-soft-sheen 5.8s ease-in-out infinite alternate;
 }
 
 .kira-app-revamp .kira-liquid-body .kira-liquid-fill--inverted {
@@ -303,49 +586,24 @@ html.dark-mode .kira-app-revamp :where(.kira-visa-dashboard .kira-visa-inset) {
         color-mix(in srgb, var(--kira-liquid-tone-mid) 12%, var(--kira-revamp-bg-card)) 0%,
         color-mix(in srgb, var(--kira-liquid-tone-dark) 92%, var(--kira-revamp-bg-card)) 100%
     );
-    animation: kira-liquid-wave-inverted 4s ease-in-out infinite alternate;
+    animation: none;
 }
 
-.kira-app-revamp .kira-liquid-ripple {
-    position: absolute;
-    top: -18%;
-    left: -35%;
-    width: 170%;
-    height: 48%;
-    border-radius: 48% 52% 46% 54% / 62% 38% 55% 45%;
-    background: radial-gradient(
-        ellipse 65% 70% at 50% 100%,
-        color-mix(in srgb, var(--kira-revamp-bg-card) 25%, transparent) 0%,
-        color-mix(in srgb, var(--kira-liquid-glow) 45%, transparent) 38%,
-        transparent 70%
-    );
-    opacity: 0.5;
-    mix-blend-mode: soft-light;
-    animation: kira-liquid-ripple 5.8s ease-in-out infinite alternate;
-    will-change: transform;
-}
-
-.kira-app-revamp .kira-liquid-ripple--inverted {
-    top: auto;
-    bottom: -18%;
-    left: -35%;
-    background: radial-gradient(
-        ellipse 65% 70% at 50% 0%,
-        color-mix(in srgb, var(--kira-revamp-bg-card) 25%, transparent) 0%,
-        color-mix(in srgb, var(--kira-liquid-glow) 45%, transparent) 38%,
-        transparent 70%
-    );
-    animation: kira-liquid-ripple-inverted 5.8s ease-in-out infinite alternate;
+.kira-app-revamp .kira-liquid-body .kira-liquid-fill--inverted::after {
+    transform: translateX(36%) rotate(8deg);
+    animation-direction: alternate-reverse;
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .kira-app-revamp .kira-liquid-body .kira-liquid-fill,
-    .kira-app-revamp .kira-liquid-body .kira-liquid-fill--inverted {
+    .kira-app-revamp :where(.kira-revamp-card.kira-visa-dashboard)::before,
+    .kira-app-revamp :where(.kira-revamp-card.kira-visa-dashboard)::after,
+    .kira-app-revamp :where(.kira-visa-dashboard .kira-visa-inset),
+    .kira-app-revamp .kira-liquid-body .kira-liquid-fill::after {
         animation: none;
     }
 
-    .kira-app-revamp .kira-liquid-ripple,
-    .kira-app-revamp .kira-liquid-ripple--inverted {
+    .kira-app-revamp .kira-liquid-body .kira-liquid-fill,
+    .kira-app-revamp .kira-liquid-body .kira-liquid-fill--inverted {
         animation: none;
     }
 
@@ -357,6 +615,7 @@ html.dark-mode .kira-app-revamp :where(.kira-visa-dashboard .kira-visa-inset) {
             0 0 22px color-mix(in srgb, var(--kira-liquid-glow) 40%, transparent),
             0 0 48px color-mix(in srgb, var(--kira-liquid-glow) 26%, transparent);
     }
+
 }
 
 /* Wellbeing “spirit level” meter — energy-bar pulse (see t-animation-dash.html) */
@@ -392,7 +651,7 @@ html.dark-mode .kira-app-revamp :where(.kira-visa-dashboard .kira-visa-inset) {
 
 /* Bottom safe area for fixed nav + FAB */
 .kira-app-revamp-main {
-    padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(var(--kira-revamp-bottom-nav-h) + 3rem + env(safe-area-inset-bottom, 0px));
 }
 
 @media (min-width: 768px) {
@@ -405,38 +664,38 @@ html.dark-mode .kira-app-revamp :where(.kira-visa-dashboard .kira-visa-inset) {
  * Portals (e.g. RAC Tooltip) render outside `.kira-app-revamp` — aligned to docs/dsign.md.
  */
 :root {
-    --kira-revamp-popover-work-bg: #f4f3f1;
+    --kira-revamp-popover-work-bg: #f7f6f3;
     --kira-revamp-popover-work-text: #1a1c1a;
     --kira-revamp-popover-work-muted: #424842;
     --kira-revamp-popover-work-border: rgb(74 101 78 / 0.28);
 
-    --kira-revamp-popover-exam-bg: #aeeeee;
+    --kira-revamp-popover-exam-bg: #bdf8f6;
     --kira-revamp-popover-exam-text: #072020;
     --kira-revamp-popover-exam-muted: #266868;
     --kira-revamp-popover-exam-border: rgb(38 104 104 / 0.35);
 
-    --kira-revamp-popover-wellbeing-bg: #cceace;
+    --kira-revamp-popover-wellbeing-bg: #d8f2da;
     --kira-revamp-popover-wellbeing-text: #07200f;
     --kira-revamp-popover-wellbeing-muted: #334d38;
     --kira-revamp-popover-wellbeing-border: rgb(74 101 78 / 0.32);
 
     --kira-revamp-accent-wellbeing-fg: #233d29;
     --kira-revamp-drawer-scrim: rgb(26 28 26 / 0.88);
-    --kira-revamp-shadow-bottom-nav: 0 -8px 28px rgb(139 168 142 / 0.14);
+    --kira-revamp-shadow-bottom-nav: 0 -8px 24px rgb(139 168 142 / 0.12);
 }
 
 html.dark-mode {
-    --kira-revamp-popover-work-bg: #3a3c3a;
+    --kira-revamp-popover-work-bg: #434844;
     --kira-revamp-popover-work-text: #f2f1ee;
     --kira-revamp-popover-work-muted: #c9cbc7;
     --kira-revamp-popover-work-border: rgb(176 206 178 / 0.35);
 
-    --kira-revamp-popover-exam-bg: #2a4545;
+    --kira-revamp-popover-exam-bg: #315454;
     --kira-revamp-popover-exam-text: #e8fffe;
     --kira-revamp-popover-exam-muted: #aeeeee;
     --kira-revamp-popover-exam-border: rgb(174 238 238 / 0.35);
 
-    --kira-revamp-popover-wellbeing-bg: #354538;
+    --kira-revamp-popover-wellbeing-bg: #3e5242;
     --kira-revamp-popover-wellbeing-text: #f2faf0;
     --kira-revamp-popover-wellbeing-muted: #b0ceb2;
     --kira-revamp-popover-wellbeing-border: rgb(176 206 178 / 0.32);
