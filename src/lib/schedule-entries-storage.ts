@@ -1,6 +1,6 @@
 import type { ScheduleEntry, ScheduleKind } from "@/components/kira/calendar-month";
 
-const KEY = "kira-schedule-entries-v1";
+const KEY = "kira-schedule-entries-v2";
 
 function isKind(x: unknown): x is ScheduleKind {
     return x === "shift" || x === "exam" || x === "study";

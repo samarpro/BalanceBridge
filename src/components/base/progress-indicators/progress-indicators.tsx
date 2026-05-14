@@ -51,7 +51,7 @@ export const ProgressBarBase = ({ value, min = 0, max = 100, className, progress
                 animate={{ x }}
                 transition={{ type: "spring" as const, stiffness: 260, damping: 26, mass: 0.6 }}
                 className={cx(
-                    "size-full rounded-full bg-gradient-to-r from-brand-600 via-teal-400 to-emerald-500 will-change-transform",
+                    "size-full rounded-full bg-gradient-to-r from-brand-600 via-purple-400 to-amber-400 will-change-transform",
                     progressClassName,
                 )}
             />

@@ -31,6 +31,15 @@ export function isoFromDate(d: Date): string {
     return `${y}-${m}-${day}`;
 }
 
+/** Local calendar midnight for `YYYY-MM-DD` (invalid parts yield an invalid Date). */
+export function dateFromIso(iso: string): Date {
+    const [y, m, d] = iso.split("-").map(Number);
+    if (!y || !m || !d) return new Date(NaN);
+    const x = new Date(y, m - 1, d);
+    x.setHours(0, 0, 0, 0);
+    return x;
+}
+
 export function startOfWeekMonday(d: Date): Date {
     const x = new Date(d);
     const dow = (x.getDay() + 6) % 7;

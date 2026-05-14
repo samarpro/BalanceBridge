@@ -1,6 +1,6 @@
 import type { WellbeingTask } from "@/types/wellbeing-task";
 
-const KEY = "kira-wellbeing-tasks-v1";
+const KEY = "kira-wellbeing-tasks-v2";
 
 function parseTask(raw: unknown): WellbeingTask | null {
     if (!raw || typeof raw !== "object") return null;

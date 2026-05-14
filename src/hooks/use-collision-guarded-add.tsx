@@ -21,6 +21,7 @@ export function useCollisionGuardedAdd() {
     const entries = useKiraStore((s) => s.entries);
     const lifePriorityOrder = useKiraStore((s) => s.lifePriorityOrder);
     const addEntry = useKiraStore((s) => s.addEntry);
+    const incrementConflictBlocksShown = useKiraStore((s) => s.incrementConflictBlocksShown);
 
     const [collision, setCollision] = useState<CollisionState | null>(null);
 
@@ -30,6 +31,7 @@ export function useCollisionGuardedAdd() {
         if (overlaps.length > 0) {
             const dur = end - start;
             const suggested = findNextFreeSlotStart(entries, payload.isoDate, dur, undefined, start);
+            incrementConflictBlocksShown();
             setCollision({ overlaps, payload, startMin: start, endMin: end, suggested, onSuccess });
             return;
         }

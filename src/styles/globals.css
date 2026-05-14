@@ -40,6 +40,58 @@ body {
     font-kerning: normal;
 }
 
+/* Slim scrollbars — document + app main + scrollable panels inside revamp shell */
+html,
+.kira-app-revamp-main,
+.kira-app-revamp .overflow-y-auto {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(0 0 0 / 0.2) transparent;
+}
+
+html::-webkit-scrollbar,
+.kira-app-revamp-main::-webkit-scrollbar,
+.kira-app-revamp .overflow-y-auto::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+html::-webkit-scrollbar-thumb,
+.kira-app-revamp-main::-webkit-scrollbar-thumb,
+.kira-app-revamp .overflow-y-auto::-webkit-scrollbar-thumb {
+    background-color: rgb(0 0 0 / 0.18);
+    border-radius: 9999px;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+.kira-app-revamp-main::-webkit-scrollbar-thumb:hover,
+.kira-app-revamp .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(0 0 0 / 0.3);
+}
+
+html::-webkit-scrollbar-track,
+.kira-app-revamp-main::-webkit-scrollbar-track,
+.kira-app-revamp .overflow-y-auto::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+html.dark-mode,
+html.dark-mode .kira-app-revamp-main,
+html.dark-mode .kira-app-revamp .overflow-y-auto {
+    scrollbar-color: rgb(255 255 255 / 0.14) transparent;
+}
+
+html.dark-mode::-webkit-scrollbar-thumb,
+html.dark-mode .kira-app-revamp-main::-webkit-scrollbar-thumb,
+html.dark-mode .kira-app-revamp .overflow-y-auto::-webkit-scrollbar-thumb {
+    background-color: rgb(255 255 255 / 0.12);
+}
+
+html.dark-mode::-webkit-scrollbar-thumb:hover,
+html.dark-mode .kira-app-revamp-main::-webkit-scrollbar-thumb:hover,
+html.dark-mode .kira-app-revamp .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(255 255 255 / 0.22);
+}
+
 /* Hide the default expand arrow on Safari.  */
 details summary::-webkit-details-marker {
     display: none;

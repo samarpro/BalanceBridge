@@ -39,18 +39,18 @@ export function WellbeingSpiritMeter({ completedCount, totalCount, className }: 
                 className="pointer-events-none absolute -inset-6 rounded-[60%_40%_70%_30%/40%_50%_60%_70%] bg-[color-mix(in_srgb,var(--kira-revamp-accent-wellbeing)_32%,transparent)] opacity-50 blur-2xl dark:opacity-40"
                 aria-hidden
             />
-            <div className="relative flex h-32 items-end justify-center gap-2 sm:gap-2.5">
+            <div className="relative flex h-28 items-end justify-center gap-1.5 sm:h-32 sm:gap-2.5">
                 {OUTER_BAR_HEIGHTS_PCT.slice(0, 2).map((h, i) => (
                     <div
                         key={`L${i}`}
-                        className="w-2 shrink-0 rounded-full bg-[color-mix(in_srgb,var(--kira-revamp-accent-wellbeing)_22%,var(--kira-revamp-bg-card))] ring-1 ring-[color-mix(in_srgb,var(--kira-revamp-border)_55%,transparent)]"
+                        className="w-1.5 shrink-0 rounded-full bg-[color-mix(in_srgb,var(--kira-revamp-accent-wellbeing)_22%,var(--kira-revamp-bg-card))] ring-1 ring-[color-mix(in_srgb,var(--kira-revamp-border)_55%,transparent)] sm:w-2"
                         style={{ height: `${h}%` }}
                         aria-hidden
                     />
                 ))}
                 <div
                     className={cx(
-                        "kira-wellbeing-spirit-pulse w-3 shrink-0 rounded-full bg-[var(--kira-revamp-accent-wellbeing)]",
+                        "kira-wellbeing-spirit-pulse w-2.5 shrink-0 rounded-full bg-[var(--kira-revamp-accent-wellbeing)] sm:w-3",
                         "ring-1 ring-[color-mix(in_srgb,var(--kira-revamp-accent-wellbeing-fg)_25%,transparent)]",
                     )}
                     style={{ height: `${centerHeightPct}%` }}
@@ -59,18 +59,18 @@ export function WellbeingSpiritMeter({ completedCount, totalCount, className }: 
                 {OUTER_BAR_HEIGHTS_PCT.slice(2).map((h, i) => (
                     <div
                         key={`R${i}`}
-                        className="w-2 shrink-0 rounded-full bg-[color-mix(in_srgb,var(--kira-revamp-accent-wellbeing)_22%,var(--kira-revamp-bg-card))] ring-1 ring-[color-mix(in_srgb,var(--kira-revamp-border)_55%,transparent)]"
+                        className="w-1.5 shrink-0 rounded-full bg-[color-mix(in_srgb,var(--kira-revamp-accent-wellbeing)_22%,var(--kira-revamp-bg-card))] ring-1 ring-[color-mix(in_srgb,var(--kira-revamp-border)_55%,transparent)] sm:w-2"
                         style={{ height: `${h}%` }}
                         aria-hidden
                     />
                 ))}
             </div>
-            <div className="relative mt-4 flex flex-col items-center gap-1 text-center">
+            <div className="relative mt-3 flex flex-col items-center gap-1 text-center sm:mt-4">
                 <div className="flex items-center gap-1.5">
                     <HeartRounded data-icon aria-hidden className="size-4 text-[var(--kira-revamp-accent-wellbeing-fg)]" />
                     <p className="kira-revamp-section-label tracking-wide text-[var(--kira-revamp-text-primary)]">{t("app.nav.wellbeing")}</p>
                 </div>
-                <p className="text-4xl font-bold tabular-nums leading-none text-[var(--kira-revamp-accent-wellbeing-fg)]">{safeCompleted}</p>
+                <p className="text-3xl font-bold tabular-nums leading-none text-[var(--kira-revamp-accent-wellbeing-fg)] sm:text-4xl">{safeCompleted}</p>
                 <p className="max-w-[14rem] text-xs font-medium text-[var(--kira-revamp-text-muted)]">
                     {safeTotal === 0
                         ? t("dashboard.revamp.wellbeingSpiritCaptionEmpty")

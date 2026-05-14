@@ -29,7 +29,7 @@ function MorphingFocusDiagram() {
     return (
         <div className="pointer-events-none relative mx-auto aspect-square w-[min(78vw,22rem)] max-w-full select-none" aria-hidden>
             <motion.div
-                className="absolute inset-[-18%] rounded-full bg-gradient-to-br from-brand-600/35 via-teal-400/25 to-sky-500/30 blur-3xl dark:from-brand-500/25 dark:via-teal-400/20 dark:to-sky-400/25"
+                className="absolute inset-[-18%] rounded-full bg-gradient-to-br from-brand-600/35 via-purple-400/25 to-amber-400/30 blur-3xl dark:from-brand-500/25 dark:via-purple-400/20 dark:to-amber-300/20"
                 animate={{ scale: [1, 1.12, 0.96, 1], rotate: [0, 8, -6, 0] }}
                 transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
             />
@@ -54,7 +54,7 @@ function MorphingFocusDiagram() {
                 animate={{ scale: [1, 1.02, 1] }}
                 transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
             >
-                <div className="size-[42%] rounded-full bg-gradient-to-br from-teal-300/30 to-brand-600/20 blur-md dark:from-teal-400/20 dark:to-brand-500/15" />
+                <div className="size-[42%] rounded-full bg-gradient-to-br from-purple-300/30 to-brand-600/20 blur-md dark:from-purple-400/20 dark:to-brand-500/15" />
             </motion.div>
         </div>
     );
@@ -139,7 +139,7 @@ function FocusSessionLayer({ onRequestClose }: FocusSessionLayerProps) {
                     transition={{ duration: 24, repeat: Infinity, ease: "easeInOut" }}
                 />
                 <motion.div
-                    className="absolute -right-1/4 bottom-0 size-[100vmin] rounded-full bg-teal-400/10 blur-3xl dark:bg-teal-400/12"
+                    className="absolute -right-1/4 bottom-0 size-[100vmin] rounded-full bg-purple-400/10 blur-3xl dark:bg-purple-400/12"
                     animate={{ x: [0, "-6%", 0], y: [0, "6%", 0] }}
                     transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
                 />

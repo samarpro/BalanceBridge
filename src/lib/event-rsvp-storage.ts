@@ -1,6 +1,6 @@
 import type { RsvpStatus } from "@/data/mock-events";
 
-const KEY = "kira-event-rsvp-v1";
+const KEY = "kira-event-rsvp-v2";
 
 function isRsvp(x: unknown): x is RsvpStatus {
     return x === "going" || x === "not-going" || x === "undecided";

@@ -22,7 +22,7 @@ export function ProfilePanel() {
                 )}
             </header>
 
-            <section className="kira-revamp-card space-y-3 p-5">
+            <section className="kira-revamp-card kira-dashboard-card kira-card-variant-wellbeing space-y-3 p-5">
                 <p className="kira-revamp-section-label">{t("profile.revamp.limits")}</p>
                 <p className="text-sm leading-relaxed text-[var(--kira-revamp-text-secondary)]">{t("profile.revamp.limitsBody")}</p>
                 <Button color="secondary" size="md" className="mt-1" onClick={() => openLimitsEditor()}>
